@@ -46,6 +46,7 @@ Allow strings to span multiple lines
 Remove [1,,2] elision syntax
 Remove RegExpr literal syntax
 
+
 Keywords
 
 class
@@ -53,7 +54,8 @@ var
 if
 switch
 
-Dart can't compete with TypeScript because it's a new language to learn and you can't directly use JavaScript libraries.
+
+Tests
 
 var f = (x, y) => { x * x; };
 var f = x => { x * x; };
@@ -81,5 +83,8 @@ names.split(",").map(name => {
   name.trim();
 });
 
+x = (1, 2);
+
+foo(("foo", bar, { baz: [1, 2, 3] }));
 
 */
