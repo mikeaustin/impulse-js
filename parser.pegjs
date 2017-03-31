@@ -44,6 +44,8 @@
 //
 //   * Changed function expressions to fat arrow syntax. E.g. f = (x, y) => x * y
 //
+//   * Added class declarations. E.g. class Foo { function bar() { } }
+//
 //   * Added literal tuple syntax. E.g. ("foo", bar, { baz: [1, 2, 3] })
 //
 // Limitations:
