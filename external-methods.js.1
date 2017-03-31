@@ -1,0 +1,42 @@
+Object.prototype.invoke = function(method, args) {
+  var getPrototypeOf = Object.getPrototypeOf;
+
+  for (var proto = getPrototypeOf(this); proto != null; proto = getPrototypeOf(proto)) {
+    var func = method.get(proto);
+
+    if (func) {
+      return func.apply(this, args);
+    }
+  }
+
+  return;
+}
+
+toString = new Map();
+
+toString.set(Object.prototype, function(exp) {
+  return this.toString();
+});
+
+{
+  var power = new Map();
+
+  power.set(Number.prototype, function(exp) {
+    return Math.pow(this, exp);
+  });
+
+  Object.power = Object.power || [];
+  Object.power.push(power);
+
+
+  var toString = new Map();
+
+  toString.set(String.prototype, function(exp) {
+    return "String: " + this.toString();
+  });
+
+  console.log((5).invoke(power, [2]));
+  console.log((5).invoke(toString, []));
+  console.log(("foo").invoke(toString, []));
+}
+

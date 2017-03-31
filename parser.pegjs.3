@@ -1,0 +1,89 @@
+/*
+ * Simple Arithmetics Grammar
+ * ==========================
+ *
+ * Accepts expressions like "2 * (3 + 4)" and computes their value.
+ */
+ 
+{
+  function Expression(chain) { this.chain = chain; }
+  function Tuple(values) { this.values = values; }
+  function Expression(expr) { this.expr = expr; }
+  function Identifier(name) { this.name = name; }
+  function Call(method, args) { this.method = method; this.args = args; }
+}
+
+Expression
+  = PipeExpression
+
+PipeExpression
+  = head:TupleExpression tail:(_ "|" _ Call)* {
+      var result = [];
+      
+      result.push(head);
+      
+      tail.forEach(item => {
+        result.push(item[3]);
+      });
+      
+      return new Expression(result);
+    }
+
+TupleExpression
+  = head:Primary tail:(_ "," _ Primary)* {
+      if (tail) {
+        return new Tuple([head].concat(tail.map(item => item[3])));
+      } else {
+        return head;
+      }
+    }
+
+Call
+  = method:Identifier args:(_ TupleExpression)? {
+      if (args) {
+        return new Call(method, args[1]);
+      } else {
+        return new Call(method, []);
+      }
+    }
+
+Primary
+  = "(" _ expr:Expression _ ")" {
+      if (expr.length > 1) {
+        return new Expression(expr);
+      } else {
+      console.log(expr.expr);
+        return expr[0];
+      }
+    }
+  / Identifier
+  / Literal
+
+Arguments
+  = head:Primary tail:(_ "," _ ArgumentExpression)*
+  
+ArgumentExpression
+  = Primary
+
+Identifier
+  = [a-z]+ { return new Identifier(text()); }
+
+Literal
+  = Integer
+  
+Integer "integer"
+  = [0-9]+ { return text(); }
+
+_ "whitespace"
+  = [ \t\n\r]*
+
+/*
+
+Assignment
+  = pattern:Pattern _ "=" _ expr:Expression { return [pattern, expr]; }
+
+Pattern
+  = "(" head:Identifier tail:(_ "," _ Identifier)* ")" { return [head, tail]; }
+  / head:Identifier tail:(_ "," _ Identifier)* { return [head, tail]; }
+
+*/

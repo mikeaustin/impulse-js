@@ -1,0 +1,97 @@
+/*
+ * Simple Arithmetics Grammar
+ * ==========================
+ *
+ * Accepts expressions like "2 * (3 + 4)" and computes their value.
+ */
+ 
+{
+  function isIdentifier(value) {
+    return new RegExp(/[a-z]/).test(value);
+  }
+  
+  function Function(args, body) {
+    if (!args.every(value => isIdentifier(value))) {
+      error("Function arguments must all be identifiers");
+    }
+        
+    this.args = args;
+    this.body = body;
+  }
+  
+  function Assignment(values, expr) {
+    this.values = values;
+    this.expr = expr;
+  }
+}
+
+Program
+  = _ head:Expression tail:(_ Expression)* _ {
+    return [head].concat(tail.map(expr => expr[1]));
+  }
+
+Expression
+  = values:Values body:(_ "=>" _ Expression)? assign:(_ "=" _ Expression)? {
+      if (body && body.length > 0) {
+        return new Function(values, body[3]);
+      } else if (assign) {
+        return new Assignment(values, assign[3]);
+      } else {
+        return values;
+      }
+    }
+  / "//" .* [\r\n]?
+
+Values
+  = head:Operator tail:(_ ", " _ Operator)* {
+      if (tail.length > 0) {
+        return [head].concat(tail.map(expr => expr[3]));
+      } else {
+        return [head];
+      }
+    }
+
+ValuesOperator
+  = body:(_ "=>" _ Expression) {
+      return new Function(values, body[3]);
+    }
+  / expr:(_ "=" _ Expression) {
+      return new Assignment(values, assign[3]);
+    }
+
+Operator
+  = head:Term tail:(_ ("+" / "-") _ Term)* {
+      var result = head, i;
+
+      for (i = 0; i < tail.length; i++) {
+        result += " + " + tail[i][3];
+      }
+
+      return result;
+    }
+
+Term
+  = head:Factor tail:(_ ("*" / "/") _ Factor)* {
+      var result = head, i;
+
+      for (i = 0; i < tail.length; i++) {
+        result += " * " + tail[i][3];
+      }
+
+      return result;
+    }
+
+Factor
+  = "(" _ expr:Expression _ ")" { return expr; }
+  / Integer
+  / Identifier
+
+Integer "integer"
+  = [0-9]+ { return text(); }
+
+Identifier "identifier"
+  = [a-z]+ { return text(); }
+
+_ "whitespace"
+  = [ \t\n\r]*
+  

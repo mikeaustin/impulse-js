@@ -1,0 +1,137 @@
+/*
+
+x, y					Tuple
+x, y = y, x
+(x, y)					Tuple
+(x, y)
+(x, y) => x + y
+(x: String)
+(x: String, y)			valid?
+(x: Integer) => x + 1
+
+foo = a, b => 5		(a, b) => 5		(a, b => 5)
+foo = a, (b) => 5
+
+a, b = a, x => x
+
+let a, b = 10, x, y => x + y
+
+let a, b = 10, |x, y| x + y
+
+a, b				Return an Identifier or an Expression
+a, b => a + b
+
+a + b, a + c
+a + b, a + c => ?	Illegal
+
+
+list.sort(a, (b, c) => a < b)
+list.sort(a, (b => a < b))
+list.sort((b) => a < b, 5)
+
+list.reduce(init: a, func: b, c => {
+  b + c
+})
+
+list | reduce a, b => a <=> b, with: c
+list | reduce (a, b) => a <=> b, with: c
+list | reduce (a, b => a <=> b), with: c
+
+reduce = () => ?
+
+list . reduce (a, b) => do
+  a < b
+end . reverse
+
+((list sort) reverse)
+
+reverse(sort(list))
+
+"hello" split (char) reverse
+
+*/
+
+{
+  class Element {
+    constructor(name, value) {
+      this.name = name;
+      this.value = value;
+    }
+  }
+  
+  class Tuple {
+    constructor(values) {
+      this.values = values;
+    }
+  }
+  
+  class FunctionDef {
+    constructor(args, body) {
+      this.args = args;
+      this.body = body;
+    }
+  }
+}
+
+Expression
+  = args:Primary _ body:("=>" _ Identifier)? {
+      if (body) {
+        return new FunctionDef(args, body[2]);
+      } else {
+        return new Tuple(args);
+      }
+    }
+
+Primary
+  = head:Element tail:(_ "," _ Element)* {
+      if (tail) {
+        return [head].concat(tail.map(item => { return item[3]; }));
+      } else {
+        return head;
+      }
+    }
+
+Element
+  = name:Identifier value:(":" _ Identifier)? {
+      return new Element(name, value ? value[2] : undefined);
+    }
+
+Subexpression
+  = ident:Identifier
+
+/*
+Program
+  = _ expr:(Expression ";")* _ {
+      return expr;
+    }
+
+Expression
+  = Identifier
+  / Tuple
+
+Tuple
+  = "(" args:ArgsList ")" _ body:("=>" _ Identifier)? {
+      if (body) {
+        return new FunctionDef(args, body[2]);
+      } else {
+        return new Tuple(args);
+      }
+    }
+
+ArgsList
+  = head:Value _ tail:("," _ Value)* {
+      return [head].concat(tail.map((item) => { return item[2]; }));
+    }
+
+Value
+  = name:Identifier value:(":" _ Identifier)? {
+      return new Value(name, value);
+    }
+*/
+
+Identifier
+  = [a-z]+ { return text(); }
+
+_ "whitespace"
+  = [ \t\r\n]*
+  

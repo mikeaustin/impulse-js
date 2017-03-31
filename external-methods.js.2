@@ -1,0 +1,75 @@
+
+Stack = {
+  array: [],
+
+  push: function() {
+    var types = new Map();
+
+    this.array.push(types);
+  },
+
+  pop: function() {
+    this.array.pop();
+  },
+
+  peek: function() {
+    return this.array[this.array.length - 1];
+  },
+
+  method: function(name) {
+    return this.peek()[name];
+  }
+};
+
+define = function(name, type, func) {
+  var types = Stack.peek();
+  var methods = types.get(type.prototype);
+
+  if (!methods) {
+    var methods = { };
+
+    types.set(type.prototype, methods);
+  }
+
+  methods[name] = func;
+};
+
+Object.prototype.invoke = function(name, args) {
+  var getPrototypeOf = Object.getPrototypeOf;
+
+  for (var i = Stack.array.length - 1; i >= 0; --i) {
+    var types = Stack.array[i];
+
+    for (var proto = getPrototypeOf(this); proto != null; proto = getPrototypeOf(proto)) {
+      var methods = types.get(proto);
+
+      if (methods !== undefined && methods.hasOwnProperty(name)) {
+        return methods[name].apply(this, args);
+      }
+    }
+  }
+
+  throw new Error("Method '" + name + "' is not defined");
+
+  return;
+}
+
+Stack.push();
+
+define("toString", Object, function() {
+  return this.toString();
+});
+
+{
+  Stack.push();
+
+  define("power", Number, function(exp) {
+    return Math.pow(this, exp);
+  });
+
+  console.log((5).invoke("power", [2]));
+  console.log((5).invoke("toString", []));
+
+  Stack.pop();
+}
+
