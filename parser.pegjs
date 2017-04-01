@@ -603,7 +603,17 @@ AssignmentExpression
         right: right
       };
     }
-  / ConditionalExpression
+  / left:ConditionalExpression right:(__ ".." __ ConditionalExpression)? {
+    if (right) {
+      return {
+        type: "RangeExpression",
+        left: left,
+        right: right[3]
+      };
+    }
+    
+    return left;
+  }
 
 Expression
   = head:AssignmentExpression {
