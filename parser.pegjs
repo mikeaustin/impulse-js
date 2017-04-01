@@ -232,10 +232,7 @@ NumericLiteral "number"
     }
 
 DecimalLiteral
-  = DecimalIntegerLiteral "." DecimalDigit* ExponentPart? {
-      return { type: "Literal", value: parseFloat(text()) };
-    }
-  / "." DecimalDigit+ ExponentPart? {
+  = DecimalIntegerLiteral "." DecimalDigit ExponentPart? {
       return { type: "Literal", value: parseFloat(text()) };
     }
   / DecimalIntegerLiteral ExponentPart? {

@@ -80,11 +80,13 @@ class Foo { }
 names.split(",").map(name => name.trim());
 
 names.split(",").map(name => {
-  name.trim();
+  return name.trim();
 });
 
 x = (1, 2);
 
 foo(("foo", bar, { baz: [1, 2, 3] }));
+
+1.5;
 
 */
