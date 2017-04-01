@@ -384,12 +384,12 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 TupleLiteral
- = "(" __ head:Expression __ tail:(__ "," __ Expression)* __ ")" {
-     return {
-       type: "TupleExpression",
-       elements: buildList(head, tail, 3)
-     };
-   }
+  = "(" __ head:Expression __ tail:(__ "," __ Expression)* __ ")" {
+      return {
+        type: "TupleExpression",
+        elements: buildList(head, tail, 3)
+      };
+    }
 
 ArrayLiteral
   = "[" __ "]" {
