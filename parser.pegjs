@@ -48,6 +48,11 @@
 //
 //   * Added literal tuple syntax. E.g. ("foo", bar, { baz: [1, 2, 3] })
 //
+//   * Required floating point values to have at least one digit before and after
+//     the decimal point. This is to support range syntax. E.g. 1.5..2.5
+//
+//   * Added literal ranges syntax. E.g. 1..5, 1.5..2.5, 'a'..'z', foo()..bar()
+//
 // Limitations:
 //
 //   * Non-BMP characters are completely ignored to avoid surrogate pair
