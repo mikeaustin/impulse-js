@@ -1,0 +1,25 @@
+{
+  "name": "impulse-js",
+  "version": "0.1.0",
+  "description": "A stricter JavaScript with extension methods, ranges, tuples, and tuple projections",
+  "main": "index.js",
+  "author": "Mike Austin <mike_ekim@yahoo.com>",
+  "license": "MIT",
+
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "pegjs": "^0.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeaustin/impulse-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mikeaustin/impulse-js/issues"
+  },
+  "homepage": "https://github.com/mikeaustin/impulse-js#readme"
+}

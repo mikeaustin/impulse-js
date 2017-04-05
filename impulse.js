@@ -2,6 +2,17 @@ util = require("util");
 fs = require("fs");
 peg = require("pegjs");
 
+function Tuple() {
+  for (var i = 0; i < arguments.length; i += 1) {
+    this.values = Array.prototype.slice.call(arguments);
+  }
+}
+
+function Range(start, end) {
+  this.start = start;
+  this.end   = end;
+}
+
 // _(foo, bar).map
 var test = `-1;`;
 
@@ -45,6 +56,7 @@ Allow strings to span multiple lines
 () = apply(), [] index
 Remove [1,,2] elision syntax
 Remove RegExpr literal syntax
+Default parameters
 
 
 Keywords
@@ -64,6 +76,8 @@ console.log((x, y) => x * y);
 console.log(x => x * x);
 foo(a, b => a);
 
+class Foo { }
+
 class String
 {
   function foo() {
@@ -74,8 +88,6 @@ class String
     return z => x + y * z;
   }
 }
-
-class Foo { }
 
 names.split(",").map(name => name.trim());
 
@@ -90,5 +102,18 @@ foo(("foo", bar, { baz: [1, 2, 3] }));
 [(1.0, 0.1), (5.0, 5.5)];
 
 [1..5, (a + b)..(x), 1.5..2.5, 'a'..'z', foo()..bar()];
+
+var data = {
+  verticies: [(1, 2), (3, 4), (5, 6), (7, 8), (9, 10)],
+  indecies: [0..2, 2..4]
+};
+
+data.indicies.each(indexRange => {
+  return indexRange.map(index => data.verticies[index]);
+});
+
+function test(arg...) {
+  return ["foo", arg.toString()...];
+}
 
 */
