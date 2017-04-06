@@ -7,7 +7,7 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 // to add and invoke functions. Use extend() to add extension methods.
 //
 
-function Extension(parent) {
+var Extension = function Extension(parent) {
   this.parent  = parent || null;
   this.methods = Immutable.Map();
 };

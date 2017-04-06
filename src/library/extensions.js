@@ -27,6 +27,14 @@ var _toString = Impulse.extend(Object, _toString, function(hideProperties) {
   }
 });
 
+var _toString = Impulse.extend(Number, _toString, function() {
+  if (this === Number.prototype) {
+    return "Number";
+  }
+  
+  return this.toString();
+});
+
 var _toString = Impulse.extend(Array, _toString, function() {
   if (this === Array.prototype) {
     return "Array";
