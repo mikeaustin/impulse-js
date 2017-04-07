@@ -36,6 +36,7 @@ var _toString = Impulse.extend(Number, _toString, function() {
   return "here";
 });
 
-console.log(typeof _toString === U ? (10).toString() : _toString.apply(10));
 
-console.log((10).toString ? (10).toString() : _toString.apply(10));
+var foo = 10;
+
+console.log((foo.toString || _toString).apply(foo));

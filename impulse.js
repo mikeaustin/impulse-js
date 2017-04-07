@@ -26,39 +26,44 @@ fs.readFile("parser.pegjs", "utf8", function(error, data) {
 
 /*
 
-Move instanceOf to a method on Object
-Remove ++, -- prefix and postfix operators
-Remove +=, *= etc. operators
-Move bitwise |, &, <<, ~, etc. to methods
-Remove for, do, while iteration					We don't need these with each(), map(), reduce(), etc.
-Remove all unicode rules						Taken out temporarily to simplify the syntax.
-Remove automatic semicolon insertion			Causes bugs. Always use ; at the end of a statement.
-Disallow direct property setting				foo.x = 10; Open to monkey-patching abuse.
-Change == to mean _.isEqual, remove ===
-? Change object notation to use Map()
-Make switch statement more powerful
-Require boolean expressions in if ()
-Make if () an expression, remove ?:
-? Require braces around if ()
-Bind foo.bar to this
-Add fat arrow functions (x => x * x)
-Add named parameters
-Add operator overloading				operator_isEqual, operator_isGreater, operator_multiply, ...
-Destructured assignment
-? Pattern matching
-Extension methods
-Tuple, Range							"(1, 2, 3)", 1..10
-Require "use string"
-Optional types							function foo(arg?)
-Immutable types
-Allow strings to span multiple lines
+	Move instanceOf to a method on Object
+☑️	Remove ++, -- prefix and postfix operators
+	Remove +=, *= etc. operators
+	Move bitwise |, &, <<, ~, etc. to methods
+☑️	Remove for, do, while iteration					We don't need these with each(), map(), reduce(), etc.
+☑️	Remove all unicode rules						Taken out temporarily to simplify the syntax.
+☑️	Remove automatic semicolon insertion			Causes bugs. Always use ; at the end of a statement.
+	Disallow direct property setting				foo.x = 10; Open to monkey-patching abuse.
+	Change == to mean _.isEqual, remove ===
+	? Change object notation to use Map()
+	Make switch statement more powerful
+	Require boolean expressions in if ()
+	Make if () an expression, remove ?:
+	? Require braces around if ()
+	Bind foo.bar to this
+☑️	Add fat arrow functions (x => x * x)
+☑️	Add named parameters
+☑️	Default parameters
+	Add operator overloading				operator_isEqual, operator_isGreater, operator_multiply, ...
+	Destructured assignment
+	? Pattern matching
+☑️	Extension methods
+☑️	Tuple, Range							"(1, 2, 3)", 1..10
+	Require "use strict"
+	Optional types							function foo(arg?)
+☑️	Immutable types
+	Allow strings to span multiple lines
 
 () = apply(), [] index
-Remove [1,,2] elision syntax
-Remove RegExpr literal syntax
-Default parameters
+☑️	Remove [1,,2] elision syntax
+☑️	Remove RegExpr literal syntax
+    Change object notation to use Map() instead of objects.
+    Make switch statement more powerful.
+    Add dynamic, non-null requirements in parameters.
+    Add support for immutable types (const).
 
-
+    
+    
 Keywords
 
 class
