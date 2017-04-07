@@ -76,17 +76,15 @@ function parameters(parameters, _arguments, func) {
 
   while (i < parameters.length) {
     var parameterName = getParameterName(parameters[i]);
-    var argument = keywordArguments && keywordArguments[parameterName];
+    var argument;
 
-    if (argument === undefined) {
-      var defaultValue = parameters[i]["$"];
-      
-      if (defaultValue !== undefined) {
-        argument = defaultValue;
-      } else {
-        throw Error("Missing parameter: '" + parameterName + "' in call to function '" + func.name + "'");
-      }
-    }  
+    if (keywordArguments && keywordArguments.hasOwnProperty(parameterName)) {
+      argument = keywordArguments[parameterName];
+    } else if (parameters[i].hasOwnProperty("$")) {
+        argument = parameters[i]["$"];
+    } else {
+      throw Error("Missing parameter: '" + parameterName + "' in call to function '" + func.name + "'");
+    }
   
     args.push(argument);
     
@@ -98,6 +96,9 @@ function parameters(parameters, _arguments, func) {
   for (var i = 0; i < parameters.length; i++) {
     var parameterName = getParameterName(parameters[i]);
     var parameterType = getParameterType(parameters[i]);
+
+    if (parameters[i].hasOwnProperty("$") && parameters[i]["$"] === undefined)
+      continue;
     
     var argumentType = getPrototypeOf(args[i]);
 
@@ -125,28 +126,28 @@ module.exports = {
 // Tests
 //
 
-var _addBook = define([{title: String}, {description: String, $: "Untitled"}], function _addBook(title, description) {
-  console.log(title, description);
-});
-
-_addBook("Frankenstein", "A great humanity story");
-_addBook("Frankenstein", {description: "A great humanity story"});
-_addBook({title: "Frankenstein", description: "A great humanity story"});
-_addBook("Frankenstein");
-try {
-  _addBook("Frankenstein", 5);
-} catch(error) {
-  console.log(error);
-}
-try {
-  _addBook({description: "A great humanity story"});
-} catch(error) {
-  console.log(error);
-}
+//var _addBook = define([{title: String}, {description: String, $: "Untitled"}], function _addBook(title, description) {
+//  console.log(title, description);
+//});
+//
+//_addBook("Frankenstein", "A great humanity story");
+//_addBook("Frankenstein", {description: "A great humanity story"});
+//_addBook({title: "Frankenstein", description: "A great humanity story"});
+//_addBook("Frankenstein");
+//try {
+//  _addBook("Frankenstein", 5);
+//} catch(error) {
+//  console.log(error);
+//}
+//try {
+//  _addBook({description: "A great humanity story"});
+//} catch(error) {
+//  console.log(error);
+//}
 
 String.parameters = [{beginIndex: Number}, {endIndex: Number, $: undefined}];
 
-String.prototype.slice.apply("foo", parameters(String.parameters, [0], String.prototype.slice));
+console.log(String.prototype.slice.apply("foo", parameters(String.parameters, [1], String.prototype.slice)));
 
 /*
 
