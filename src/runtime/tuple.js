@@ -3,6 +3,8 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var List = Immutable.List;
 var Range = Immutable.Range;
 
+var getPrototypeOf = Object.getPrototypeOf;
+
 
 function boolCheck(expression) {
   if (expression === true)
@@ -25,25 +27,19 @@ Tuple.of = function() {
 
 //
 
-Object.typeEquals = function(that) {
-  return this.prototype === Object.getPrototypeOf(that);
-}
-
-Number.prototype.typeEquals = Object.typeEquals;
-String.typeEquals = Object.typeEquals;
-Array.prototype.typeEquals = Object.typeEquals;
-
-String.prototype.isType = function(that) {
-  return Object.getPrototypeOf(this) === that.prototype;
+Number.prototype.isType = String.prototype.isType = Array.prototype.isType = function(that) {
+  return getPrototypeOf(this) === that.prototype;
 }
 
 //
 
-Tuple.prototype.typeEquals = function(that) {
-  var getPrototypeOf = Object.getPrototypeOf;
-
-  for (var i = 0; i < this.values.length; i++) {
-    if (getPrototypeOf(this.values[i]) != getPrototypeOf(that.values[i])) {
+Array.prototype.isType = function(that) {
+  if (getPrototypeOf(that) !== Array.prototype) {
+    return false;
+  }
+  
+  for (var i = 0; i < this.length; i++) {
+    if (!this[i].isType(that[0])) {
       return false;
     }
   }
@@ -51,11 +47,16 @@ Tuple.prototype.typeEquals = function(that) {
   return true;
 }
 
+//
+
 Tuple.prototype.isType = function(that) {
-  var getPrototypeOf = Object.getPrototypeOf;
+  if (getPrototypeOf(that) !== Tuple.prototype ||
+      this.values.length != that.values.length) {
+    return false;
+  }
 
   for (var i = 0; i < this.values.length; i++) {
-    if (getPrototypeOf(this.values[i]) !== that.values[i].prototype) {
+    if (!this.values[i].isType(that.values[i])) {
       return false;
     }
   }
@@ -107,6 +108,9 @@ console.log(T(1, 2).concat(T(3, 4)));
 console.log(T([1, 2], [3, 4]).map((a, b) => a + b));
 console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
 
-var a = T("foo", 100), b = T("bar", 200);
-
-console.log(">>>", a.typeEquals(b));
+console.log(">>>", T().isType(T()));
+console.log(">>>", T("foo", 5).isType(T(String, Number)));
+console.log(">>>", [].isType([]));
+console.log(">>>", [1, 2, 3].isType([Number]));
+console.log(">>>", [1, 2, "x"].isType([Number]));
+console.log(">>>", T("foo", T(10, "bar"), [1, 2, 3]).isType(T(String, T(Number, String), [Number])));

@@ -72,7 +72,7 @@ module.exports = {
 // Tests
 //
 
-var _addBook = define([{title: String}, {description: String, $: "Untitled"}], function _addBook(args) {
+var _addBook = define([{title: String}, {description: String, $: "Untitled"}], function(args) {
   console.log(args);
 });
 
