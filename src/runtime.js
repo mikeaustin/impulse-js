@@ -3,6 +3,7 @@
 var Tuple = require("./runtime/tuple.js");
 var Extension = require("./runtime/extension.js");
 var Parameters = require("./runtime/parameters.js");
+var Module = require("./runtime/module.js");
 
 var Extensions = require("./library/extensions.js");
 

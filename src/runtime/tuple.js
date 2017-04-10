@@ -92,25 +92,25 @@ module.exports = {
 // Tests
 //
 
-var L = List.of;
-var T = Tuple.of;
-var R = function(start, end, step) {
-  return Range(start, end + 1, step);
-}
-
-if (boolCheck(2 > 1)) {
-  console.log("here");
-}
-
-console.log("=====");
-
-console.log(T(1, 2).concat(T(3, 4)));
-console.log(T([1, 2], [3, 4]).map((a, b) => a + b));
-console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
-
-console.log(">>>", T().isType(T()));
-console.log(">>>", T("foo", 5).isType(T(String, Number)));
-console.log(">>>", [].isType([]));
-console.log(">>>", [1, 2, 3].isType([Number]));
-console.log(">>>", [1, 2, "x"].isType([Number]));
-console.log(">>>", T("foo", T(10, "bar"), [1, 2, 3]).isType(T(String, T(Number, String), [Number])));
+//var L = List.of;
+//var T = Tuple.of;
+//var R = function(start, end, step) {
+//  return Range(start, end + 1, step);
+//}
+//
+//if (boolCheck(2 > 1)) {
+//  console.log("here");
+//}
+//
+//console.log("=====");
+//
+//console.log(T(1, 2).concat(T(3, 4)));
+//console.log(T([1, 2], [3, 4]).map((a, b) => a + b));
+//console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
+//
+//console.log(">>>", T().isType(T()));
+//console.log(">>>", T("foo", 5).isType(T(String, Number)));
+//console.log(">>>", [].isType([]));
+//console.log(">>>", [1, 2, 3].isType([Number]));
+//console.log(">>>", [1, 2, "x"].isType([Number]));
+//console.log(">>>", T("foo", T(10, "bar"), [1, 2, 3]).isType(T(String, T(Number, String), [Number])));

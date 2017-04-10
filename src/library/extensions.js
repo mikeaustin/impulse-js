@@ -62,7 +62,7 @@ var _capitalize = Impulse.extend(String, _capitalize, function() {
   return this[0].toUpperCase() + this.slice(1);
 });
 
-console.log(_capitalize.apply("foo"));
+console.log(_capitalize.apply("xoo"));
 
 module.exports = {
   _toString: _toString

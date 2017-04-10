@@ -1,5 +1,7 @@
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
+var getPrototypeOf = Object.getPrototypeOf;
+
 //
 // class Extension
 //
@@ -10,6 +12,7 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var Extension = function Extension(parent) {
   this.parent  = parent || null;
   this.methods = Immutable.Map();
+  //this.traits  = Immutable.Map();
 };
 
 // Add a new extention method, passing the type of object and the function
@@ -20,15 +23,23 @@ Extension.prototype.add = function(type, func) {
   return this;
 }
 
-// Call an extension method, passing in the "this" object and the arguments
-
-Extension.prototype.apply = function(_this, args) {
-  if (_this === null || _this === undefined) {
-    return _this;
+Extension.prototype.construct = function(_this, args) {
+  var constructor = this.lookup(_this);
+  
+  function Constructor() {
+    return constructor.apply(this, args);
   }
+  
+  Constructor.prototype = constructor.prototype;
+  
+  var instance = new Constructor();
+  
+  instance.constructor = constructor;
+  
+  return instance;
+}
 
-  var getPrototypeOf = Object.getPrototypeOf;
-
+Extension.prototype.lookup = function(_this) {
   // Traverse the lexical scope from innermost to outermost
   
   for (var scope = this; scope != null; scope = scope.parent) {
@@ -39,12 +50,37 @@ Extension.prototype.apply = function(_this, args) {
       var method = scope.methods.get(proto);
  
       if (method !== undefined) {
-        return method.apply(_this, args);
+        return method;
       }
     }
   }
+}
 
-  return "error";
+// Call an extension method, passing in the "this" object and the arguments
+
+Extension.prototype.apply = function(_this, args) {
+  if (_this === null || _this === undefined) {
+    return _this;
+  }
+
+  return this.lookup(_this).apply(_this, args);
+  
+//  // Traverse the lexical scope from innermost to outermost
+//  
+//  for (var scope = this; scope != null; scope = scope.parent) {
+//    // Traverse the inheritance hierarchy of _this,
+//    // look for a match and call the appropriate function
+//    
+//    for (var proto = _this; proto != null; proto = getPrototypeOf(proto)) {
+//      var method = scope.methods.get(proto);
+// 
+//      if (method !== undefined) {
+//        return method.apply(_this, args);
+//      }
+//    }
+//  }
+//
+//  return "error";
 }
 
 // Add an extention method to type. Parent is the lexically scoped outer

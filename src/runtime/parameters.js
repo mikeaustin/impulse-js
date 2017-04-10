@@ -59,8 +59,9 @@ function parameters(parameters, _arguments) {
   return args;
 }
 
-function parameters(parameters, _arguments, func) {
+function applyParameters(parameters, _arguments, func) {
   var args = [], i = 0;
+  var _arguments = _arguments || [];
 
   // Positional arguments
 
@@ -145,15 +146,20 @@ module.exports = {
 //  console.log(error);
 //}
 
-String.parameters = [{beginIndex: Number}, {endIndex: Number, $: undefined}];
+Function.prototype._apply = Function.prototype.apply;
+Function.prototype.apply = function(thisArg, argsArray) {
+  if (this.parameters) {
+    return this._apply(thisArg, applyParameters(this.parameters, argsArray, this));
+  } else {
+    return this._apply(thisArg, argsArray);
+  }
+}
 
-console.log(String.prototype.slice.apply("foo", parameters(String.parameters, [1], String.prototype.slice)));
+String.prototype.slice.parameters = [{beginIndex: Number}, {endIndex: Number, $: undefined}];
 
-/*
+var foo = "foo";
 
-String.typeEquals(String)
-String.typeEquals(tuple)
-
-T("foo").isType(T(String))
-
-*/
+console.log(foo.slice.apply("foo", [1]));
+console.log(foo.slice.apply("foo", [{beginIndex: 1}]));
+console.log(foo.slice.apply("foo", [0, {endIndex: 1}]));
+console.log(foo.slice.apply("foo", [{beginIndex: 0, endIndex: 1}]));
