@@ -6,7 +6,6 @@ var extend = require("../runtime/extension.js").extend;
 var Iterable = {
   map: function(iterate) {
     return function(func) {
-    console.log("here", iterate.apply(this).moveNext());
       var array = [];
     
       var iter = iterate.apply(this);
@@ -20,28 +19,6 @@ var Iterable = {
   }
 }
 
-//Array.Iterator = function Iterator(array) {
-//  this.array = array;
-//  this.index = -1;
-//}
-//
-//Array.Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
-//Array.Iterator.prototype.value = function() { return this.array[this.index]; }
-//
-//Array._traits = new Map();
-//Array._traits.set(Iterable, { });
-//
-//Array._traits.get(Iterable).iterator = function() {
-//  return new Array.Iterator(this);
-//}
-//
-//var array = [1, 2, 3];
-//var iter = array.constructor._traits.get(Iterable).iterator.apply(array);
-//
-//while (iter.moveNext()) {
-//  console.log("iter", iter.value());
-//}
-
 
 Iterator = function Iterator(array) {
   this.array = array;
@@ -51,26 +28,13 @@ Iterator = function Iterator(array) {
 Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
 Iterator.prototype.value = function() { return this.array[this.index]; }
 
-var array = [1, 2, 3];
-//array._traits = new Map([[Iterable, { iterator: () => new Iterator(array) }]]);
-//
-//var classes = new Map([[Array,
-//  new Map([[Iterable, { iterator: () => new Iterator(array) }]])
-//]]);
-//
-//var iter = classes.get(Array).get(Iterable).iterator();
 
+var array = [1, 2, 3];
 
 var _Iterator = extend(Array, _Iterator, Iterator);
 
-var iter = _Iterator.construct(Array.prototype, [array]);
-while (iter.moveNext()) {
-  console.log("iter:", iter.value());
-}
-
 var _iterate = extend(Array, _iterate, function() {
-  //return _Iterator.construct(Array.prototype, this);
-  return new Iterator(this);
+  return _Iterator.construct(Array.prototype, [this]);
 });
 
 var _map = extend(Array, _map, Iterable.map(_iterate));
@@ -89,8 +53,8 @@ trait Iterable {
   
   function map(func) {
     var array = [];
-    var iter = this._traits.get(Iterable).iterator(); // How to get traits?
     
+    var iter = this._traits.get(Iterable).iterator();
     while (iter.moveNext()) {
       array.push(iter.value());
     }
@@ -99,7 +63,7 @@ trait Iterable {
   }
 }
 
-extend Array implements Iterable { // Where to store Iterable information?
+extend Array implements Iterable {
   class Iterator() {
     function moveNext() {
       this.index = this.index + 1;
@@ -115,10 +79,6 @@ extend Array implements Iterable { // Where to store Iterable information?
   }
 }
 
-Array.Iterator
-
-_Iterator = extend(Array, _Iterator, new function(array) {
-}
 
 Value : Type
 
