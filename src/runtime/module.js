@@ -20,18 +20,19 @@ var Iterable = {
 }
 
 
-Iterator = function Iterator(array) {
-  this.array = array;
-  this.index = -1;
-}
-
-Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
-Iterator.prototype.value = function() { return this.array[this.index]; }
-
-
 var array = [1, 2, 3];
 
-var _Iterator = extend(Array, _Iterator, Iterator);
+var _Iterator = extend(Array, _Iterator, (function() {
+  var Iterator = function Iterator(array) {
+    this.array = array;
+    this.index = -1;
+  }
+
+  Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
+  Iterator.prototype.value = function() { return this.array[this.index]; }
+  
+  return Iterator;
+})());
 
 var _iterate = extend(Array, _iterate, function() {
   return _Iterator.construct(Array.prototype, [this]);
@@ -49,9 +50,7 @@ Add traits to constructor or instanced objects?
 
 
 trait Iterable {
-  function iterator();
-  
-  function map(func) {
+  function map(iterator)(func) {
     var array = [];
     
     var iter = this._traits.get(Iterable).iterator();
