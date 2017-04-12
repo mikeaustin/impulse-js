@@ -3,6 +3,12 @@
 var extend = require("../runtime/extension.js").extend;
 
 
+
+
+//
+// Tests
+//
+
 Number.prototype.add = function(that) { return this + that; };
 
 var x = 2;

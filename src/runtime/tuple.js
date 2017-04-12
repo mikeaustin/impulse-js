@@ -1,3 +1,7 @@
+//
+// tuple.js
+//
+
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
 var List = Immutable.List;
@@ -27,19 +31,39 @@ Tuple.of = function() {
 
 //
 
-Number.prototype.isType = String.prototype.isType = Array.prototype.isType = function(that) {
-  return getPrototypeOf(this) === that.prototype;
+Boolean.assertType = String.assertType = function(_this, that) {
+  if (!(new Object(_this) instanceof that)) {
+    throw Error("Type assertion; Expected a '" + _this.constructor.name + "' but found a '" + that.name + "'");
+  }
+  
+  return _this;
 }
+
+Number.isType = String.isType = Array.isType = function(_this, that) {
+  return getPrototypeOf(_this) === that.prototype;
+}
+
+Number.isType = function(_this, that) {
+  if (that.prototype === Int.prototype) {
+    return typeof _this === 'number' && isFinite(_this) && Math.floor(_this) === _this;
+  }
+  
+  return getPrototypeOf(_this) === that.prototype;
+}
+
+function Int(value) { }
+
+Int.prototype = new Number();
 
 //
 
-Array.prototype.isType = function(that) {
+Array.isType = function(_this, that) {
   if (getPrototypeOf(that) !== Array.prototype) {
     return false;
   }
   
-  for (var i = 0; i < this.length; i++) {
-    if (!this[i].isType(that[0])) {
+  for (var i = 0; i < _this.length; i++) {
+    if (!_this[i].constructor.isType(_this[i], that[0])) {
       return false;
     }
   }
@@ -49,14 +73,14 @@ Array.prototype.isType = function(that) {
 
 //
 
-Tuple.prototype.isType = function(that) {
+Tuple.isType = function(_this, that) {
   if (getPrototypeOf(that) !== Tuple.prototype ||
-      this.values.length != that.values.length) {
+      _this.values.length != that.values.length) {
     return false;
   }
 
-  for (var i = 0; i < this.values.length; i++) {
-    if (!this.values[i].isType(that.values[i])) {
+  for (var i = 0; i < _this.values.length; i++) {
+    if (!_this.values[i].constructor.isType(_this.values[i], that.values[i])) {
       return false;
     }
   }
@@ -114,3 +138,10 @@ module.exports = {
 //console.log(">>>", [1, 2, 3].isType([Number]));
 //console.log(">>>", [1, 2, "x"].isType([Number]));
 //console.log(">>>", T("foo", T(10, "bar"), [1, 2, 3]).isType(T(String, T(Number, String), [Number])));
+
+console.log("assertType: ", true.constructor.assertType(true, Boolean));
+//console.log("assertType: ", "foo".constructor.assertType("foo", Boolean));
+
+console.log("ppp", (10).constructor.isType(10, Int));
+console.log("ppp", (10).constructor.isType(10, Number));
+console.log("ppp", (Math.PI).constructor.isType(Math.PI, Int));

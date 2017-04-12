@@ -91,4 +91,20 @@ N : N	Record					(1, "foo")	== (Number, String)
 1 : 0	Untyped Scalar
 N : 1	Top						1, "foo"	== Object
 
+
+
+
+
+import { symbol } from "core-js/es6/symbol";
+
+import * from core-js.fn.object.assign;
+
+
+eval("var symbol = Symbol.symbol;");
+
+
+import foo, bar from library;
+
+import * from library.module;
+
 */
