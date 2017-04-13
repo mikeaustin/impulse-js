@@ -1,5 +1,12 @@
 "use strict";
 
+global.test = function(expression) {
+  var result = global.eval(expression);
+
+  console.log((result ? "\x1B[32mpass\x1B[0m" : "fail") + "\t" + expression);
+}
+
+var Types = require("./runtime/types.js");
 var Tuple = require("./runtime/tuple.js");
 var Union = require("./runtime/union.js");
 var Extension = require("./runtime/extension.js");
@@ -29,11 +36,10 @@ var _toString = Extensions._toString;
 var U = "undefined";
 var T = Impulse.Tuple.of;
 
-console.log(_toString.apply({ foo: [1, 2, 3] }));
-console.log(_toString.apply(_toString));
+global._toString = _toString;
 
-console.log(_toString.apply(10));
-console.log((10).toString());
+test(' _toString.apply({ foo: [1, 2, 3] }) == "Object { foo: [1, 2, 3] }" ');
+//console.log(_toString.apply(_toString));
 
 var _toString = Impulse.extend(Number, _toString, function() {
   return "here";
@@ -42,4 +48,6 @@ var _toString = Impulse.extend(Number, _toString, function() {
 
 var foo = 10;
 
-console.log((foo.toString || _toString).apply(foo));
+global.foo = foo;
+
+test(' (foo.toString || _toString).apply(foo) == "10" ');

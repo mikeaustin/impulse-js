@@ -16,5 +16,8 @@ var x = 2;
 
 var _mul = extend(Number, _mul, function(that) { return this * that; });
 
-console.log("aaa", (x.add || _add).apply(x, [3]));
-console.log("aaa", (x.mul || _mul).apply(x, [3]));
+global.x = x;
+global._mul = _mul;
+
+test(' (x.add || _add).apply(x, [3]) == 5 ');
+test(' (x.mul || _mul).apply(x, [3]) == 6 ');

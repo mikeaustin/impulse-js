@@ -17,14 +17,13 @@ Union.of = function() {
 
 //
 
-Union.isType = function(_this, that) {
+Union.prototype.isType = function(that) {
   if (getPrototypeOf(that) !== Union.prototype) {
     return false;
   }
 
-  for (var i = 0; i < _this.values.length; i++) {
-  console.log("!!!", _this.values[i]);
-    if (_this.values[i].constructor.isType(_this.values[i], that.values[i])) {
+  for (var i = 0; i < this.values.length; i++) {
+    if (this.values[i].isType(that.values[i])) {
       return true;
     }
   }
@@ -45,12 +44,12 @@ Option.of = function(value) {
   return new Option(value);
 };
 
-Option.isType = function(_this, that) {
+Option.prototype.isType = function(that) {
   if (getPrototypeOf(that) !== Option.prototype) {
     return false;
   }
 
-  if (_this.value && _this.value.constructor.isType(_this.value, that.value)) {
+  if (this.value && this.value.isType(that.value)) {
     return true;
   }
   
@@ -67,6 +66,9 @@ module.exports = {
 // Tests
 //
 
-console.log(Union.of("Foo").constructor.isType(Union.of("Foo"), Union.of(String, Number)));
-console.log(Option.of("Foo").constructor.isType(Option.of("Foo"), Option.of(String)));
-console.log(Option.of().constructor.isType(Option.of(), Option.of(String)));
+global.Union = Union;
+global.Option = Option;
+
+test(' Union.of("Foo").isType(Union.of(String, Number)) == true ');
+test(' Option.of("Foo").isType(Option.of(String)) == true ');
+test(' Option.of().isType(Option.of(String)) == false ');

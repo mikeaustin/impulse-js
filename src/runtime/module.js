@@ -40,7 +40,10 @@ var _iterate = extend(Array, _iterate, function() {
 
 var _map = extend(Array, _map, Iterable.map(_iterate));
 
-console.log(">>>", _map.apply(array, [n => n * n]));
+global.array = array;
+global._map = _map;
+
+test(' _map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
 
 /*
 
@@ -90,9 +93,6 @@ N : N	Record					(1, "foo")	== (Number, String)
 
 1 : 0	Untyped Scalar
 N : 1	Top						1, "foo"	== Object
-
-
-
 
 
 import { symbol } from "core-js/es6/symbol";

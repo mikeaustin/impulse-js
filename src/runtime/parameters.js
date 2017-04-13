@@ -14,51 +14,6 @@ function getParameterType(parameter) {
   }
 }
 
-//function parameters(parameters, _arguments) {
-//  var args = { };
-//  
-//  for (var i = 0; i < _arguments.length; i++) {
-//    var isKeywordArgument = Object.getPrototypeOf(_arguments[i]) === Object.prototype;
-//  
-//    if (!isKeywordArgument) {
-//      var parameterName = getParameterName(parameters[i]);
-//      
-//      args[parameterName] = _arguments[i];
-//    } else {
-//      var keywordArguments = _arguments[i];
-//      
-//      for (var parameterName in keywordArguments) {
-//        args[parameterName] = keywordArguments[parameterName];
-//      }
-//    }
-//  }
-//
-//  for (var j = 0; j < parameters.length; j++) {
-//    var parameterName = getParameterName(parameters[j]);
-//    var parameterType = getParameterType(parameters[j]);
-//
-//	if (args[parameterName] === undefined) {
-//      var defaultValue = parameters[j]["$"];
-//      
-//      if (defaultValue !== undefined) {
-//        args[parameterName] = defaultValue;
-//      } else {
-//        throw Error("Missing parameter: '" + parameterName + "'");
-//      }
-//    }
-//    
-//    var argumentType = Object.getPrototypeOf(args[parameterName]);
-//
-//    if (parameterType != null && !args[parameterName].isType(parameterType)) {
-//      throw Error("Type mismatch for parameter '" + parameterName +
-//                  "' - Expected a " + parameterType.name +
-//                  " but found a " + argumentType.constructor.name + ".");
-//    }
-//  }
-//  
-//  return args;
-//}
-
 function applyParameters(parameters, _arguments, func) {
   var args = [], i = 0;
   var _arguments = _arguments || [];
@@ -103,7 +58,7 @@ function applyParameters(parameters, _arguments, func) {
     
     var argumentType = getPrototypeOf(args[i]);
 
-    if (parameterType != null && !args[i].constructor.isType(args[i], parameterType)) {
+    if (parameterType != null && !args[i].isType(parameterType)) {
       throw Error("Type mismatch for parameter '" + parameterName + "' in call to function '" + func.name + "'" +
                   "; Expected a " + parameterType.name + " but found a " + argumentType.constructor.name + ".");
     }
@@ -157,9 +112,9 @@ Function.prototype.apply = function(thisArg, argsArray) {
 
 String.prototype.slice.parameters = [{beginIndex: Number}, {endIndex: Number, $: undefined}];
 
-var foo = "foo";
+global.foo = "foo";
 
-console.log(foo.slice.apply("foo", [1]));
-console.log(foo.slice.apply("foo", [{beginIndex: 1}]));
-console.log(foo.slice.apply("foo", [0, {endIndex: 1}]));
-console.log(foo.slice.apply("foo", [{beginIndex: 0, endIndex: 1}]));
+test(' foo.slice.apply(foo, [1]) == "oo" ');
+test(' foo.slice.apply(foo, [{beginIndex: 1}]) == "oo" ');
+test(' foo.slice.apply(foo, [0, {endIndex: 1}]) == "f" ');
+test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) ');
