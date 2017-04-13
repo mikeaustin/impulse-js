@@ -24,14 +24,28 @@ Tuple.of = function() {
 
 //
 
-Tuple.prototype.isType = function(type) {
-  if (Object.getPrototypeOf(type) !== Tuple.prototype ||
-      this.values.length !== type.values.length) {
+// Tuple.prototype.isType = function(type) {
+//   if (Object.getPrototypeOf(type) !== Tuple.prototype ||
+//       this.values.length !== type.values.length) {
+//     return false;
+//   }
+
+//   for (var i = 0; i < this.values.length && i < type.values.length; i++) {
+//     if (!this.values[i].isType(type.values[i])) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// }
+
+Tuple.prototype.isTypeOf = function(that) {
+  if (!Object.getPrototypeOf(this).isPrototypeOf(that)) {
     return false;
   }
 
-  for (var i = 0; i < this.values.length && i < type.values.length; i++) {
-    if (!this.values[i].isType(type.values[i])) {
+  for (var i = 0; i < this.values.length && i < that.values.length; i++) {
+    if (!this.values[i].isTypeOf(that.values[i])) {
       return false;
     }
   }
@@ -84,6 +98,8 @@ module.exports = {
 // Tests
 //
 
+console.log("\ntuple.js\n");
+
 global.L = List.of;
 global.T = Tuple.of;
 global.R = function(start, end, step) {
@@ -93,9 +109,9 @@ global.R = function(start, end, step) {
 test(' T(1, 2).concat(T(3, 4)).isEqual(T(1, 2, 3, 4)) ');
 //test(' (global.T([1, 2], [3, 4]).map((a, b) => a + b)).isEqual([4, 6]) ');
 //console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
-test(' T().isType(T()) == true');
-test(' T("foo", 5).isType(T(String, Number)) ');
-test(' [].isType([]) ');
-test(' [1, 2, 3].isType([Number]) ');
-test(' [1, 2, "x"].isType([Number]) == false');
-test(' T("foo", T(10, "bar"), [1, 2, 3]).isType(T(String, T(Number, String), [Number])) == true');
+test(' T().isTypeOf(T()) == true');
+test(' T(String, Number).isTypeOf(T("foo", 5)) == true');
+test(' [].isTypeOf([]) ');
+test(' [Number].isTypeOf([1, 2, 3]) == true ');
+test(' [Number].isTypeOf([1, 2, "x"]) == false');
+test(' T(String, T(Number, String), [Number]).isTypeOf(T("foo", T(10, "bar"), [1, 2, 3])) == true');

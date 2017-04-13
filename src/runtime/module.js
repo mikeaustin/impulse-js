@@ -43,6 +43,12 @@ var _map = extend(Array, _map, Iterable.map(_iterate));
 global.array = array;
 global._map = _map;
 
+//
+// Tests
+//
+
+console.log("\nmodule.js\n");
+
 test(' _map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
 
 /*

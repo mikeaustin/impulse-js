@@ -1,9 +1,26 @@
 "use strict";
 
-global.test = function(expression) {
-  var result = global.eval(expression);
+var passed = 0;
+var failed = 0;
 
-  console.log((result ? "\x1B[32mpass\x1B[0m" : "fail") + "\t" + expression);
+console.log("Impulse-JS Tests");
+
+global.test = function(expression, onException) {
+  var result;
+
+  try {
+    result = global.eval(expression);
+  } catch (e) {
+    if (onException) {
+      result = onException(e);
+    } else {
+      console.log(e);
+    }
+  }
+
+  result ? ++passed : ++failed;
+
+  console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
 }
 
 var Types = require("./runtime/types.js");
@@ -50,3 +67,5 @@ var foo = 10;
 global.foo = foo;
 
 test(' (foo.toString || _toString).apply(foo) == "10" ');
+
+console.log("\n" + passed + " tests passed, " + failed + " tests failed.\n");

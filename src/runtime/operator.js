@@ -9,6 +9,8 @@ var extend = require("../runtime/extension.js").extend;
 // Tests
 //
 
+console.log("\noperator.js\n");
+
 Number.prototype.add = function(that) { return this + that; };
 
 var x = 2;

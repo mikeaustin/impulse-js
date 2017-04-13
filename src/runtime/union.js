@@ -31,6 +31,21 @@ Union.prototype.isType = function(type) {
   return false;
 };
 
+Union.prototype.isTypeOf = function(that) {
+  for (var i = 0; i < this.values.length; i++) {
+    if (this.values[i].isTypeOf(that)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Used to wrap arguments so match can work
+
+Union.prototype.wrapValue = function(value) {
+  return Union.of(value);
+}
 
 //
 // class Option
@@ -66,9 +81,12 @@ module.exports = {
 // Tests
 //
 
+console.log("\nunion.js\n");
+
 global.Union = Union;
 global.Option = Option;
 
-test(' Union.of("Foo").isType(Union.of(String, Number)) == true ');
-test(' Option.of("Foo").isType(Option.of(String)) == true ');
-test(' Option.of().isType(Option.of(String)) == false ');
+test(' Union.of(Number, String).isTypeOf(10) ');
+test(' Union.of(Number, String).isTypeOf("foo") ');
+test(' Union.of(Number, String).isTypeOf(true) == false ')
+test(' Union.of(Int, String).isTypeOf(1.5) == false ')

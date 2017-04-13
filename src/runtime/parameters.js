@@ -58,7 +58,8 @@ function applyParameters(parameters, _arguments, func) {
     
     var argumentType = getPrototypeOf(args[i]);
 
-    if (parameterType != null && !args[i].isType(parameterType)) {
+    //if (parameterType != null && !args[i].isType(parameterType)) {
+    if (parameterType != null && !parameterType.isTypeOf(args[i])) {
       throw Error("Type mismatch for parameter '" + parameterName + "' in call to function '" + func.name + "'" +
                   "; Expected a " + parameterType.name + " but found a " + argumentType.constructor.name + ".");
     }
@@ -114,6 +115,12 @@ Function.prototype.apply = function(thisArg, argsArray) {
   }
 }
 
+//
+// Tests
+//
+
+console.log("\nparameters.js\n");
+
 String.prototype.slice.parameters = [{beginIndex: Number}, {endIndex: Number, $: undefined}];
 
 global.foo = "foo";
@@ -124,29 +131,35 @@ test(' foo.slice.apply(foo, [0, {endIndex: 1}]) == "f" ');
 test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) ');
 
 
-Union.prototype.match = function() {
+Boolean.prototype.matchType = Number.prototype.matchType = String.prototype.matchType = function() {
   for (var i = 0; i < arguments.length; i++) {
     var parameterType = getParameterType(arguments[i].parameters[0]);
 
-    if (this.values[0].isType(parameterType)) {
-      return arguments[i](this.values[0]);
+    if (parameterType.isTypeOf(this)) {
+      return arguments[i](this);
     }
   }
+
+  throw Error("No match");
 }
 
 var numberOrString = define([{foo: Union.of(Number, String)}], function(foo) {
-  return "Argument " + foo.match(
-    define([{foo: Number}], function(foo) { return "is a Number"; }),
-    define([{foo: String}], function(foo) { return "is a String"; })
+  return foo.matchType(
+    define([{foo: Number}], function(foo) { return "Number"; }),
+    define([{foo: String}], function(foo) { return "String"; })
   );
 });
 
-console.log(numberOrString(Union.of(10)));
-console.log(numberOrString(Union.of("10")));
+global.numberOrString = numberOrString;
+
+test(' numberOrString(10) == "Number" ');
+test(' numberOrString("10") == "String" ');
 
 
-var array = define([{foo: [Number]}], function(foo) {
-  return "Yup, it's an array of Numbers";
+var testArray = define([{foo: [Number]}], function(foo) {
+  return true;
 });
 
-console.log(array([1, 2, 3]));
+global.testArray = testArray;
+
+test(' testArray([1, 2, 3]) == true ');
