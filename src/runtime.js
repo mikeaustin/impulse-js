@@ -33,7 +33,6 @@ var _toString = Extensions._toString;
 // Tests
 //
 
-var U = "undefined";
 var T = Impulse.Tuple.of;
 
 global._toString = _toString;

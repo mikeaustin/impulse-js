@@ -17,13 +17,13 @@ Union.of = function() {
 
 //
 
-Union.prototype.isType = function(that) {
-  if (getPrototypeOf(that) !== Union.prototype) {
+Union.prototype.isType = function(type) {
+  if (getPrototypeOf(type) !== Union.prototype) {
     return false;
   }
 
-  for (var i = 0; i < this.values.length; i++) {
-    if (this.values[i].isType(that.values[i])) {
+  for (var i = 0; i < type.values.length; i++) {
+    if (this.values[0].isType(type.values[i])) {
       return true;
     }
   }

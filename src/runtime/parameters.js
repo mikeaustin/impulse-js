@@ -68,9 +68,13 @@ function applyParameters(parameters, _arguments, func) {
 }
 
 function define(params, func) {
-  return function() {
-    return func.apply(null, parameters(params, arguments, func));
+  var closure = function() {
+    return func.apply(null, applyParameters(params, arguments, func));
   }
+
+  closure.parameters = params;
+
+  return closure;
 }
 
 module.exports = {
@@ -118,3 +122,31 @@ test(' foo.slice.apply(foo, [1]) == "oo" ');
 test(' foo.slice.apply(foo, [{beginIndex: 1}]) == "oo" ');
 test(' foo.slice.apply(foo, [0, {endIndex: 1}]) == "f" ');
 test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) ');
+
+
+Union.prototype.match = function() {
+  for (var i = 0; i < arguments.length; i++) {
+    var parameterType = getParameterType(arguments[i].parameters[0]);
+
+    if (this.values[0].isType(parameterType)) {
+      return arguments[i](this.values[0]);
+    }
+  }
+}
+
+var numberOrString = define([{foo: Union.of(Number, String)}], function(foo) {
+  return "Argument " + foo.match(
+    define([{foo: Number}], function(foo) { return "is a Number"; }),
+    define([{foo: String}], function(foo) { return "is a String"; })
+  );
+});
+
+console.log(numberOrString(Union.of(10)));
+console.log(numberOrString(Union.of("10")));
+
+
+var array = define([{foo: [Number]}], function(foo) {
+  return "Yup, it's an array of Numbers";
+});
+
+console.log(array([1, 2, 3]));
