@@ -12,7 +12,6 @@ var getPrototypeOf = Object.getPrototypeOf;
 var Extension = function Extension(parent) {
   this.parent  = parent || null;
   this.methods = Immutable.Map();
-  //this.traits  = Immutable.Map();
 };
 
 // Add a new extention method, passing the type of object and the function
@@ -64,23 +63,6 @@ Extension.prototype.apply = function(_this, args) {
   }
 
   return this.lookup(_this).apply(_this, args);
-  
-//  // Traverse the lexical scope from innermost to outermost
-//  
-//  for (var scope = this; scope != null; scope = scope.parent) {
-//    // Traverse the inheritance hierarchy of _this,
-//    // look for a match and call the appropriate function
-//    
-//    for (var proto = _this; proto != null; proto = getPrototypeOf(proto)) {
-//      var method = scope.methods.get(proto);
-// 
-//      if (method !== undefined) {
-//        return method.apply(_this, args);
-//      }
-//    }
-//  }
-//
-//  return "error";
 }
 
 // Add an extention method to type. Parent is the lexically scoped outer
@@ -99,3 +81,20 @@ function extend(type, parent, func) {
 module.exports = {
   extend: extend
 }
+
+
+//
+// Tests
+//
+
+console.log("\nextension.js\n");
+
+var _capitalize = extend(String, _capitalize, function() {
+  return this[0].toUpperCase() + this.slice(1);
+});
+
+global.foo = "foo";
+global._capitalize = _capitalize;
+
+test(' (foo.capitalize || _capitalize).apply(foo) == "Foo" ');
+test(' (foo.toUpperCase || _toUppderCase).apply(foo) == "FOO" ');

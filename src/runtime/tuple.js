@@ -107,11 +107,8 @@ global.R = function(start, end, step) {
 }
 
 test(' T(1, 2).concat(T(3, 4)).isEqual(T(1, 2, 3, 4)) ');
-//test(' (global.T([1, 2], [3, 4]).map((a, b) => a + b)).isEqual([4, 6]) ');
+//test(' (T([1, 2], [3, 4]).map((a, b) => a + b)).isEqual([4, 6]) ');
 //console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
 test(' T().isTypeOf(T()) == true');
 test(' T(String, Number).isTypeOf(T("foo", 5)) == true');
-test(' [].isTypeOf([]) ');
-test(' [Number].isTypeOf([1, 2, 3]) == true ');
-test(' [Number].isTypeOf([1, 2, "x"]) == false');
 test(' T(String, T(Number, String), [Number]).isTypeOf(T("foo", T(10, "bar"), [1, 2, 3])) == true');

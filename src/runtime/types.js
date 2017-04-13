@@ -102,10 +102,20 @@ Boolean.from = function(value) {
   throw TypeError("Can't convert " + value + " to Boolean");
 }
 
+//
+// Returns the argument converted to a Number, or returns the
+// argument itself if already a number. Throws a TypeError if
+// the argument can't be converted.
+//
+
 Number.from = function(value, radix) {
+  // Return value if primitive or new String()
+
   if (Number.isTypeOf(value)) {
     return value;
   }
+
+  // Return string value if it can be converted
 
   if (String.isTypeOf(value)) {
     var number = parseInt(value, radix);
@@ -114,6 +124,8 @@ Number.from = function(value, radix) {
       return number;
     }
   }
+  
+  // If it can't be converted, throw an exception
 
   throw TypeError("Can't convert " + value + " to Number");
 }
@@ -165,6 +177,7 @@ test(' Boolean.isTypeOf(true) == true ')
 
 console.log("");
 
+test(' [].isTypeOf([]) ');
 test(' [Number].isTypeOf([1, 2, 3]) == true ')
 test(' [String].isTypeOf(["foo", "bar"]) == true ')
 test(' [Number].isTypeOf([1, 2, "x"]) == false ')

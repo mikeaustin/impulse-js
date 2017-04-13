@@ -86,6 +86,7 @@ console.log("\nunion.js\n");
 global.Union = Union;
 global.Option = Option;
 
+test(' Union.of(Number).isTypeOf(10) ');
 test(' Union.of(Number, String).isTypeOf(10) ');
 test(' Union.of(Number, String).isTypeOf("foo") ');
 test(' Union.of(Number, String).isTypeOf(true) == false ')
