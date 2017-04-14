@@ -1,3 +1,5 @@
+"use strict";
+
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
 var extend = require("../runtime/extension.js").extend;

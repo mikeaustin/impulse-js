@@ -1,7 +1,5 @@
 "use strict";
 
-var getPrototypeOf = Object.getPrototypeOf;
-
 function getParameterName(parameter) {
   for (var parameterName in parameter) {
     if (parameterName !== "$") return parameterName;
@@ -95,38 +93,6 @@ module.exports = {
   define: define
 }
 
-
-//
-// Tests
-//
-
-//var _addBook = define([{title: String}, {description: String, $: "Untitled"}], function _addBook(title, description) {
-//  console.log(title, description);
-//});
-//
-//_addBook("Frankenstein", "A great humanity story");
-//_addBook("Frankenstein", {description: "A great humanity story"});
-//_addBook({title: "Frankenstein", description: "A great humanity story"});
-//_addBook("Frankenstein");
-//try {
-//  _addBook("Frankenstein", 5);
-//} catch(error) {
-//  console.log(error);
-//}
-//try {
-//  _addBook({description: "A great humanity story"});
-//} catch(error) {
-//  console.log(error);
-//}
-
-// Function.prototype._apply = Function.prototype.apply;
-// Function.prototype.apply = function(thisArg, argsArray) {
-//   if (this.parameters) {
-//     return this._apply(thisArg, applyParameters(this.parameters, argsArray, this));
-//   } else {
-//     return this._apply(thisArg, argsArray);
-//   }
-// }
 
 //
 // Tests

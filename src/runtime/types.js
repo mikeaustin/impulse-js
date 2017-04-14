@@ -1,6 +1,4 @@
-//
-// types.js
-//
+"use strict";
 
 global.Int = function Int() { }
 
@@ -9,6 +7,7 @@ global.Int.prototype.constructor = Int;
 
 global.Undefined = function Undefined() { }
 global.Undefined.isTypeOf = function(that) { return that === undefined; }
+
 
 Boolean.prototype.assertType = String.assertType = function(that) {
   if (!(this instanceof that)) {

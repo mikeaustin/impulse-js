@@ -1,3 +1,5 @@
+"use strict";
+
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
 var getPrototypeOf = Object.getPrototypeOf;
@@ -18,8 +20,6 @@ Union.of = function() {
 Union.prototype.from = function(that) {
   return new Union([that]);
 }
-
-//
 
 Union.prototype.isTypeOf = function(that) {
   if (that instanceof Union) {
@@ -51,11 +51,6 @@ Union.prototype.match = function() {
   throw Error("No match");
 }
 
-// Used to wrap arguments so match can work
-
-Union.prototype.wrapValue = function(value) {
-  return Union.of(value);
-}
 
 //
 // class Option

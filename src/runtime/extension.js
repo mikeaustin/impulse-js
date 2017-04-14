@@ -1,6 +1,7 @@
+"use strict";
+
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
-var getPrototypeOf = Object.getPrototypeOf;
 
 //
 // class Extension
@@ -22,6 +23,23 @@ Extension.prototype.add = function(type, func) {
   return this;
 }
 
+Extension.prototype.lookup = function(_this) {
+  // Traverse the lexical scope from innermost to outermost
+  
+  for (var scope = this; scope !== null; scope = scope.parent) {
+    // Traverse the inheritance hierarchy of _this,
+    // look for a match and call the appropriate function
+    
+    for (var proto = _this; proto !== null; proto = Object.getPrototypeOf(proto)) {
+      var method = scope.methods.get(proto);
+ 
+      if (method !== undefined) {
+        return method;
+      }
+    }
+  }
+}
+
 Extension.prototype.construct = function(_this, args) {
   var constructor = this.lookup(_this);
   
@@ -36,23 +54,6 @@ Extension.prototype.construct = function(_this, args) {
   instance.constructor = constructor;
   
   return instance;
-}
-
-Extension.prototype.lookup = function(_this) {
-  // Traverse the lexical scope from innermost to outermost
-  
-  for (var scope = this; scope !== null; scope = scope.parent) {
-    // Traverse the inheritance hierarchy of _this,
-    // look for a match and call the appropriate function
-    
-    for (var proto = _this; proto !== null; proto = getPrototypeOf(proto)) {
-      var method = scope.methods.get(proto);
- 
-      if (method !== undefined) {
-        return method;
-      }
-    }
-  }
 }
 
 // Call an extension method, passing in the "this" object and the arguments

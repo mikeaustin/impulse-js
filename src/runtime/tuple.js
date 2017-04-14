@@ -1,9 +1,5 @@
 "use strict";
 
-//
-// tuple.js
-//
-
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
 var List = Immutable.List;
@@ -73,6 +69,7 @@ Tuple.prototype.map = function(func) {
 
   return result;
 };
+
 
 module.exports = {
   Tuple: Tuple
