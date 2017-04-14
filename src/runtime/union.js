@@ -17,9 +17,9 @@ Union.of = function() {
   return new Union(arguments);
 };
 
-Union.prototype.from = function(that) {
-  return new Union([that]);
-}
+// Union.prototype.from = function(that) {
+//   return new Union([that]);
+// }
 
 Union.prototype.isTypeOf = function(that) {
   if (that instanceof Union) {
