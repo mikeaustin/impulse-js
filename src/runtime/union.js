@@ -15,23 +15,35 @@ Union.of = function() {
   return new Union(arguments);
 };
 
+Union.prototype.from = function(that) {
+  return new Union([that]);
+}
+
 //
 
-Union.prototype.isType = function(type) {
-  if (getPrototypeOf(type) !== Union.prototype) {
-    return false;
-  }
+// Union.prototype.isType = function(type) {
+//   if (getPrototypeOf(type) !== Union.prototype) {
+//     return false;
+//   }
 
-  for (var i = 0; i < type.values.length; i++) {
-    if (this.values[0].isType(type.values[i])) {
-      return true;
+//   for (var i = 0; i < type.values.length; i++) {
+//     if (this.values[0].isType(type.values[i])) {
+//       return true;
+//     }
+//   }
+
+//   return false;
+// };
+
+Union.prototype.isTypeOf = function(that) {
+  if (that instanceof Union) {
+    for (var i = 0; i < this.values.length; i++) {
+      if (this.values[i].isTypeOf(that.values[0])) {
+        return true;
+      }
     }
   }
 
-  return false;
-};
-
-Union.prototype.isTypeOf = function(that) {
   for (var i = 0; i < this.values.length; i++) {
     if (this.values[i].isTypeOf(that)) {
       return true;
@@ -39,6 +51,24 @@ Union.prototype.isTypeOf = function(that) {
   }
 
   return false;
+}
+
+function getParameterType(parameter) {
+  for (var parameterName in parameter) {
+    if (parameterName !== "$") return parameter[parameterName];
+  }
+}
+
+Union.prototype.match = function() {
+  for (var i = 0; i < arguments.length; i++) {
+    var parameterType = getParameterType(arguments[i].parameters[0]);
+
+    if (parameterType.isTypeOf(this.values[0])) {
+      return arguments[i](this.values[0]);
+    }
+  }
+
+  throw Error("No match");
 }
 
 // Used to wrap arguments so match can work

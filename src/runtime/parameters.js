@@ -14,6 +14,16 @@ function getParameterType(parameter) {
   }
 }
 
+function Parameters(signature) {
+  for (var i = 0; i < signature.length; i++) {
+    this[i] = {
+      name:    getParameterName(signature[i]),
+      type:    getParameterType(signature[i]),
+      default: signature[i].$
+    };
+  }
+}
+
 function applyParameters(parameters, _arguments, func) {
   var args = [], i = 0;
   var _arguments = _arguments || [];
@@ -21,7 +31,16 @@ function applyParameters(parameters, _arguments, func) {
   // Positional arguments
 
   while (i < _arguments.length && getPrototypeOf(_arguments[i]) !== Object.prototype) {
-    args.push(_arguments[i]);
+    //console.log(getParameterType(parameters[i]));
+
+    var parameterType = getParameterType(parameters[i]);
+    var argument = _arguments[i];
+
+    if (parameterType.from) {
+      argument = parameterType.from(_arguments[i]);
+    }
+
+    args.push(argument);
     
     i += 1;
   }
@@ -47,7 +66,7 @@ function applyParameters(parameters, _arguments, func) {
     i += 1;
   }
 
-  // Typechecking
+  // Runtime typechecking
 
   for (var i = 0; i < parameters.length; i++) {
     var parameterName = getParameterName(parameters[i]);
@@ -58,7 +77,6 @@ function applyParameters(parameters, _arguments, func) {
     
     var argumentType = getPrototypeOf(args[i]);
 
-    //if (parameterType != null && !args[i].isType(parameterType)) {
     if (parameterType != null && !parameterType.isTypeOf(args[i])) {
       throw Error("Type mismatch for parameter '" + parameterName + "' in call to function '" + func.name + "'" +
                   "; Expected a " + parameterType.name + " but found a " + argumentType.constructor.name + ".");
@@ -106,6 +124,10 @@ module.exports = {
 //  console.log(error);
 //}
 
+var params = new Parameters([{foo: Int, $: 1}]);
+console.log(params[0]);
+
+
 Function.prototype._apply = Function.prototype.apply;
 Function.prototype.apply = function(thisArg, argsArray) {
   if (this.parameters) {
@@ -131,20 +153,8 @@ test(' foo.slice.apply(foo, [0, {endIndex: 1}]) == "f" ');
 test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) ');
 
 
-Boolean.prototype.matchType = Number.prototype.matchType = String.prototype.matchType = function() {
-  for (var i = 0; i < arguments.length; i++) {
-    var parameterType = getParameterType(arguments[i].parameters[0]);
-
-    if (parameterType.isTypeOf(this)) {
-      return arguments[i](this);
-    }
-  }
-
-  throw Error("No match");
-}
-
 var numberOrString = define([{foo: Union.of(Number, String)}], function(foo) {
-  return foo.matchType(
+  return foo.match(
     define([{foo: Number}], function(foo) { return "Number"; }),
     define([{foo: String}], function(foo) { return "String"; })
   );
