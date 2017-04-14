@@ -7,6 +7,8 @@ global.Int = function Int() { }
 global.Int.prototype = new Number();
 global.Int.prototype.constructor = Int;
 
+global.Undefined = function Undefined() { }
+global.Undefined.isTypeOf = function(that) { return that === undefined; }
 
 Boolean.prototype.assertType = String.assertType = function(that) {
   if (!(this instanceof that)) {
@@ -124,7 +126,7 @@ Number.from = function(value, radix) {
       return number;
     }
   }
-  
+
   // If it can't be converted, throw an exception
 
   throw TypeError("Can't convert " + value + " to Number");
