@@ -21,20 +21,6 @@ Union.prototype.from = function(that) {
 
 //
 
-// Union.prototype.isType = function(type) {
-//   if (getPrototypeOf(type) !== Union.prototype) {
-//     return false;
-//   }
-
-//   for (var i = 0; i < type.values.length; i++) {
-//     if (this.values[0].isType(type.values[i])) {
-//       return true;
-//     }
-//   }
-
-//   return false;
-// };
-
 Union.prototype.isTypeOf = function(that) {
   if (that instanceof Union) {
     for (var i = 0; i < this.values.length; i++) {
@@ -53,15 +39,9 @@ Union.prototype.isTypeOf = function(that) {
   return false;
 }
 
-function getParameterType(parameter) {
-  for (var parameterName in parameter) {
-    if (parameterName !== "$") return parameter[parameterName];
-  }
-}
-
 Union.prototype.match = function() {
   for (var i = 0; i < arguments.length; i++) {
-    var parameterType = getParameterType(arguments[i].parameters[0]);
+    var parameterType = arguments[i].parameters[0].type;
 
     if (parameterType.isTypeOf(this.values[0])) {
       return arguments[i](this.values[0]);
@@ -116,8 +96,8 @@ console.log("\nunion.js\n");
 global.Union = Union;
 global.Option = Option;
 
-test(' Union.of(Number).isTypeOf(10) ');
-test(' Union.of(Number, String).isTypeOf(10) ');
-test(' Union.of(Number, String).isTypeOf("foo") ');
-test(' Union.of(Number, String).isTypeOf(true) == false ')
-test(' Union.of(Int, String).isTypeOf(1.5) == false ')
+test(' Union.of(Number).isTypeOf(10) === true ');
+test(' Union.of(Number, String).isTypeOf(10) === true');
+test(' Union.of(Number, String).isTypeOf("foo") === true');
+test(' Union.of(Number, String).isTypeOf(true) === false ')
+test(' Union.of(Int, String).isTypeOf(1.5) === false ')

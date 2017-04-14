@@ -24,21 +24,6 @@ Tuple.of = function() {
 
 //
 
-// Tuple.prototype.isType = function(type) {
-//   if (Object.getPrototypeOf(type) !== Tuple.prototype ||
-//       this.values.length !== type.values.length) {
-//     return false;
-//   }
-
-//   for (var i = 0; i < this.values.length && i < type.values.length; i++) {
-//     if (!this.values[i].isType(type.values[i])) {
-//       return false;
-//     }
-//   }
-
-//   return true;
-// }
-
 Tuple.prototype.isTypeOf = function(that) {
   if (!Object.getPrototypeOf(this).isPrototypeOf(that)) {
     return false;
@@ -106,9 +91,9 @@ global.R = function(start, end, step) {
   return Range(start, end + 1, step);
 }
 
-test(' T(1, 2).concat(T(3, 4)).isEqual(T(1, 2, 3, 4)) ');
+test(' T(1, 2).concat(T(3, 4)).isEqual(T(1, 2, 3, 4)) === true');
 //test(' (T([1, 2], [3, 4]).map((a, b) => a + b)).isEqual([4, 6]) ');
 //console.log(T(R(1, 2), R(3, 4)).map((a, b) => a + b));
-test(' T().isTypeOf(T()) == true');
-test(' T(String, Number).isTypeOf(T("foo", 5)) == true');
-test(' T(String, T(Number, String), [Number]).isTypeOf(T("foo", T(10, "bar"), [1, 2, 3])) == true');
+test(' T().isTypeOf(T()) === true');
+test(' T(String, Number).isTypeOf(T("foo", 5)) === true');
+test(' T(String, T(Number, String), [Number]).isTypeOf(T("foo", T(10, "bar"), [1, 2, 3])) === true');

@@ -3,8 +3,6 @@
 var extend = require("../runtime/extension.js").extend;
 
 
-
-
 //
 // Tests
 //
@@ -21,5 +19,5 @@ var _mul = extend(Number, _mul, function(that) { return this * that; });
 global.x = x;
 global._mul = _mul;
 
-test(' (x.add || _add).apply(x, [3]) == 5 ');
-test(' (x.mul || _mul).apply(x, [3]) == 6 ');
+test(' (x.add || _add).apply(x, [3]) === 5 ');
+test(' (x.mul || _mul).apply(x, [3]) === 6 ');

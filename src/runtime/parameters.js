@@ -79,74 +79,14 @@ Parameters.prototype.apply = function(_arguments) {
   return args;
 }
 
-var params = new Parameters([{foo: Int, $: 1}, {bar: Union.of(Int, Undefined)}]);
-console.log(params.apply([10]));
-console.log(params.apply([{foo: 10}]));
-console.log(params.apply([]));
-//console.log(params.apply(["foo"]));
-
-
-function applyParameters(parameters, _arguments, func) {
-  var args = [], i = 0;
-  var _arguments = _arguments || [];
-
-  // Positional arguments
-
-  while (i < _arguments.length && getPrototypeOf(_arguments[i]) !== Object.prototype) {
-    var parameterType = getParameterType(parameters[i]);
-    var argument = _arguments[i];
-
-    if (parameterType.from) {
-      argument = parameterType.from(_arguments[i]);
-    }
-
-    args.push(argument);
-    
-    i += 1;
-  }
-
-  // Keyword arguments
-
-  var keywordArguments = _arguments[i];
-
-  while (i < parameters.length) {
-    var parameterName = getParameterName(parameters[i]);
-    var argument;
-
-    if (keywordArguments && keywordArguments.hasOwnProperty(parameterName)) {
-      argument = keywordArguments[parameterName];
-    } else if (parameters[i].hasOwnProperty("$")) {
-        argument = parameters[i]["$"];
-    } else {
-      throw Error("Missing parameter: '" + parameterName + "' in call to function '" + func.name + "'");
-    }
-  
-    args.push(argument);
-    
-    i += 1;
-  }
-
-  // Runtime typechecking
-
-  for (var i = 0; i < parameters.length; i++) {
-    var parameterName = getParameterName(parameters[i]);
-    var parameterType = getParameterType(parameters[i]);
-
-    if (!parameterType.isTypeOf(args[i])) {
-      throw Error("Type mismatch for parameter '" + parameterName + "' in call to function '" + func.name + "'" +
-                  "; Expected type " + parameterType.name + " but found '" + args[i] + "'.");
-    }
-  }
-    
-  return args;
-}
-
 function define(params, func) {
+  var parameters = new Parameters(params);
+
   var closure = function() {
-    return func.apply(null, applyParameters(params, arguments, func));
+    return func.apply(this, parameters.apply(arguments, func));
   }
 
-  closure.parameters = params;
+  closure.parameters = parameters;
 
   return closure;
 }
@@ -179,14 +119,14 @@ module.exports = {
 //  console.log(error);
 //}
 
-Function.prototype._apply = Function.prototype.apply;
-Function.prototype.apply = function(thisArg, argsArray) {
-  if (this.parameters) {
-    return this._apply(thisArg, applyParameters(this.parameters, argsArray, this));
-  } else {
-    return this._apply(thisArg, argsArray);
-  }
-}
+// Function.prototype._apply = Function.prototype.apply;
+// Function.prototype.apply = function(thisArg, argsArray) {
+//   if (this.parameters) {
+//     return this._apply(thisArg, applyParameters(this.parameters, argsArray, this));
+//   } else {
+//     return this._apply(thisArg, argsArray);
+//   }
+// }
 
 //
 // Tests
@@ -194,14 +134,22 @@ Function.prototype.apply = function(thisArg, argsArray) {
 
 console.log("\nparameters.js\n");
 
-String.prototype.slice.parameters = [{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}];
+global.params = new Parameters([{foo: Int, $: 1}, {bar: Union.of(Int, Undefined)}]);
+
+test(' params.apply([10])[0] === 10 ');
+test(' params.apply([{foo: 10}])[0] === 10 ');
+test(' params.apply([])[0] === 1 ');
+//console.log(params.apply(["foo"]));
+
+
+String.prototype.slice = define([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}], String.prototype.slice);
 
 global.foo = "foo";
 
-test(' foo.slice.apply(foo, [1]) == "oo" ');
-test(' foo.slice.apply(foo, [{beginIndex: 1}]) == "oo" ');
-test(' foo.slice.apply(foo, [0, {endIndex: 1}]) == "f" ');
-test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) ');
+test(' foo.slice.apply(foo, [1]) === "oo" ');
+test(' foo.slice.apply(foo, [{beginIndex: 1}]) === "oo" ');
+test(' foo.slice.apply(foo, [0, {endIndex: 1}]) === "f" ');
+test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) === "f" ');
 
 
 var numberOrString = define([{foo: Union.of(Number, String)}], function(foo) {
@@ -213,8 +161,8 @@ var numberOrString = define([{foo: Union.of(Number, String)}], function(foo) {
 
 global.numberOrString = numberOrString;
 
-test(' numberOrString(10) == "Number" ');
-test(' numberOrString("10") == "String" ');
+test(' numberOrString(10) === "Number" ');
+test(' numberOrString("10") === "String" ');
 
 
 var testArray = define([{foo: [Number]}], function(foo) {
@@ -223,4 +171,4 @@ var testArray = define([{foo: [Number]}], function(foo) {
 
 global.testArray = testArray;
 
-test(' testArray([1, 2, 3]) == true ');
+test(' testArray([1, 2, 3]) === true ');

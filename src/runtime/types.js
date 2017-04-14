@@ -28,7 +28,7 @@ Object.isTypeOf = function(that) {
 }
 
 Number.isTypeOf = function(that) {
-  return typeof that === "number" || this.prototype.isPrototypeOf(that);
+  return typeof that === "number" || that instanceof this;
 }
 
 String.isTypeOf = function(that) {
@@ -153,34 +153,34 @@ String.from = function(value, separator) {
 
 console.log("\ntypes.js\n");
 
-test(' Number.from("10") == 10 ');
-test(' Number.from("FF", 16) == 255 ');
-test(' Number.from("foo") == "TypeError" ', function(e) { return e instanceof TypeError; } );
-test(' String.from(["a", "b"]) == "ab" ');
-test(' String.from(["a", "b"], ", ") == "a, b" ');
-test(' Boolean.from("false") == false ');
+test(' Number.from("10") === 10 ');
+test(' Number.from("FF", 16) === 255 ');
+test(' Number.from("foo") === "TypeError" ', function(e) { return e instanceof TypeError; } );
+test(' String.from(["a", "b"]) === "ab" ');
+test(' String.from(["a", "b"], ", ") === "a, b" ');
+test(' Boolean.from("false") === false ');
 
 console.log("");
 
 //console.log("assertType: ", true.assertType(Boolean));
 //console.log("assertType: ", "foo".constructor.assertType("foo", Boolean));
 
-test(' (1).isEqual(1) ');
-test(' ("foo").isEqual("foo") ');
-test(' (true).isEqual(true) ');
+test(' (1).isEqual(1) === true ');
+test(' ("foo").isEqual("foo") === true ');
+test(' (true).isEqual(true) === true ');
 
 console.log("");
 
-test(' Number.isTypeOf(1) == true ');
-test(' Int.isTypeOf(1) == true ');
-test(' Int.isTypeOf(1.5) == false ');
-test(' String.isTypeOf("foo") == true ');
-test(' Boolean.isTypeOf(true) == true ')
+test(' Number.isTypeOf(1) === true ');
+test(' Int.isTypeOf(1) === true ');
+test(' Int.isTypeOf(1.5) === false ');
+test(' String.isTypeOf("foo") === true ');
+test(' Boolean.isTypeOf(true) === true ')
 
 console.log("");
 
 test(' [].isTypeOf([]) ');
-test(' [Number].isTypeOf([1, 2, 3]) == true ')
-test(' [String].isTypeOf(["foo", "bar"]) == true ')
-test(' [Number].isTypeOf([1, 2, "x"]) == false ')
-test(' [Object].isTypeOf([1, "foo"]) == true');
+test(' [Number].isTypeOf([1, 2, 3]) === true ')
+test(' [String].isTypeOf(["foo", "bar"]) === true ')
+test(' [Number].isTypeOf([1, 2, "x"]) === false ')
+test(' [Object].isTypeOf([1, "foo"]) === true');

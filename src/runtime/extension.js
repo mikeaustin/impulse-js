@@ -41,11 +41,11 @@ Extension.prototype.construct = function(_this, args) {
 Extension.prototype.lookup = function(_this) {
   // Traverse the lexical scope from innermost to outermost
   
-  for (var scope = this; scope != null; scope = scope.parent) {
+  for (var scope = this; scope !== null; scope = scope.parent) {
     // Traverse the inheritance hierarchy of _this,
     // look for a match and call the appropriate function
     
-    for (var proto = _this; proto != null; proto = getPrototypeOf(proto)) {
+    for (var proto = _this; proto !== null; proto = getPrototypeOf(proto)) {
       var method = scope.methods.get(proto);
  
       if (method !== undefined) {
@@ -96,5 +96,5 @@ var _capitalize = extend(String, _capitalize, function() {
 global.foo = "foo";
 global._capitalize = _capitalize;
 
-test(' (foo.capitalize || _capitalize).apply(foo) == "Foo" ');
-test(' (foo.toUpperCase || _toUppderCase).apply(foo) == "FOO" ');
+test(' (foo.capitalize || _capitalize).apply(foo) === "Foo" ');
+test(' (foo.toUpperCase || _toUppderCase).apply(foo) === "FOO" ');
