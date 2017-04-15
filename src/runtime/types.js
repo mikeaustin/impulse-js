@@ -119,10 +119,34 @@ Number.from = function(value, radix) {
   // Return string value if it can be converted
 
   if (String.isTypeOf(value)) {
-    var number = parseInt(value, radix);
+    var number = parseFloat(value);
 
     if (!isNaN(number)) {
       return number;
+    }
+  }
+
+  // If it can't be converted, throw an exception
+
+  throw TypeError("Can't convert " + value + " to Number");
+}
+
+Int.from = function(value, radix) {
+  // Return value if primitive or new String()
+
+  if (Int.isTypeOf(value)) {
+    return value;
+  }
+
+  // Return string value if it can be converted
+
+  if (String.isTypeOf(value)) {
+    if (value.indexOf(".") < 0) {
+      var number = parseInt(value, radix);
+
+      if (!isNaN(number)) {
+        return number;
+      }
     }
   }
 
@@ -152,9 +176,10 @@ String.from = function(value, separator) {
 
 console.log("\ntypes.js\n");
 
-test(' Number.from("10") === 10 ');
-test(' Number.from("FF", 16) === 255 ');
+test(' Number.from("1.5") === 1.5 ');
+test(' Int.from("FF", 16) === 255 ');
 test(' Number.from("foo") === "TypeError" ', function(e) { return e instanceof TypeError; } );
+test(' Int.from("1.5") === "TypeError" ', function(e) { return e instanceof TypeError; } );
 test(' String.from(["a", "b"]) === "ab" ');
 test(' String.from(["a", "b"], ", ") === "a, b" ');
 test(' Boolean.from("false") === false ');
