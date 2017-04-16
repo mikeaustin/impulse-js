@@ -11,7 +11,7 @@ global.Undefined.isTypeOf = function(that) { return that === undefined; }
 
 Boolean.prototype.assertType = String.assertType = function(that) {
   if (!(this instanceof that)) {
-    throw Error("Type assertion; Expected a '" + this.constructor.name + "' but found a '" + that.name + "'");
+    throw new Error("Type assertion; Expected a '" + this.constructor.name + "' but found a '" + that.name + "'");
   }
   
   return this;
@@ -100,7 +100,7 @@ Boolean.from = function(value) {
     }
   }
   
-  throw TypeError("Can't convert " + value + " to Boolean");
+  throw new TypeError("Can't convert " + value + " to Boolean");
 }
 
 //
@@ -128,7 +128,7 @@ Number.from = function(value, radix) {
 
   // If it can't be converted, throw an exception
 
-  throw TypeError("Can't convert " + value + " to Number");
+  throw new TypeError("Can't convert " + value + " to Number");
 }
 
 Int.from = function(value, radix) {
@@ -152,7 +152,7 @@ Int.from = function(value, radix) {
 
   // If it can't be converted, throw an exception
 
-  throw TypeError("Can't convert " + value + " to Number");
+  throw new TypeError("Can't convert " + value + " to Number");
 }
 
 String.from = function(value, separator) {
@@ -166,7 +166,7 @@ String.from = function(value, separator) {
     return value.join(separator ? separator : "");
   }
 
-  throw TypeError("Can't convert " + value + " to String");
+  throw new TypeError("Can't convert " + value + " to String");
 }
 
 
