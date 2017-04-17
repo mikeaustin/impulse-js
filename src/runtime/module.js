@@ -4,13 +4,11 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var extend = require("../runtime/extension.js").extend;
 
 
-function Trait(parent) {
+function Trait(parent, type) {
   this.parent = parent || null;
-  this.types = new Set();
+  this.types = new Set(type ? [type] : []);
   this.methods = { };
 }
-
-Trait.prototype.types = new Set();
 
 Trait.prototype.add = function (type) {
   this.types = this.types.add(type.prototype);
@@ -32,16 +30,6 @@ Trait.prototype.isTypeOf = function (value) {
 
 var Iterable = new Trait(Iterable);
 
-Iterable.types = new Set([[Number]]);
-
-var Iterable = new Trait(Iterable);
-
-Iterable.types = new Set([[String]]);
-
-console.log(Iterable.isTypeOf([1, 2, 3]));
-console.log(Iterable.isTypeOf(["foobar"]));
-
-
 Iterable.methods.map = function (iterate) {
   return function(func) {
     var array = [];
@@ -57,9 +45,15 @@ Iterable.methods.map = function (iterate) {
 }
 
 
+var Iterable = new Trait(Iterable, [Number]);
+
+console.log(Iterable.isTypeOf([1, 2, 3]));
+console.log(Iterable.isTypeOf(["foobar"]));
+
+
 var array = [1, 2, 3];
 
-var _Iterator = extend(Array, _Iterator, (function() {
+var _Iterator = extend(Array, _Iterator, function() {
   var Iterator = function Iterator(array) {
     this.array = array;
     this.index = -1;
@@ -69,13 +63,13 @@ var _Iterator = extend(Array, _Iterator, (function() {
   Iterator.prototype.value = function() { return this.array[this.index]; }
   
   return Iterator;
-})());
+}());
 
 var _iterate = extend(Array, _iterate, function() {
   return _Iterator.construct(Array.prototype, [this]);
 });
 
-var _map = extend(Array, _map, Iterable.methods.map(_iterate));
+var _map = extend(Array, _map, Iterable.parent.methods.map(_iterate));
 
 
 //
