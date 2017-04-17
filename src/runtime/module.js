@@ -1,23 +1,58 @@
 "use strict";
 
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
-
 var extend = require("../runtime/extension.js").extend;
 
 
-var Iterable = {
-  map: function(iterate) {
-    return function(func) {
-      var array = [];
-    
-      var iter = iterate.apply(this);
-    
-      while (iter.moveNext()) {
-        array.push(func(iter.value()));
+function Trait(parent) {
+  this.parent = parent || null;
+  this.types = new Set();
+  this.methods = { };
+}
+
+Trait.prototype.types = new Set();
+
+Trait.prototype.add = function (type) {
+  this.types = this.types.add(type.prototype);
+
+  return this;
+}
+
+Trait.prototype.isTypeOf = function (value) {
+  for (var scope = this; scope !== null; scope = scope.parent) {
+    for (var type of scope.types) {
+      if (type.isTypeOf(value)) {
+        return true;
       }
-      
-      return array;
     }
+  }
+
+  return false;
+}
+
+var Iterable = new Trait(Iterable);
+
+Iterable.types = new Set([[Number]]);
+
+var Iterable = new Trait(Iterable);
+
+Iterable.types = new Set([[String]]);
+
+console.log(Iterable.isTypeOf([1, 2, 3]));
+console.log(Iterable.isTypeOf(["foobar"]));
+
+
+Iterable.methods.map = function (iterate) {
+  return function(func) {
+    var array = [];
+  
+    var iter = iterate.apply(this);
+  
+    while (iter.moveNext()) {
+      array.push(func(iter.value()));
+    }
+    
+    return array;
   }
 }
 
@@ -40,18 +75,37 @@ var _iterate = extend(Array, _iterate, function() {
   return _Iterator.construct(Array.prototype, [this]);
 });
 
-var _map = extend(Array, _map, Iterable.map(_iterate));
+var _map = extend(Array, _map, Iterable.methods.map(_iterate));
 
-global.array = array;
-global._map = _map;
 
 //
 // Tests
 //
 
+global.array = array;
+global._map = _map;
+
 console.log("\nmodule.js\n");
 
 test(' _map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
+
+
+// void function() {
+//   function Iterable() {
+//   }
+
+//   Iterable.isTypeOf = function (value) {
+
+//   }
+
+//   var _filter = extend(Iterable, _filter, function(func) {
+
+//   });
+
+//   var foo = define({iterable: _Iterable}, function (iterable) {
+//     iterable.map(function (n) { return n * n ; });
+//   });
+// }();
 
 /*
 

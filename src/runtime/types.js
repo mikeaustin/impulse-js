@@ -51,6 +51,10 @@ Array.prototype.isTypeOf = function(that) {
     return false;
   }
 
+  if (this[0] === Object.prototype) {
+    return true;
+  }
+
   for (var i = 0; i < that.length; i++) {
     if (!this[0].isTypeOf(that[i])) {
       return false;
