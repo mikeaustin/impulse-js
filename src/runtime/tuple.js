@@ -14,13 +14,13 @@ function Tuple(iterable) {
   this.values = Array.prototype.slice.call(iterable, 0);
 }
 
-Tuple.of = function() {
+Tuple.of = function () {
   return new Tuple(arguments);
 };
 
 //
 
-Tuple.prototype.isTypeOf = function(that) {
+Tuple.prototype.isTypeOf = function (that) {
   if (!Object.getPrototypeOf(this).isPrototypeOf(that)) {
     return false;
   }
@@ -34,7 +34,7 @@ Tuple.prototype.isTypeOf = function(that) {
   return true;
 }
 
-Tuple.prototype.isEqual = function(that) {
+Tuple.prototype.isEqual = function (that) {
   if (Object.getPrototypeOf(that) !== Tuple.prototype ||
       this.values.length !== that.values.length) {
     return false;
@@ -51,13 +51,13 @@ Tuple.prototype.isEqual = function(that) {
 
 // Concatinate two tuples
 
-Tuple.prototype.concat = function(tuple) {
+Tuple.prototype.concat = function (tuple) {
   return new Tuple(this.values.concat(tuple.values));
 };
 
 // Map over each iterable value in parallel
 
-Tuple.prototype.map = function(func) {
+Tuple.prototype.map = function (func) {
   if (this.values.length === 0) {
     return [];
   }
@@ -84,7 +84,7 @@ console.log("\ntuple.js\n");
 
 global.L = List.of;
 global.T = Tuple.of;
-global.R = function(start, end, step) {
+global.R = function (start, end, step) {
   return Range(start, end + 1, step);
 }
 

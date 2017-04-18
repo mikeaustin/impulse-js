@@ -27,7 +27,7 @@ function Parameters(signature) {
   }
 }
 
-Parameters.prototype.apply = function(_arguments) {
+Parameters.prototype.apply = function (_arguments) {
   var _arguments = _arguments || [];
   var args = [], i = 0;
 
@@ -83,7 +83,7 @@ Parameters.prototype.apply = function(_arguments) {
 function define(params, func) {
   var parameters = new Parameters(params);
 
-  var closure = function() {
+  var closure = function () {
     return func.apply(this, parameters.apply(arguments, func));
   }
 
@@ -121,19 +121,19 @@ test(' foo.slice.apply(foo, [0, {endIndex: 1}]) === "f" ');
 test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) === "f" ');
 
 
-Number.case = String.case = Array.prototype.case = function(that) {
+Number.case = String.case = Array.prototype.case = function (that) {
   return this.isTypeOf(that);
 }
 
-Number.prototype.case = String.prototype.case = function(that) {
+Number.prototype.case = String.prototype.case = function (that) {
   return this.isEqual(that);
 }
 
-Immutable.Range.prototype.case = function(that) {
+Immutable.Range.prototype.case = function (that) {
   return Number.isTypeOf(that) && this.includes(that);
 }
 
-var numberOrString = define([{foo: Union.of(Number, String, [Int], Boolean)}], function(foo) {
+var numberOrString = define([{foo: Union.of(Number, String, [Int], Boolean)}], function (foo) {
   var $; switch (true) {                            // return switch (foo) {
     case R(1, 5).case(foo):                         //
     case (7).case(foo):     $ = "1..5, 7";  break;  //   case 1..5, 7: "1..5, 7"

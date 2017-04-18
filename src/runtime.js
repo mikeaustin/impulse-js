@@ -5,7 +5,7 @@ var failed = 0;
 
 console.log("Impulse-JS Tests");
 
-global.test = function(expression, onException) {
+global.test = function (expression, onException) {
   var result;
 
   try {

@@ -17,13 +17,13 @@ var Extension = function Extension(parent) {
 
 // Add a new extention method, passing the type of object and the function
 
-Extension.prototype.add = function(type, func) {
+Extension.prototype.add = function (type, func) {
   this.methods = this.methods.set(type.prototype, func);
 
   return this;
 }
 
-Extension.prototype.lookup = function(_this) {
+Extension.prototype.lookup = function (_this) {
   // Traverse the lexical scope from innermost to outermost
   
   for (var scope = this; scope !== null; scope = scope.parent) {
@@ -40,7 +40,7 @@ Extension.prototype.lookup = function(_this) {
   }
 }
 
-Extension.prototype.construct = function(_this, args) {
+Extension.prototype.construct = function (_this, args) {
   var constructor = this.lookup(_this);
   
   function Constructor() {
@@ -58,7 +58,7 @@ Extension.prototype.construct = function(_this, args) {
 
 // Call an extension method, passing in the "this" object and the arguments
 
-Extension.prototype.apply = function(_this, args) {
+Extension.prototype.apply = function (_this, args) {
   if (_this === null || _this === undefined) {
     return _this;
   }
@@ -72,9 +72,9 @@ Extension.prototype.apply = function(_this, args) {
 function extend(type, parent, func) {
   var extension = parent;
 
-  if (parent === undefined || parent.methods.get(type) !== undefined) {
+  //if (parent === undefined || parent.methods.get(type) !== undefined) {
     extension = new Extension(parent);
-  }
+  //}
 
   return extension.add(type, func);
 }
@@ -90,7 +90,7 @@ module.exports = {
 
 console.log("\nextension.js\n");
 
-var _capitalize = extend(String, _capitalize, function() {
+var _capitalize = extend(String, _capitalize, function () {
   return this[0].toUpperCase() + this.slice(1);
 });
 

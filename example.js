@@ -15,15 +15,15 @@ function Tuple(iterable) {
   this.values = Array.prototype.slice.call(iterable, 0);
 }
 
-Tuple.of = function() {
+Tuple.of = function () {
   return new Tuple(arguments);
 };
 
-Tuple.prototype.concat = function(tuple) {
+Tuple.prototype.concat = function (tuple) {
   return new Tuple(this.values.concat(tuple.values));
 };
 
-Tuple.prototype.map = function(func) {
+Tuple.prototype.map = function (func) {
   if (this.values.length === 0) {
     return [];
   }
@@ -36,7 +36,7 @@ Tuple.prototype.map = function(func) {
 
 var L = List.of;
 var T = Tuple.of;
-var R = function(start, end, step) {
+var R = function (start, end, step) {
   return Range(start, end + 1, step);
 }
 

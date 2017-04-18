@@ -1,10 +1,10 @@
 util = require("util");
 
-Array.prototype.head = function() {
+Array.prototype.head = function () {
   return this[0];
 }
 
-Array.prototype.tail = function() {
+Array.prototype.tail = function () {
   return this.slice(1);
 }
 
@@ -37,11 +37,11 @@ function Tuple(values) {
   );
 }
 
-Tuple.prototype.map = function(func) {
+Tuple.prototype.map = function (func) {
   return map(func, ...this.values);
 }
 
-Tuple.prototype.add = function(tuple) {
+Tuple.prototype.add = function (tuple) {
   var result = map((a, b) => {
     return a + b;
   }, this.values, tuple.values);
@@ -49,7 +49,7 @@ Tuple.prototype.add = function(tuple) {
   return new Tuple(result);
 }
 
-Tuple.prototype.concat = function(tuple) {
+Tuple.prototype.concat = function (tuple) {
   return new Tuple(this.values.concat(tuple.values));
 }
 

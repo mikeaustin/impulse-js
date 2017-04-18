@@ -87,7 +87,7 @@
 
   function filledArray(count, value) {
     return Array.apply(null, new Array(count))
-      .map(function() { return value; });
+      .map(function () { return value; });
   }
 
   function extractOptional(optional, index) {
@@ -95,7 +95,7 @@
   }
 
   function extractList(list, index) {
-    return list.map(function(element) { return element[index]; });
+    return list.map(function (element) { return element[index]; });
   }
 
   function buildList(head, tail, index) {
@@ -103,7 +103,7 @@
   }
 
   function buildBinaryExpression(head, tail) {
-    return tail.reduce(function(result, element) {
+    return tail.reduce(function (result, element) {
       return {
         type: "BinaryExpression",
         operator: element[1],
@@ -114,7 +114,7 @@
   }
 
   function buildLogicalExpression(head, tail) {
-    return tail.reduce(function(result, element) {
+    return tail.reduce(function (result, element) {
       return {
         type: "LogicalExpression",
         operator: element[1],
@@ -449,7 +449,7 @@ MemberExpression
         }
     )*
     {
-      return tail.reduce(function(result, element) {
+      return tail.reduce(function (result, element) {
         return {
           type: "MemberExpression",
           object: result,
@@ -491,7 +491,7 @@ CallExpression
         }
     )*
     {
-      return tail.reduce(function(result, element) {
+      return tail.reduce(function (result, element) {
         element[TYPES_TO_PROPERTY_NAMES[element.type]] = result;
 
         return element;

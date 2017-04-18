@@ -16,7 +16,7 @@ function Range(start, end) {
 // _(foo, bar).map
 var test = `-1;`;
 
-fs.readFile("parser.pegjs", "utf8", function(error, data) {
+fs.readFile("parser.pegjs", "utf8", function (error, data) {
   var parser = peg.generate(data);
 
   var result = parser.parse(test);

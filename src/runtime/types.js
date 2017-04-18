@@ -6,10 +6,10 @@ global.Int.prototype = new Number();
 global.Int.prototype.constructor = Int;
 
 global.Undefined = function Undefined() { }
-global.Undefined.isTypeOf = function(that) { return that === undefined; }
+global.Undefined.isTypeOf = function (that) { return that === undefined; }
 
 
-Boolean.prototype.assertType = String.assertType = function(that) {
+Boolean.prototype.assertType = String.assertType = function (that) {
   if (!(this instanceof that)) {
     throw new Error("Type assertion; Expected a '" + this.constructor.name + "' but found a '" + that.name + "'");
   }
@@ -22,23 +22,23 @@ Boolean.prototype.assertType = String.assertType = function(that) {
 // Object.isTypeOf(that)
 //
 
-Object.isTypeOf = function(that) {
+Object.isTypeOf = function (that) {
   return this.prototype.isPrototypeOf(Object(that));
 }
 
-Number.isTypeOf = function(that) {
+Number.isTypeOf = function (that) {
   return typeof that === "number" || that instanceof this;
 }
 
-String.isTypeOf = function(that) {
+String.isTypeOf = function (that) {
   return typeof that === "string" || this.prototype.isPrototypeOf(that);
 }
 
-Boolean.isTypeOf = function(that) {
+Boolean.isTypeOf = function (that) {
   return typeof that === "boolean" || this.prototype.isPrototypeOf(that);
 }
 
-Int.isTypeOf = function(that) {
+Int.isTypeOf = function (that) {
   if (!(typeof that === "number" || this.prototype.isPrototypeOf(that))) {
     return false;
   }
@@ -46,7 +46,7 @@ Int.isTypeOf = function(that) {
   return isFinite(that) && Math.floor(that) === that;
 }
 
-Array.prototype.isTypeOf = function(that) {
+Array.prototype.isTypeOf = function (that) {
   if (!Object.getPrototypeOf(this).isPrototypeOf(that)) {
     return false;
   }
@@ -69,11 +69,11 @@ Array.prototype.isTypeOf = function(that) {
 // Object.isEqual(that)
 //
 
-Boolean.prototype.isEqual = Number.prototype.isEqual = String.prototype.isEqual = function(that) {
+Boolean.prototype.isEqual = Number.prototype.isEqual = String.prototype.isEqual = function (that) {
   return this.valueOf() === that;
 }
 
-Array.prototype.isEqual = function(that) {
+Array.prototype.isEqual = function (that) {
   if (Object.getPrototypeOf(that) !== Array.prototype) {
     return false;
   }
@@ -92,7 +92,7 @@ Array.prototype.isEqual = function(that) {
 // Object.from(value)
 //
 
-Boolean.from = function(value) {
+Boolean.from = function (value) {
   if (Boolean.isTypeOf(value)) {
     return value;
   }
@@ -113,7 +113,7 @@ Boolean.from = function(value) {
 // the argument can't be converted.
 //
 
-Number.from = function(value, radix) {
+Number.from = function (value, radix) {
   // Return value if primitive or new String()
 
   if (Number.isTypeOf(value)) {
@@ -135,7 +135,7 @@ Number.from = function(value, radix) {
   throw new TypeError("Can't convert " + value + " to Number");
 }
 
-Int.from = function(value, radix) {
+Int.from = function (value, radix) {
   // Return value if primitive or new String()
 
   if (Int.isTypeOf(value)) {
@@ -159,7 +159,7 @@ Int.from = function(value, radix) {
   throw new TypeError("Can't convert " + value + " to Number");
 }
 
-String.from = function(value, separator) {
+String.from = function (value, separator) {
   if (String.isTypeOf(value)) {
     return value;
   }
@@ -182,8 +182,8 @@ console.log("\ntypes.js\n");
 
 test(' Number.from("1.5") === 1.5 ');
 test(' Int.from("FF", 16) === 255 ');
-test(' Number.from("foo") === "TypeError" ', function(e) { return e instanceof TypeError; } );
-test(' Int.from("1.5") === "TypeError" ', function(e) { return e instanceof TypeError; } );
+test(' Number.from("foo") === "TypeError" ', function (e) { return e instanceof TypeError; } );
+test(' Int.from("1.5") === "TypeError" ', function (e) { return e instanceof TypeError; } );
 test(' String.from(["a", "b"]) === "ab" ');
 test(' String.from(["a", "b"], ", ") === "a, b" ');
 test(' Boolean.from("false") === false ');

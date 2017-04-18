@@ -7,20 +7,20 @@
 // * Provides ways to add and invoke functions
 //
 
-var Extension = function(parent) {
+var Extension = function (parent) {
   this.parent  = parent || null;
   this.methods = new Map();
 };
 
 // Add a new extention method, passing the type of object and the function
 
-Extension.prototype.add = function(type, func) {
+Extension.prototype.add = function (type, func) {
   this.methods.set(type.prototype, func);
 }
 
 // Call an extension method, passing in the "this" object and the arguments
 
-Extension.prototype.apply = function(_this, args) {
+Extension.prototype.apply = function (_this, args) {
   var getPrototypeOf = Object.getPrototypeOf;
 
   for (var scope = this; scope != null; scope = scope.parent) {
@@ -37,11 +37,11 @@ Extension.prototype.apply = function(_this, args) {
 
 var _toString = new Extension(_toString);
 
-_toString.add(Object, function() {
+_toString.add(Object, function () {
   return this.toString();
 });
 
-//_toString.add(Object, function() {
+//_toString.add(Object, function () {
 //  var str = "";
 //
 //  if (Object.getPrototypeOf(this) === Object.prototype) {
@@ -58,7 +58,7 @@ _toString.add(Object, function() {
 function test() {
   _toString = new Extension(_toString);
   
-  _toString.add(Array, function() {
+  _toString.add(Array, function () {
     return "[" + this.join(", ") + "]";
   });
   
@@ -72,16 +72,16 @@ test();
 
 "use strict";
 
-var Extension = function(parent) {
+var Extension = function (parent) {
   this.parent  = parent || null;
   this.methods = new Map();
 };
 
-Extension.prototype.add = function(type, func) {
+Extension.prototype.add = function (type, func) {
   this.methods.set(type.prototype, func);
 }
 
-Extension.prototype.apply = function(self, args) {
+Extension.prototype.apply = function (self, args) {
   var getPrototypeOf = Object.getPrototypeOf;
 
   for (var scope = this; scope != null; scope = scope.parent) {
@@ -95,10 +95,10 @@ Extension.prototype.apply = function(self, args) {
   }
 }
 
-var extend = function(parent) {
+var extend = function (parent) {
   var ext = new Extension(parent);
   
-  var extension = function() {
+  var extension = function () {
     return ext.apply(arguments[0], Array.prototype.shift.apply(arguments));
   }
 
@@ -111,7 +111,7 @@ var extend = function(parent) {
 //var _toString = new Extension(_toString);
 var _toString = extend(_toString);
 
-_toString.add(Object, function() {
+_toString.add(Object, function () {
   var str = "";
 
   if (Object.getPrototypeOf(this) === Object.prototype) {
@@ -127,7 +127,7 @@ _toString.add(Object, function() {
 
 var _power = new Extension();
 
-_power.add(Number, function(exp) {
+_power.add(Number, function (exp) {
   return Math.pow(this, exp);
 });
 
@@ -135,7 +135,7 @@ function test() {
 //  _toString = new Extension(_toString);
   var _toString = extend(_toString);
   
-  _toString.add(Array, function() {
+  _toString.add(Array, function () {
     return "[" + this.join(", ") + "]";
   });
   
@@ -145,8 +145,8 @@ function test() {
 
 test();
 
-//(function(_toString, _power) {
-//  _toString.add(Array, function() {
+//(function (_toString, _power) {
+//  _toString.add(Array, function () {
 //    return "[" + this.join(", ") + "]";
 //  });
 //

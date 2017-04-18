@@ -1,6 +1,6 @@
 var Impulse = require("../runtime/extension.js");
 
-var _toString = Impulse.extend(Object, _toString, function(hideProperties) {
+var _toString = Impulse.extend(Object, _toString, function (hideProperties) {
   if (this === Object.prototype) {
     return "Object";
   }
@@ -27,7 +27,7 @@ var _toString = Impulse.extend(Object, _toString, function(hideProperties) {
   }
 });
 
-var _toString = Impulse.extend(Number, _toString, function() {
+var _toString = Impulse.extend(Number, _toString, function () {
   if (this === Number.prototype) {
     return "Number";
   }
@@ -35,7 +35,7 @@ var _toString = Impulse.extend(Number, _toString, function() {
   return this.toString();
 });
 
-var _toString = Impulse.extend(Array, _toString, function() {
+var _toString = Impulse.extend(Array, _toString, function () {
   if (this === Array.prototype) {
     return "Array";
   }
@@ -43,12 +43,12 @@ var _toString = Impulse.extend(Array, _toString, function() {
   return "[" + this.join(", ") + "]";
 });
 
-var _toString = Impulse.extend(_toString.methods.constructor, _toString, function() {
+var _toString = Impulse.extend(_toString.methods.constructor, _toString, function () {
   if (this === _toString.methods.constructor.prototype) {
     return "Map";
   }
 
-  var items = this.map(function(value, key) {
+  var items = this.map(function (value, key) {
     var keyString = _toString.apply(key, [true]);
     var valueString = _toString.apply(value, []);
 
@@ -58,7 +58,7 @@ var _toString = Impulse.extend(_toString.methods.constructor, _toString, functio
   return "Map { " + items + " }";
 });
 
-var _capitalize = Impulse.extend(String, _capitalize, function() {
+var _capitalize = Impulse.extend(String, _capitalize, function () {
   return this[0].toUpperCase() + this.slice(1);
 });
 

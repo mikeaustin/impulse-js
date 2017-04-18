@@ -4,14 +4,14 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var extend = require("../runtime/extension.js").extend;
 
 
-function Trait(parent, type) {
+function Trait(parent) {
   this.parent = parent || null;
-  this.types = new Set(type ? [type] : []);
+  this.types = new Set();
   this.methods = parent ? parent.methods : { };
 }
 
 Trait.prototype.add = function (type) {
-  this.types = this.types.add(type.prototype);
+  this.types = this.types.add(type);
 
   return this;
 }
@@ -29,21 +29,17 @@ Trait.prototype.isTypeOf = function (value) {
 }
 
 function addtrait(type, parent) {
-  var trait = parent;
-
-  if (parent === undefined || parent.types.has(type) !== undefined) {
-    trait = new Trait(parent);
-  }
+  var trait = new Trait(parent);
 
   return trait.add(type);
 }
 
 //
 
-var Iterable = new Trait(Iterable);
+var Iterable = new Trait();
 
 Iterable.methods.map = function (iterate) {
-  return function(func) {
+  return function (func) {
     var array = [];
   
     var iter = iterate.apply(this);
@@ -56,22 +52,17 @@ Iterable.methods.map = function (iterate) {
   }
 }
 
-
-var Iterable = new Trait(Iterable, [Number]);
-
-console.log(Iterable.isTypeOf([1, 2, 3]));
-console.log(Iterable.isTypeOf(["foobar"]));
-
+//
 
 var Iterator = function Iterator(array) {
   this.array = array;
   this.index = -1;
 }
 
-Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
-Iterator.prototype.value = function() { return this.array[this.index]; }
+Iterator.prototype.moveNext = function () { return ++this.index < this.array.length; }
+Iterator.prototype.value = function () { return this.array[this.index]; }
 
-var _iterate = extend(Array, _iterate, function() {
+var _iterate = extend(Array, _iterate, function () {
   return new Iterator(this);
 });
 
@@ -84,6 +75,7 @@ var _map = extend(Array, _map, Iterable.methods.map(_iterate));
 
 var array = [1, 2, 3];
 
+global.Iterable = Iterable;
 global.array = array;
 global._map = _map;
 
@@ -91,60 +83,22 @@ console.log("\nmodule.js\n");
 
 test(' _map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
 
+void function () {
+  var Iterable = new addtrait([Number], Iterable);
 
-// void function() {
-//   function Iterable() {
-//   }
+  var temp = global.Iterable;
+  global.Iterable = Iterable;
 
-//   Iterable.isTypeOf = function (value) {
+  test(' Iterable.isTypeOf([1, 2, 3]) === true ');
+  test(' [Number].isTypeOf([1, 2, 3]) === true ');
+  test(' Iterable.isTypeOf(["foobar"]) === false ');
 
-//   }
+  global.Iterable = temp;
+}();
 
-//   var _filter = extend(Iterable, _filter, function(func) {
-
-//   });
-
-//   var foo = define({iterable: _Iterable}, function (iterable) {
-//     iterable.map(function (n) { return n * n ; });
-//   });
-// }();
+test(' Iterable.isTypeOf([1, 2, 3]) === false ');
 
 /*
-
-How do you implement nested classes?
-Copy methods or walk traits tree?
-Add traits to constructor or instanced objects?
-
-
-trait Iterable {
-  function map(iterator)(func) {
-    var array = [];
-    
-    var iter = this._traits.get(Iterable).iterator();
-    while (iter.moveNext()) {
-      array.push(iter.value());
-    }
-    
-    return array;
-  }
-}
-
-extend Array implements Iterable {
-  class Iterator() {
-    function moveNext() {
-      this.index = this.index + 1;
-    }
-    
-    function value() {
-      return this.array[this.index];
-    }
-  }
-  
-  function Iterable.iterator() {
-    return new Array.Iterator(this);
-  }
-}
-
 
 Value : Type
 
