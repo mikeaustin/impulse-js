@@ -7,7 +7,7 @@ var extend = require("../runtime/extension.js").extend;
 function Trait(parent, type) {
   this.parent = parent || null;
   this.types = new Set(type ? [type] : []);
-  this.methods = { };
+  this.methods = parent ? parent.methods : { };
 }
 
 Trait.prototype.add = function (type) {
@@ -27,6 +27,18 @@ Trait.prototype.isTypeOf = function (value) {
 
   return false;
 }
+
+function addtrait(type, parent) {
+  var trait = parent;
+
+  if (parent === undefined || parent.types.has(type) !== undefined) {
+    trait = new Trait(parent);
+  }
+
+  return trait.add(type);
+}
+
+//
 
 var Iterable = new Trait(Iterable);
 
@@ -51,30 +63,26 @@ console.log(Iterable.isTypeOf([1, 2, 3]));
 console.log(Iterable.isTypeOf(["foobar"]));
 
 
-var array = [1, 2, 3];
+var Iterator = function Iterator(array) {
+  this.array = array;
+  this.index = -1;
+}
 
-var _Iterator = extend(Array, _Iterator, function() {
-  var Iterator = function Iterator(array) {
-    this.array = array;
-    this.index = -1;
-  }
-
-  Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
-  Iterator.prototype.value = function() { return this.array[this.index]; }
-  
-  return Iterator;
-}());
+Iterator.prototype.moveNext = function() { return ++this.index < this.array.length; }
+Iterator.prototype.value = function() { return this.array[this.index]; }
 
 var _iterate = extend(Array, _iterate, function() {
-  return _Iterator.construct(Array.prototype, [this]);
+  return new Iterator(this);
 });
 
-var _map = extend(Array, _map, Iterable.parent.methods.map(_iterate));
+var _map = extend(Array, _map, Iterable.methods.map(_iterate));
 
 
 //
 // Tests
 //
+
+var array = [1, 2, 3];
 
 global.array = array;
 global._map = _map;
