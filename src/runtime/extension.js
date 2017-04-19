@@ -10,6 +10,47 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 // to add and invoke functions. Use extend() to add extension methods.
 //
 
+function Extension2(parent, type, func) {
+  this.parent = parent || null;
+  this.type = type;
+  this.func = func;
+}
+
+Extension2.prototype.apply = function (_this, args) {
+  for (var scope = this; scope !== null; scope = scope.parent) {
+    if (scope.type.isTypeOf(_this)) {
+      return scope.func.apply(_this, args);
+    }
+  }
+};
+
+Extension2.extend = function (parent, type, funcs) {
+  function Scope() { }
+
+  Scope.prototype = parent || null;
+
+  var scope = new Scope();
+
+  for (var name in funcs) {
+    scope[name] = new this(parent ? parent[name] : null, type, funcs[name]);
+  }
+
+  return scope;
+}
+
+var _methods = Extension2.extend(_methods, Number, {
+  add: function (that) {
+    return this + that;
+  },
+
+  sub: function (that) {
+    return this - that;
+  }
+});
+
+console.log(_methods.add.apply(2, [3]), _methods.sub.apply(2, [3]));
+
+
 var Extension = function Extension(parent) {
   this.parent  = parent || null;
   this.methods = Immutable.Map();
@@ -29,7 +70,7 @@ Extension.prototype.lookup = function (_this) {
   for (var scope = this; scope !== null; scope = scope.parent) {
     // Traverse the inheritance hierarchy of _this,
     // look for a match and call the appropriate function
-    
+
     for (var proto = _this; proto !== null; proto = Object.getPrototypeOf(proto)) {
       var method = scope.methods.get(proto);
  
@@ -94,8 +135,19 @@ var _capitalize = extend(String, _capitalize, function () {
   return this[0].toUpperCase() + this.slice(1);
 });
 
+var _factorial = extend(Number, _factorial, function _factorial() {
+  if (this === 0) {
+    return 1;
+  }
+
+  return this * _factorial.apply(this - 1);
+});
+
 global.foo = "foo";
 global._capitalize = _capitalize;
+global._factorial = _factorial;
 
 test(' (foo.capitalize || _capitalize).apply(foo) === "Foo" ');
 test(' (foo.toUpperCase || _toUppderCase).apply(foo) === "FOO" ');
+
+test(' _factorial.apply(5, []) === 120 ');

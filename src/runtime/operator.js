@@ -28,7 +28,11 @@ Number.prototype.div = function (that) {
   return this + that;
 };
 
-Number.prototype["=="] = function (that) {
+Number.prototype._cmp = function(that) {
+  return this < that ? -1 : this > that ? 1 : 0;
+}
+
+Number.prototype.eql = function (that) {
   return this.isEqual(that);
 }
 
@@ -39,7 +43,11 @@ var _mul = extend(Number, _mul, function (that) { return this * that; });
 global.x = x;
 global._mul = _mul;
 
-test(' x["=="].apply(x, [2]) === true');
+test(' (x.eql || _eql).apply(x, [2]) === true ');
+test(' (x._cmp || _cmp).apply(x, [1]) === 1 ');
+test(' (x._cmp || _cmp).apply(x, [2]) === 0 ');
+test(' (x._cmp || _cmp).apply(x, [3]) === -1 ');
+
 test(' (x.add || _add).apply(x, [3]) === 5 ');
 test(' (x.mul || _mul).apply(x, [3]) === 6 ');
 test(' x.div(0) === "DivideByZeroError" ', function (e) { return e instanceof DivideByZeroError; })
@@ -62,3 +70,17 @@ global.Vector = Vector;
 
 test(' new Vector(1, 2).add(new Vector(3, 4)).isEqual(new Vector(4, 6)) ');
 //     new Vector(1, 2) + new Vector(3, 4)) == new Vector(4, 6) ');
+
+/*
+
+Numeric     _add, _sub, _mul, _div, _mod
+Comparable  _cmp, _gt,  _lt,  _gte, _lte
+Equatable   _eql
+
+var Comparable = new Trait();
+
+Comparable.methods._gt = function (that) {
+  return 
+}
+
+*/

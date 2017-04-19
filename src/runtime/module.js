@@ -34,6 +34,11 @@ function addtrait(type, parent) {
   return trait.add(type);
 }
 
+module.exports = {
+  name: "Module",
+  Trait: Trait
+}
+
 //
 
 var Iterable = new Trait();
@@ -68,6 +73,17 @@ var _iterate = extend(Array, _iterate, function () {
 
 var _map = extend(Array, _map, Iterable.methods.map(_iterate));
 
+function Methods(parent) {
+  this.parent = parent || null
+}
+
+var _methods = extend(Array, _methods, {
+  map: Iterable.methods.map(_iterate)
+});
+
+for (var name in Iterable.methods) {
+  eval("var _" + name + " = Iterable.methods[name]");
+}
 
 //
 // Tests

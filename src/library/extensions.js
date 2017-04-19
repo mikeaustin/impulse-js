@@ -1,11 +1,12 @@
-var Impulse = require("../runtime/extension.js");
+var Extension = require("../runtime/extension.js");
+var StringExtensions = require("./extensions/String.js");
+var Stringify = require("./traits/Stringify");
 
-var _toString = Impulse.extend(Object, _toString, function (hideProperties) {
+var _toString = Extension.extend(Object, _toString, function (hideProperties) {
   if (this === Object.prototype) {
     return "Object";
   }
 
-  var getPrototypeOf = Object.getPrototypeOf;
   var constructorName = this.constructor.name + " ";
   var properties = [];
 
@@ -27,7 +28,7 @@ var _toString = Impulse.extend(Object, _toString, function (hideProperties) {
   }
 });
 
-var _toString = Impulse.extend(Number, _toString, function () {
+var _toString = Extension.extend(Number, _toString, function () {
   if (this === Number.prototype) {
     return "Number";
   }
@@ -35,7 +36,7 @@ var _toString = Impulse.extend(Number, _toString, function () {
   return this.toString();
 });
 
-var _toString = Impulse.extend(Array, _toString, function () {
+var _toString = Extension.extend(Array, _toString, function () {
   if (this === Array.prototype) {
     return "Array";
   }
@@ -43,7 +44,7 @@ var _toString = Impulse.extend(Array, _toString, function () {
   return "[" + this.join(", ") + "]";
 });
 
-var _toString = Impulse.extend(_toString.methods.constructor, _toString, function () {
+var _toString = Extension.extend(_toString.methods.constructor, _toString, function () {
   if (this === _toString.methods.constructor.prototype) {
     return "Map";
   }
@@ -58,11 +59,6 @@ var _toString = Impulse.extend(_toString.methods.constructor, _toString, functio
   return "Map { " + items + " }";
 });
 
-var _capitalize = Impulse.extend(String, _capitalize, function () {
-  return this[0].toUpperCase() + this.slice(1);
-});
-
-//console.log(_capitalize.apply("xoo"));
 
 module.exports = {
   _toString: _toString
