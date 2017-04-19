@@ -74,25 +74,37 @@ var _methods = Extension2.extend(_methods, [Object], {
   }
 });
 
-var _methods = Extension2.extend(_methods, [Object], {
-  map: Iterable.methods.map(_methods.iterate),
-});
+Trait.prototype.bind = function (func) {
+  var methods = { };
+
+  for (var name in this.methods) {
+    methods[name] = func(this.methods[name]);
+  }
+
+  return methods;
+}
+
+// var methods = { };
 
 // for (var name in Iterable.methods) {
-//   eval("var _" + name + " = Iterable.methods[name]");
+//   methods[name] = Iterable.methods[name](_methods.iterate);
 // }
+
+var _methods = Extension2.extend(_methods, [Object], Iterable.bind(method => {
+  return method(_methods.iterate);
+}));
+
 
 //
 // Tests
 //
 
-global.array = [1, 2, 3];
 global._methods = _methods;
 global.Iterable = Iterable;
 
 console.log("\nmodule.js\n");
 
-test(' _methods.map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
+test(' _methods.map.apply([1, 2, 3], [n => n * n]).isEqual([1, 4, 9]) ');
 
 void function () {
   var Iterable = new addtrait([Number], Iterable);
