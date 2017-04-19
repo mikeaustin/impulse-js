@@ -44,11 +44,11 @@ module.exports = {
 
 var Iterable = new Trait();
 
-Iterable.methods.map = function (iterate) {
+Iterable.methods.map = function (iterator) {
   return function (func) {
     var array = [];
   
-    var iter = iterate.apply(this);
+    var iter = iterator.apply(this);
   
     while (iter.moveNext()) {
       array.push(func(iter.value()));
@@ -68,17 +68,17 @@ var Iterator = function Iterator(array) {
 Iterator.prototype.moveNext = function () { return ++this.index < this.array.length; }
 Iterator.prototype.value = function () { return this.array[this.index]; }
 
-var _methods = Extension2.extend(_methods, [Object], {
-  iterate: function () {
+var _methods = Extension2.extend(_methods, String, {
+  iterator: function () {
     return new Iterator(this);
   }
 });
 
-Trait.prototype.bind = function (func) {
+Trait.prototype.bind = function () {
   var methods = { };
 
   for (var name in this.methods) {
-    methods[name] = func(this.methods[name]);
+    methods[name] = this.methods[name].apply(null, arguments);
   }
 
   return methods;
@@ -90,9 +90,7 @@ Trait.prototype.bind = function (func) {
 //   methods[name] = Iterable.methods[name](_methods.iterate);
 // }
 
-var _methods = Extension2.extend(_methods, [Object], Iterable.bind(method => {
-  return method(_methods.iterate);
-}));
+var _methods = Extension2.extend(_methods, String, Iterable.bind(_methods.iterator));
 
 
 //
@@ -104,7 +102,7 @@ global.Iterable = Iterable;
 
 console.log("\nmodule.js\n");
 
-test(' _methods.map.apply([1, 2, 3], [n => n * n]).isEqual([1, 4, 9]) ');
+test(' _methods.map.apply("abc", [c => c.charCodeAt(0)]).isEqual([97, 98, 99]) ');
 
 void function () {
   var Iterable = new addtrait([Number], Iterable);
