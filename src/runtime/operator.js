@@ -1,6 +1,6 @@
 "use strict";
 
-var Extension2 = require("../runtime/extension.js").Extension2;
+var Extension = require("../runtime/extension.js").Extension;
 
 function DivideByZeroError(message) {
   this.name = "DivideByZeroError";
@@ -38,7 +38,7 @@ Number.prototype.eql = function (that) {
 
 var x = 2;
 
-var _methods = Extension2.extend(_methods, Number, {
+var _methods = Extension.extend(_methods, Number, {
     mul: function (that) { return this * that; }
 });
 

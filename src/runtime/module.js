@@ -1,8 +1,9 @@
 "use strict";
 
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
-var extend = require("../runtime/extension.js").extend;
-var Extension2 = require("../runtime/extension").Extension2;
+
+//var extend = require("../runtime/extension.js").extend;
+var Extension = require("../runtime/extension").Extension;
 
 
 function Trait(parent) {
@@ -27,6 +28,16 @@ Trait.prototype.isTypeOf = function (value) {
   }
 
   return false;
+}
+
+Trait.prototype.bind = function () {
+  var methods = { };
+
+  for (var name in this.methods) {
+    methods[name] = this.methods[name].apply(null, arguments);
+  }
+
+  return methods;
 }
 
 function addtrait(type, parent) {
@@ -68,29 +79,13 @@ var Iterator = function Iterator(array) {
 Iterator.prototype.moveNext = function () { return ++this.index < this.array.length; }
 Iterator.prototype.value = function () { return this.array[this.index]; }
 
-var _methods = Extension2.extend(_methods, String, {
+var _methods = Extension.extend(_methods, String, {
   iterator: function () {
     return new Iterator(this);
   }
 });
 
-Trait.prototype.bind = function () {
-  var methods = { };
-
-  for (var name in this.methods) {
-    methods[name] = this.methods[name].apply(null, arguments);
-  }
-
-  return methods;
-}
-
-// var methods = { };
-
-// for (var name in Iterable.methods) {
-//   methods[name] = Iterable.methods[name](_methods.iterate);
-// }
-
-var _methods = Extension2.extend(_methods, String, Iterable.bind(_methods.iterator));
+var _methods = Extension.extend(_methods, String, Iterable.bind(_methods.iterator));
 
 
 //

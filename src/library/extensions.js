@@ -1,10 +1,10 @@
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
-var Extension2 = require("../runtime/extension.js").Extension2;
+var Extension = require("../runtime/extension.js").Extension;
 var StringExtensions = require("./extensions/String.js");
 var Stringify = require("./traits/Stringify");
 
-var _methods = Extension2.extend(_methods, Object, {
+var _methods = Extension.extend(_methods, Object, {
   toString: function (hideProperties) {
     if (this === Object.prototype) {
       return "Object";
@@ -32,7 +32,7 @@ var _methods = Extension2.extend(_methods, Object, {
   }
 });
 
-var _methods = Extension2.extend(_methods, Number, {
+var _methods = Extension.extend(_methods, Number, {
   toString: function () {
     if (this === Number.prototype) {
       return "Number";
@@ -42,7 +42,7 @@ var _methods = Extension2.extend(_methods, Number, {
   }
 });
 
-var _methods = Extension2.extend(_methods, Array, {
+var _methods = Extension.extend(_methods, Array, {
   toString: function () {
     if (this === Array.prototype) {
       return "Array";
@@ -52,7 +52,7 @@ var _methods = Extension2.extend(_methods, Array, {
   }
 });
 
-var _methods = Extension2.extend(_methods, Immutable.Map().constructor, {
+var _methods = Extension.extend(_methods, Immutable.Map().constructor, {
   toString: function () {
     if (this === Immutable.Map().constructor.prototype) {
       return "Map";

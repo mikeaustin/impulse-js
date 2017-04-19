@@ -10,13 +10,13 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 // to add and invoke functions. Use extend() to add extension methods.
 //
 
-function Extension2(parent, type, func) {
+function Extension(parent, type, func) {
   this.parent = parent || null;
   this.type = type;
   this.func = func;
 }
 
-Extension2.prototype.apply = function (_this, args) {
+Extension.prototype.apply = function (_this, args) {
   for (var scope = this; scope !== null; scope = scope.parent) {
     if (scope.type.isTypeOf(_this)) {
       return scope.func.apply(_this, args);
@@ -24,7 +24,7 @@ Extension2.prototype.apply = function (_this, args) {
   }
 };
 
-Extension2.extend = function (parent, type, funcs) {
+Extension.extend = function (parent, type, funcs) {
   function Scope() { }
 
   Scope.prototype = parent || null;
@@ -38,89 +38,76 @@ Extension2.extend = function (parent, type, funcs) {
   return scope;
 }
 
-var _methods = Extension2.extend(_methods, Number, {
-  add: function (that) {
-    return this + that;
-  },
+// var Extension = function Extension(parent) {
+//   this.parent  = parent || null;
+//   this.methods = Immutable.Map();
+// };
 
-  sub: function (that) {
-    return this - that;
-  }
-});
+// // Add a new extention method, passing the type of object and the function
 
-console.log(_methods.add.apply(2, [3]), _methods.sub.apply(2, [3]));
+// Extension.prototype.add = function (type, func) {
+//   this.methods = this.methods.set(type.prototype, func);
 
+//   return this;
+// }
 
-var Extension = function Extension(parent) {
-  this.parent  = parent || null;
-  this.methods = Immutable.Map();
-};
-
-// Add a new extention method, passing the type of object and the function
-
-Extension.prototype.add = function (type, func) {
-  this.methods = this.methods.set(type.prototype, func);
-
-  return this;
-}
-
-Extension.prototype.lookup = function (_this) {
-  // Traverse the lexical scope from innermost to outermost
+// Extension.prototype.lookup = function (_this) {
+//   // Traverse the lexical scope from innermost to outermost
   
-  for (var scope = this; scope !== null; scope = scope.parent) {
-    // Traverse the inheritance hierarchy of _this,
-    // look for a match and call the appropriate function
+//   for (var scope = this; scope !== null; scope = scope.parent) {
+//     // Traverse the inheritance hierarchy of _this,
+//     // look for a match and call the appropriate function
 
-    for (var proto = _this; proto !== null; proto = Object.getPrototypeOf(proto)) {
-      var method = scope.methods.get(proto);
+//     for (var proto = _this; proto !== null; proto = Object.getPrototypeOf(proto)) {
+//       var method = scope.methods.get(proto);
  
-      if (method !== undefined) {
-        return method;
-      }
-    }
-  }
-}
+//       if (method !== undefined) {
+//         return method;
+//       }
+//     }
+//   }
+// }
 
-Extension.prototype.construct = function (_this, args) {
-  var constructor = this.lookup(_this);
+// Extension.prototype.construct = function (_this, args) {
+//   var constructor = this.lookup(_this);
   
-  function Constructor() {
-    return constructor.apply(this, args);
-  }
+//   function Constructor() {
+//     return constructor.apply(this, args);
+//   }
   
-  Constructor.prototype = constructor.prototype;
+//   Constructor.prototype = constructor.prototype;
   
-  var instance = new Constructor();
+//   var instance = new Constructor();
   
-  instance.constructor = constructor;
+//   instance.constructor = constructor;
   
-  return instance;
-}
+//   return instance;
+// }
 
 // Call an extension method, passing in the "this" object and the arguments
 
-Extension.prototype.apply = function (_this, args) {
-  if (_this === null || _this === undefined) {
-    return _this;
-  }
+// Extension.prototype.apply = function (_this, args) {
+//   if (_this === null || _this === undefined) {
+//     return _this;
+//   }
 
-  return this.lookup(_this).apply(_this, args);
-}
+//   return this.lookup(_this).apply(_this, args);
+// }
 
-// Add an extention method to type. Parent is the lexically scoped outer
-// method. Because of hoisting, the first use will be undefined.
+// // Add an extention method to type. Parent is the lexically scoped outer
+// // method. Because of hoisting, the first use will be undefined.
 
-function extend(type, parent, func) {
-  var extension = parent;
+// function extend(type, parent, func) {
+//   var extension = parent;
 
-  extension = new Extension(parent);
+//   extension = new Extension(parent);
 
-  return extension.add(type, func);
-}
+//   return extension.add(type, func);
+// }
 
 module.exports = {
   //extend: extend,
-  Extension2
+  Extension
 }
 
 
@@ -136,13 +123,13 @@ console.log("\nextension.js\n");
 //  }
 // });
 
-var _methods = Extension2.extend(_methods, String, {
+var _methods = Extension.extend(_methods, String, {
   capitalize: function () {
     return this[0].toUpperCase() + this.slice(1);
   }
 });
 
-var _methods = Extension2.extend(_methods, Number, {
+var _methods = Extension.extend(_methods, Number, {
   factorial: function factorial() {
     if (this === 0) {
       return 1;
