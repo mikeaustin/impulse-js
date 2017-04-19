@@ -2,6 +2,7 @@
 
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var extend = require("../runtime/extension.js").extend;
+var Extension2 = require("../runtime/extension").Extension2;
 
 
 function Trait(parent) {
@@ -67,37 +68,31 @@ var Iterator = function Iterator(array) {
 Iterator.prototype.moveNext = function () { return ++this.index < this.array.length; }
 Iterator.prototype.value = function () { return this.array[this.index]; }
 
-var _iterate = extend(Array, _iterate, function () {
-  return new Iterator(this);
+var _methods = Extension2.extend(_methods, [Object], {
+  iterate: function () {
+    return new Iterator(this);
+  }
 });
 
-var _map = extend(Array, _map, Iterable.methods.map(_iterate));
-
-function Methods(parent) {
-  this.parent = parent || null
-}
-
-var _methods = extend(Array, _methods, {
-  map: Iterable.methods.map(_iterate)
+var _methods = Extension2.extend(_methods, [Object], {
+  map: Iterable.methods.map(_methods.iterate),
 });
 
-for (var name in Iterable.methods) {
-  eval("var _" + name + " = Iterable.methods[name]");
-}
+// for (var name in Iterable.methods) {
+//   eval("var _" + name + " = Iterable.methods[name]");
+// }
 
 //
 // Tests
 //
 
-var array = [1, 2, 3];
-
+global.array = [1, 2, 3];
+global._methods = _methods;
 global.Iterable = Iterable;
-global.array = array;
-global._map = _map;
 
 console.log("\nmodule.js\n");
 
-test(' _map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
+test(' _methods.map.apply(array, [n => n * n]).isEqual([1, 4, 9]) ');
 
 void function () {
   var Iterable = new addtrait([Number], Iterable);

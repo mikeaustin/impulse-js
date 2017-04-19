@@ -1,6 +1,6 @@
 "use strict";
 
-var extend = require("../runtime/extension.js").extend;
+var Extension2 = require("../runtime/extension.js").Extension2;
 
 function DivideByZeroError(message) {
   this.name = "DivideByZeroError";
@@ -38,18 +38,21 @@ Number.prototype.eql = function (that) {
 
 var x = 2;
 
-var _mul = extend(Number, _mul, function (that) { return this * that; });
+var _methods = Extension2.extend(_methods, Number, {
+    mul: function (that) { return this * that; }
+});
+
 
 global.x = x;
-global._mul = _mul;
+global._methods = _methods;
 
 test(' (x.eql || _eql).apply(x, [2]) === true ');
 test(' (x._cmp || _cmp).apply(x, [1]) === 1 ');
 test(' (x._cmp || _cmp).apply(x, [2]) === 0 ');
 test(' (x._cmp || _cmp).apply(x, [3]) === -1 ');
 
-test(' (x.add || _add).apply(x, [3]) === 5 ');
-test(' (x.mul || _mul).apply(x, [3]) === 6 ');
+test(' (x.add || _methods.add).apply(x, [3]) === 5 ');
+test(' (x.mul || _methods.mul).apply(x, [3]) === 6 ');
 test(' x.div(0) === "DivideByZeroError" ', function (e) { return e instanceof DivideByZeroError; })
 
 function Vector(x, y) {

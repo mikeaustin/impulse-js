@@ -113,15 +113,14 @@ Extension.prototype.apply = function (_this, args) {
 function extend(type, parent, func) {
   var extension = parent;
 
-  //if (parent === undefined || parent.methods.get(type) !== undefined) {
-    extension = new Extension(parent);
-  //}
+  extension = new Extension(parent);
 
   return extension.add(type, func);
 }
 
 module.exports = {
-  extend: extend
+  //extend: extend,
+  Extension2
 }
 
 
@@ -131,23 +130,24 @@ module.exports = {
 
 console.log("\nextension.js\n");
 
-var _capitalize = extend(String, _capitalize, function () {
-  return this[0].toUpperCase() + this.slice(1);
-});
-
-var _factorial = extend(Number, _factorial, function _factorial() {
-  if (this === 0) {
-    return 1;
+var _methods = Extension2.extend(_methods, String, {
+  capitalize: function () {
+    return this[0].toUpperCase() + this.slice(1);
   }
-
-  return this * _factorial.apply(this - 1);
 });
 
-global.foo = "foo";
-global._capitalize = _capitalize;
-global._factorial = _factorial;
+var _methods = Extension2.extend(_methods, Number, {
+  factorial: function factorial() {
+    if (this === 0) {
+      return 1;
+    }
 
-test(' (foo.capitalize || _capitalize).apply(foo) === "Foo" ');
-test(' (foo.toUpperCase || _toUppderCase).apply(foo) === "FOO" ');
+    return this * factorial.apply(this - 1);
+  }
+});
 
-test(' _factorial.apply(5, []) === 120 ');
+global._methods = _methods;
+
+test(' var foo = "foo"; (foo.capitalize || _methods.capitalize).apply(foo) === "Foo" ');
+test(' var foo = "foo"; (foo.toUpperCase || _methods.toUppderCase).apply(foo) === "FOO" ');
+test(' var num = 5; (num.factorial || _methods.factorial).apply(num, []) === 120 ');
