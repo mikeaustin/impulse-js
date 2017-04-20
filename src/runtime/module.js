@@ -1,9 +1,6 @@
 "use strict";
 
-var Immutable = require("../../node_modules/immutable/dist/immutable.js");
-
-//var extend = require("../runtime/extension.js").extend;
-var Extension = require("../runtime/extension").Extension;
+var Extension = require("../runtime/extension");
 
 
 function Trait(parent) {
@@ -46,10 +43,11 @@ function addtrait(type, parent) {
   return trait.add(type);
 }
 
-module.exports = {
-  name: "Module",
-  Trait: Trait
-}
+// module.exports = {
+//   Trait: Trait
+// }
+
+module.exports = Trait;
 
 //
 

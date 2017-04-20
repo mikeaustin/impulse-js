@@ -92,9 +92,11 @@ function define(params, func) {
   return closure;
 }
 
-module.exports = {
-  define: define
-}
+// module.exports = {
+//   define: define
+// }
+
+module.exports = Parameters;
 
 
 //

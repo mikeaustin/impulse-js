@@ -1,9 +1,5 @@
 "use strict";
 
-var Immutable = require("../../node_modules/immutable/dist/immutable.js");
-
-var getPrototypeOf = Object.getPrototypeOf;
-
 
 //
 // class Union
@@ -72,10 +68,12 @@ Option.prototype.isType = function (that) {
   return false;
 }
 
-module.exports = {
-  Union: Union,
-  Option: Option
-};
+// module.exports = {
+//   Union: Union,
+//   Option: Option
+// };
+
+module.exports = Union;
 
 
 //

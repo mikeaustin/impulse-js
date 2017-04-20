@@ -1,4 +1,6 @@
-var Extension = require("../../runtime/extension").Extension;
+"use strict";
+
+var Extension = require("../../runtime/extension");
 
 var _methods = Extension.extend(_methods, String, {
   capitalize: function () {

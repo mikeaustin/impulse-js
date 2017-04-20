@@ -1,6 +1,6 @@
 "use strict";
 
-var Extension = require("../runtime/extension.js").Extension;
+var Extension = require("../runtime/extension.js");
 
 function DivideByZeroError(message) {
   this.name = "DivideByZeroError";

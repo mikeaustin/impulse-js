@@ -105,11 +105,12 @@ Extension.extend = function (parent, type, funcs) {
 //   return extension.add(type, func);
 // }
 
-module.exports = {
-  //extend: extend,
-  Extension
-}
+// module.exports = {
+//   //extend: extend,
+//   Extension
+// }
 
+module.exports = Extension;
 
 //
 // Tests

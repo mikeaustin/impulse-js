@@ -1,9 +1,5 @@
-
-var x = require('../../runtime/module');
-
-eval("var " + x.name + " = x");
-
 "use strict";
 
+var Trait = require('../../runtime/module');
 
-var Stringify = new Module.Trait();
+var Stringify = new Trait();

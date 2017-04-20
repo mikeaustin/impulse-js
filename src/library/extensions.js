@@ -1,6 +1,8 @@
+"use strict";
+
 var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
-var Extension = require("../runtime/extension.js").Extension;
+var Extension = require("../runtime/extension.js");
 var StringExtensions = require("./extensions/String.js");
 var Stringify = require("./traits/Stringify");
 

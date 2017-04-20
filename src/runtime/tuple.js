@@ -1,10 +1,5 @@
 "use strict";
 
-var Immutable = require("../../node_modules/immutable/dist/immutable.js");
-
-var List = Immutable.List;
-var Range = Immutable.Range;
-
 
 //
 // class Tuple
@@ -71,9 +66,11 @@ Tuple.prototype.map = function (func) {
 };
 
 
-module.exports = {
-  Tuple: Tuple
-};
+// module.exports = {
+//   Tuple: Tuple
+// };
+
+module.exports = Tuple;
 
 
 //
@@ -82,11 +79,7 @@ module.exports = {
 
 console.log("\ntuple.js\n");
 
-global.L = List.of;
 global.T = Tuple.of;
-global.R = function (start, end, step) {
-  return Range(start, end + 1, step);
-}
 
 test(' T(1, 2).concat(T(3, 4)).isEqual(T(1, 2, 3, 4)) === true');
 //test(' (T([1, 2], [3, 4]).map((a, b) => a + b)).isEqual([4, 6]) ');
