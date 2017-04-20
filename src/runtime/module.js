@@ -8,9 +8,13 @@ function Trait(parent, funcs) {
   this.types = new Set();
   this.methods = parent ? parent.methods : { };
 
-  for (name in funcs) {
+  for (var name in funcs) {
     this.methods[name] = funcs[name];
   }
+}
+
+Trait.isTypeOf = function(that) {
+  return that instanceof this;
 }
 
 Trait.prototype.add = function (type) {
@@ -47,29 +51,25 @@ function addtrait(type, parent) {
   return trait.add(type);
 }
 
-// module.exports = {
-//   Trait: Trait
-// }
-
 module.exports = Trait;
 
 //
 
-var Iterable = new Trait();
-
-Iterable.methods.map = function (iterator) {
-  return function (func) {
-    var array = [];
-  
-    var iter = iterator.apply(this);
-  
-    while (iter.moveNext()) {
-      array.push(func(iter.value()));
-    }
+var Iterable = new Trait(Iterable, {
+  map: function (iterator) {
+    return function (func) {
+      var array = [];
     
-    return array;
+      var iter = iterator.apply(this);
+    
+      while (iter.moveNext()) {
+        array.push(func(iter.value()));
+      }
+      
+      return array;
+    }
   }
-}
+});
 
 //
 

@@ -26,8 +26,12 @@ function joinAttrs(attrs) {
   return (str !== "" ? " " : "") + str;
 }
 
-console.log(
+console.log("\nhtml.js\n");
+
+global.html = (
   ul (new Map([["class", "parts"]]), [
     li (new Map(), ["text"])
   ])
 );
+
+test(' html === "<ul class=\\"parts\\"><li>text</li></ul>" ');
