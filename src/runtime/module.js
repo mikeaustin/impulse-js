@@ -3,10 +3,14 @@
 var Extension = require("../runtime/extension");
 
 
-function Trait(parent) {
+function Trait(parent, funcs) {
   this.parent = parent || null;
   this.types = new Set();
   this.methods = parent ? parent.methods : { };
+
+  for (name in funcs) {
+    this.methods[name] = funcs[name];
+  }
 }
 
 Trait.prototype.add = function (type) {

@@ -5,6 +5,7 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 var Extension = require("../runtime/extension.js");
 var StringExtensions = require("./extensions/String.js");
 var Stringify = require("./traits/Stringify");
+var Iterable = require("./traits/Iterable");
 
 var _methods = Extension.extend(_methods, Object, {
   toString: function (hideProperties) {

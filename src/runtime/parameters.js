@@ -19,9 +19,12 @@ function Parameters(signature) {
   this.length = signature.length;
 
   for (var i = 0; i < signature.length; i++) {
+    var parameterName = getParameterName(signature[i]);
+    var parameterType = getParameterType(signature[i]);
+
     this[i] = {
-      name:    getParameterName(signature[i]),
-      type:    getParameterType(signature[i]),
+      name:    parameterName,
+      type:    parameterType,
       default: signature[i].$
     };
   }
@@ -48,6 +51,7 @@ Parameters.prototype.apply = function (_arguments) {
   // Keyword arguments
 
   var keywordArguments = _arguments[i];
+  var restArguments = _arguments[i + 1];
 
   while (i < this.length) {
     var argument;
@@ -55,7 +59,7 @@ Parameters.prototype.apply = function (_arguments) {
     if (keywordArguments && keywordArguments.hasOwnProperty(this[i].name)) {
       argument = keywordArguments[this[i].name];
     } else if (this[i].hasOwnProperty("default")) {
-        argument = this[i]["default"];
+      argument = this[i]["default"];
     } else {
       throw Error("Missing parameter: '" + this[i].name + "' in call to function '" + "XXX" + "'");
     }
@@ -80,7 +84,7 @@ Parameters.prototype.apply = function (_arguments) {
   return args;
 }
 
-function define(params, func) {
+Parameters.define = function (params, func) {
   var parameters = new Parameters(params);
 
   var closure = function () {
@@ -113,7 +117,7 @@ test(' params.apply([])[0] === 1 ');
 //console.log(params.apply(["foo"]));
 
 
-String.prototype.slice = define([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}], String.prototype.slice);
+String.prototype.slice = Parameters.define([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}], String.prototype.slice);
 
 global.foo = "foo";
 
@@ -135,7 +139,7 @@ Immutable.Range.prototype.case = function (that) {
   return Number.isTypeOf(that) && this.includes(that);
 }
 
-var numberOrString = define([{foo: Union.of(Number, String, [Int], Boolean)}], function (foo) {
+var numberOrString = Parameters.define([{foo: Union.of(Number, String, [Int], Boolean)}], function (foo) {
   var $; switch (true) {                            // return switch (foo) {
     case R(1, 5).case(foo):                         //
     case (7).case(foo):     $ = "1..5, 7";  break;  //   case 1..5, 7: "1..5, 7"

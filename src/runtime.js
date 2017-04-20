@@ -36,6 +36,7 @@ var Operator = require("./runtime/operator.js");
 // Library
 
 var Extensions = require("./library/extensions.js");
+var Extensions = require("./library/HTML.js");
 
 var Impulse = {
   Extension: Extension,
