@@ -2,27 +2,118 @@ util = require("util");
 fs = require("fs");
 peg = require("pegjs");
 
-function Tuple() {
-  for (var i = 0; i < arguments.length; i += 1) {
-    this.values = Array.prototype.slice.call(arguments);
+var Parser = require("./parser");
+
+function inspect() {
+  var args = [];
+
+  for (var i = 0; i < arguments.length; i++) {
+    args.push(util.inspect(arguments[i], { depth: null, breakLength: null}));
   }
+
+  console.log.apply(null, args);
 }
 
-function Range(start, end) {
-  this.start = start;
-  this.end   = end;
+function indent(level) {
+  var length = level || 0;
+
+  return Array(length + 1).join("  ");
 }
 
-// _(foo, bar).map
-var test = `-1;`;
+var test = `
+f = (x, y) => { x + y; x + y; };
 
-fs.readFile("parser.pegjs", "utf8", function (error, data) {
-  var parser = peg.generate(data);
+function foo(a, b) {
+  return ((a + 2) * 1, b * 2);
+}
+`;
 
-  var result = parser.parse(test);
+var test = `
+(a, b) => a + b;
+`;
 
-  console.log(util.inspect(result, { depth: null, breakLength: null })); 
-});
+//fs.readFile("parser.pegjs", "utf8", function (error, data) {
+
+var Statement = {
+  Program: function (node, level) {
+    for (var i = 0; i < node.body.length; i++) {
+      console.log(generate(node.body[i], level));
+    }
+  },
+
+  FunctionDeclaration: function (node, level) {
+    var params = node.params.map(param => generate(param, level));
+
+    return "function " + generate(node.id, level) + "(" + params.join(", ") + ") " + generate(node.body, level);
+  },
+
+
+  BlockStatement: function (node, level) {
+    var statements = [];
+
+    for (var i = 0; i < node.body.length; i++) {
+      statements.push(indent(level + 1) + generate(node.body[i], level));
+    }
+
+    return "{\n" + statements.join("\n") + "\n}";
+  },
+
+  ReturnStatement: function (node, level) {
+    return "return " + generate(node.argument, level) + ";";
+  },
+
+  ExpressionStatement: function (node, level) {
+    return generate(node.expression, level) + ";";
+  },
+
+
+  AssignmentExpression: function (node, level) {
+    return generate(node.left, level) + " = " + generate(node.right, level);
+  },
+
+  FunctionExpression: function (node, level) {
+    var params = node.params.map(param => generate(param, level));
+
+    return "(" + params.join(", ") + ")" + " => " + generate(node.body, level);
+  },
+
+  BinaryExpression: function (node, level) {
+    return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
+  },
+
+  ArrayExpression: function (node, level) {
+    return "[" + node.elements.map(element => generate(element, level)).join(", ") + "]";
+  },
+
+  TupleExpression: function (node, level) {
+    return "T(" + node.elements.map(element => generate(element, level)).join(", ") + ")";
+  },
+
+
+  Literal: function (node, level) {
+    return node.value.toString();
+  },
+
+  Identifier: function (node, level) {
+    return node.name;
+  }
+};
+
+function generate(node, level) {
+  if (Statement[node.type]) {
+    return Statement[node.type](node, level);
+  }
+
+  throw new Error("Unknown node type '" + node.type + "'");
+}
+
+function generateJS(ast) {
+  console.log(util.inspect(ast, { depth: null, breakLength: null })); 
+
+  generate(ast, 0);
+}
+
+generateJS(Parser.parse(test));
 
 /*
 

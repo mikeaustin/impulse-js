@@ -386,7 +386,7 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 TupleLiteral
-  = "(" __ head:Expression __ tail:(__ "," __ Expression)* __ ")" {
+  = "(" __ head:Expression __ tail:(__ "," __ Expression)+ __ ")" {
       return {
         type: "TupleExpression",
         elements: buildList(head, tail, 3)
@@ -408,8 +408,9 @@ ArrayLiteral
     }
 
 ElementList
-  = head:AssignmentExpression tail:(__ "," __ element:AssignmentExpression)*
-    { return Array.prototype.concat.apply(head, tail); }
+  = head:AssignmentExpression tail:(__ "," __ element:AssignmentExpression)* {
+      return Array.prototype.concat.apply(head, tail);
+    }
 
 ObjectLiteral
   = "{" __ "}" { return { type: "ObjectExpression", properties: [] }; }
@@ -826,7 +827,7 @@ FunctionExpression
       return {
         type: "FunctionExpression",
         id: null,
-        params: optionalList(extractOptional(params, 0)),
+        params: params,
         body: body
       };
     }
