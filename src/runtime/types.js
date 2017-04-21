@@ -19,8 +19,12 @@ Boolean.prototype.assertType = String.assertType = function (that) {
 
 
 //
-// Object.isTypeOf(that)
+// this.isTypeOf(that)
 //
+
+// Function.prototype.isTypeOf = function(that) {
+//   return Object.getPrototypeOf(this).isPrototypeOf(that);
+// }
 
 Object.isTypeOf = function (that) {
   return this.prototype.isPrototypeOf(Object(that));
@@ -66,7 +70,7 @@ Array.prototype.isTypeOf = function (that) {
 
 
 //
-// Object.isEqual(that)
+// this.isEqual(that)
 //
 
 Boolean.prototype.isEqual = Number.prototype.isEqual = String.prototype.isEqual = function (that) {
@@ -89,7 +93,7 @@ Array.prototype.isEqual = function (that) {
 
 
 //
-// Object.from(value)
+// this.from(value)
 //
 
 Boolean.from = function (value) {
@@ -180,6 +184,29 @@ String.from = function (value, separator) {
 
 console.log("\ntypes.js\n");
 
+test(' Number.isTypeOf(1) === true ');
+test(' Int.isTypeOf(1) === true ');
+test(' Int.isTypeOf(1.5) === false ');
+test(' String.isTypeOf("foo") === true ');
+test(' Boolean.isTypeOf(true) === true ')
+
+console.log("\ntypes.js\n");
+
+test(' [].isTypeOf([]) ');
+test(' [Number].isTypeOf([1, 2, 3]) === true ')
+test(' [String].isTypeOf(["foo", "bar"]) === true ')
+test(' [Number].isTypeOf([1, 2, "x"]) === false ')
+test(' [Object].isTypeOf([1, "foo"]) === true');
+
+console.log("");
+
+test(' (1).isEqual(1) === true ');
+test(' (true).isEqual(true) === true ');
+test(' ("foo").isEqual("foo") === true ');
+test(' [1, "foo"].isEqual([1, "foo"]) === true ');
+
+console.log("");
+
 test(' Number.from("1.5") === 1.5 ');
 test(' Int.from("FF", 16) === 255 ');
 test(' Number.from("foo") === "TypeError" ', function (e) { return e instanceof TypeError; } );
@@ -187,28 +214,3 @@ test(' Int.from("1.5") === "TypeError" ', function (e) { return e instanceof Typ
 test(' String.from(["a", "b"]) === "ab" ');
 test(' String.from(["a", "b"], ", ") === "a, b" ');
 test(' Boolean.from("false") === false ');
-
-console.log("");
-
-//console.log("assertType: ", true.assertType(Boolean));
-//console.log("assertType: ", "foo".constructor.assertType("foo", Boolean));
-
-test(' (1).isEqual(1) === true ');
-test(' ("foo").isEqual("foo") === true ');
-test(' (true).isEqual(true) === true ');
-
-console.log("");
-
-test(' Number.isTypeOf(1) === true ');
-test(' Int.isTypeOf(1) === true ');
-test(' Int.isTypeOf(1.5) === false ');
-test(' String.isTypeOf("foo") === true ');
-test(' Boolean.isTypeOf(true) === true ')
-
-console.log("");
-
-test(' [].isTypeOf([]) ');
-test(' [Number].isTypeOf([1, 2, 3]) === true ')
-test(' [String].isTypeOf(["foo", "bar"]) === true ')
-test(' [Number].isTypeOf([1, 2, "x"]) === false ')
-test(' [Object].isTypeOf([1, "foo"]) === true');

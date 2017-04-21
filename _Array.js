@@ -1,19 +1,19 @@
-var _Array = function Array() {
-  this.array = [];
+"use strict";
+
+var _Array = Array;
+
+global.Array = function () {
+console.log(_Array);
+  var array = new _Array();
+
+  array.foo = function() {
+    console.log("foo");
+  }
+
+  return array;
 }
 
-_Array.prototype.inspect = function () {
-  return this.array;
-};
-
-var names = Object.getOwnPropertyNames(Array.prototype);
-
-for (prop of names) {
-  console.log(prop);
-  _Array.prototype[prop] = function () { return Array.prototype[prop].apply(this.array, arguments); }
-}
-
-a = new _Array();
+a = new Array();
 a.push(1, 2, 3);
 
 console.log(a);

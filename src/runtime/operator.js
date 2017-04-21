@@ -16,11 +16,11 @@ DivideByZeroError.prototype.constructor = DivideByZeroError;
 
 console.log("\noperator.js\n");
 
-Number.prototype.add = function (that) {
+Number.prototype._add = function (that) {
   return this + that;
 };
 
-Number.prototype.div = function (that) {
+Number.prototype._div = function (that) {
   if (that === 0) {
     throw new DivideByZeroError("Division by zero");
   }
@@ -32,28 +32,27 @@ Number.prototype._cmp = function(that) {
   return this < that ? -1 : this > that ? 1 : 0;
 }
 
-Number.prototype.eql = function (that) {
-  return this.isEqual(that);
-}
+//Number.prototype.eql = Number.prototype.isEqual;
+
 
 var x = 2;
 
 var _methods = Extension.extend(_methods, Number, {
-    mul: function (that) { return this * that; }
+    _mul: function (that) { return this * that; }
 });
 
 
 global.x = x;
 global._methods = _methods;
 
-test(' (x.eql || _eql).apply(x, [2]) === true ');
-test(' (x._cmp || _cmp).apply(x, [1]) === 1 ');
-test(' (x._cmp || _cmp).apply(x, [2]) === 0 ');
-test(' (x._cmp || _cmp).apply(x, [3]) === -1 ');
+//test(' (x.eql || _methods.eql).apply(x, [2]) === true ');
+test(' (x._cmp || _methods.cmp).apply(x, [1]) === 1 ');
+test(' (x._cmp || _methods.cmp).apply(x, [2]) === 0 ');
+test(' (x._cmp || _methods.cmp).apply(x, [3]) === -1 ');
 
-test(' (x.add || _methods.add).apply(x, [3]) === 5 ');
-test(' (x.mul || _methods.mul).apply(x, [3]) === 6 ');
-test(' x.div(0) === "DivideByZeroError" ', function (e) { return e instanceof DivideByZeroError; })
+test(' (x._add || _methods._add).apply(x, [3]) === 5 ');
+test(' (x._mul || _methods._mul).apply(x, [3]) === 6 ');
+test(' (x._div || _methods._dib)(0) === "DivideByZeroError" ', function (e) { return e instanceof DivideByZeroError; })
 
 function Vector(x, y) {
   this.x = x;
@@ -64,14 +63,14 @@ Vector.prototype.isEqual = function (that) {
   return this.x.isEqual(that.x) && this.y.isEqual(that.y);
 }
 
-Vector.prototype.add = function (that) {
+Vector.prototype._add = function (that) {
   return new Vector(this.x + that.x, this.y + that.y);
 }
 
 
 global.Vector = Vector;
 
-test(' new Vector(1, 2).add(new Vector(3, 4)).isEqual(new Vector(4, 6)) ');
+test(' new Vector(1, 2)._add(new Vector(3, 4)).isEqual(new Vector(4, 6)) ');
 //     new Vector(1, 2) + new Vector(3, 4)) == new Vector(4, 6) ');
 
 /*
