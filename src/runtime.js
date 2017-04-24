@@ -39,11 +39,11 @@ var Extensions = require("./library/extensions.js");
 var Extensions = require("./library/HTML.js");
 
 var Impulse = {
-  Extension: Extension,
   Tuple: Tuple,
-  Parameters: Parameters
+  Union: Union,
+  Extension: Extension,
+  Parameters: Parameters,
+  Module: Module
 };
-
-console.log("\n" + passed + " tests passed, " + failed + " tests failed.\n");
 
 module.exports = Impulse;

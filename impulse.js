@@ -11,7 +11,7 @@ function inspect() {
     args.push(util.inspect(arguments[i], { depth: null, breakLength: null}));
   }
 
-  console.log.apply(null, args);
+  console.error.apply(null, args);
 }
 
 function indent(level) {
@@ -21,20 +21,17 @@ function indent(level) {
 }
 
 var test = `
-f = (x, y) => x + y;
+var $, tuple = (1, 2);
 
-function foo(items) {
-  {
-    this.max();
-    this.min();
-  }
+// var f = (x, y) => x + y;
 
-  return (1..5).map(n => n * n);
-}
+// function foo(items) {
+//   return items.map(n => n * n);
+// }
 
-foo(10);
+// foo(1..5);
 
-"foo".capitlaize(10);
+//"foo".capitlaize(10);
 `;
 
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
@@ -50,6 +47,22 @@ var Statement = {
   Program: function (node, level) {
     for (var i = 0; i < node.body.length; i++) {
       console.log(generate(node.body[i], level));
+    }
+  },
+
+  VariableDeclaration: (node, level) => {
+    return "var " + node.declarations.map(decl => {
+      return indent(level) + generate(decl, level);
+    }).join(", ") + ";";
+  },
+
+  VariableDeclarator: (node, level) => {
+    if (!node.init) {
+      return generate(node.id, level);
+    } else if (node.init.value === null) {
+      return generate(node.id, level) + " = " + "null";
+    } else {
+      return generate(node.id, level) + " = " + generate(node.init, level);
     }
   },
 
@@ -125,16 +138,20 @@ var Statement = {
 
   CallExpression: function (node, level) {
     var arguments = node.arguments.map(argument => generate(argument, level));
-    var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : "null";
+    var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
 
-    return generate(node.callee,  level) + ".apply(" + "$" + ", [" + arguments + "])";
+    if (object) {
+      return "($ = " + object + ", " + generate(node.callee,  level) + ").apply(" + "$" + ", [" + arguments + "])";
+    } else {
+      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + arguments + "])";
+    }
   },
 
   MemberExpression: function (node, level) {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    return "($ = " + object + ", $." + property + " || _methods." + property + ")";
+    return object + "." + property + " || _methods." + property;
   },
 
   ThisExpression: (node, level) => {
@@ -144,7 +161,11 @@ var Statement = {
   //
 
   Literal: function (node, level) {
-    return node.value.toString();
+    if (typeof node.value === "string") {
+      return '"' + node.value + '"';
+    } else {
+      return node.value.toString();
+    }
   },
 
   Identifier: function (node, level) {
@@ -160,13 +181,14 @@ function generate(node, level, options) {
   throw new Error("Unknown node type '" + node.type + "'");
 }
 
-function generateJS(ast) {
-  console.log(util.inspect(ast, { depth: null, breakLength: null })); 
 
-  generate(ast, 0);
-}
+var ast = Parser.parse(test);
 
-generateJS(Parser.parse(test));
+inspect(ast);
+
+console.log('var Impulse = require("./src/runtime");');
+
+generate(ast, 0);
 
 /*
 
