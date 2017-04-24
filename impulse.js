@@ -21,11 +21,7 @@ function indent(level) {
 }
 
 var test = `
-f = (x, y) => {
-  x + y;
-  x + y;
-  x + y;
-};
+f = (x, y) => x + y;
 
 function foo(items) {
   {
@@ -33,7 +29,7 @@ function foo(items) {
     this.min();
   }
 
-  return items.map(item => item * this.max());
+  return (1..5).map(n => n * n);
 }
 
 foo(10);
@@ -42,6 +38,13 @@ foo(10);
 `;
 
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
+
+var operators = {
+  "+": "_add",
+  "-": "_sub",
+  "*": "_mul",
+  "/": "_div",
+}
 
 var Statement = {
   Program: function (node, level) {
@@ -96,7 +99,13 @@ var Statement = {
   },
 
   BinaryExpression: function (node, level) {
-    return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
+    var left = generate(node.left, level);
+
+    if (true) {
+      return "(" + generate(node.left, level) + "." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply(" + left + ", [" + generate(node.right, level) + "])";
+    } else {
+      return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
+    }
   },
 
   ArrayExpression: function (node, level) {
@@ -107,18 +116,25 @@ var Statement = {
     return "T(" + node.elements.map(element => generate(element, level)).join(", ") + ")";
   },
 
+  RangeExpression: function (node, level) {
+    var left = generate(node.left, level);
+    var right = generate(node.right, level);
+
+    return "R(" + left + ", " + right + ")";
+  },
+
   CallExpression: function (node, level) {
     var arguments = node.arguments.map(argument => generate(argument, level));
     var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : "null";
 
-    return generate(node.callee,  level) + ".apply(" + object + ", [" + arguments + "])";
+    return generate(node.callee,  level) + ".apply(" + "$" + ", [" + arguments + "])";
   },
 
   MemberExpression: function (node, level) {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    return "(" + object + "." + property + " || _methods." + property + ")";
+    return "($ = " + object + ", $." + property + " || _methods." + property + ")";
   },
 
   ThisExpression: (node, level) => {
