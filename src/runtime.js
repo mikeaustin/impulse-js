@@ -28,6 +28,7 @@ global.test = function (expression, onException) {
 var Types = require("./runtime/types");
 var Tuple = require("./runtime/tuple.js");
 var Union = require("./runtime/union.js");
+
 var Extension = require("./runtime/extension.js");
 var Parameters = require("./runtime/parameters.js");
 var Module = require("./runtime/module.js");
@@ -38,12 +39,18 @@ var Operator = require("./runtime/operator.js");
 var Extensions = require("./library/extensions.js");
 var Extensions = require("./library/HTML.js");
 
-var Impulse = {
+//
+// Exports
+//
+
+/**
+ * @module Impulse
+**/
+
+module.exports = {
   Tuple: Tuple,
   Union: Union,
   Extension: Extension,
   Parameters: Parameters,
   Module: Module
 };
-
-module.exports = Impulse;

@@ -5,9 +5,9 @@
   "main": "index.js",
   "author": "Mike Austin <mike_ekim@yahoo.com>",
   "license": "MIT",
-
   "dependencies": {
     "immutable": "^3.8.1",
+    "jsdoc": "^3.4.3",
     "pegjs": "^0.10.0"
   },
   "devDependencies": {},

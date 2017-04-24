@@ -1,8 +1,11 @@
 "use strict";
 
-//
-// class Tuple
-//
+/**
+ * @constructor Tuple
+ * @memberof module:Impulse
+ *
+ * @summary A tuple type that supports structural typing and multi-value mapping on iterables.
+**/
 
 function Tuple(iterable) {
   this.values = Array.prototype.slice.call(iterable, 0);

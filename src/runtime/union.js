@@ -1,9 +1,12 @@
 "use strict";
 
 
-//
-// class Union
-//
+/**
+ * @constructor Union
+ * @memberof module:Impulse
+ *
+ * @summary A Union type that allows runtime parameter typechecking with different types.
+**/
 
 function Union(iterable) {
   this.values = Array.prototype.slice.call(iterable, 0);
