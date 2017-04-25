@@ -16,10 +16,9 @@ global.params = new Parameters([{foo: Int, $: 1}, {bar: Union.of(Int, Undefined)
 test(' params.apply([10])[0] === 10 ');
 test(' params.apply([{foo: 10}])[0] === 10 ');
 test(' params.apply([])[0] === 1 ');
-//console.log(params.apply(["foo"]));
 
 
-String.prototype.slice = Parameters.define([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}], String.prototype.slice);
+String.prototype.slice.parameters = new Parameters([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}]);
 
 global.foo = "foo";
 

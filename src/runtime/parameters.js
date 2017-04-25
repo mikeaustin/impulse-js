@@ -102,6 +102,15 @@ Parameters.define = function (params, func) {
   return closure;
 }
 
+
+var _apply = Function.prototype.apply;
+
+Function.prototype.apply = function apply(_this, args) {
+  var args = this.parameters ? this.parameters.apply(args) : args;
+
+  return _apply.call(this, _this, args);
+}
+
 //
 // Exports
 //

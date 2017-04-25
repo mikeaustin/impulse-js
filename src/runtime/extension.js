@@ -17,6 +17,10 @@ function Extension(parent, type, func) {
   this.func = func;
 }
 
+Function.prototype.isTypeOf = function (that) {
+  return that instanceof this;
+}
+
 Extension.prototype.apply = function (_this, args) {
   for (var scope = this; scope !== null; scope = scope.parent) {
     if (scope.type.isTypeOf(_this)) {

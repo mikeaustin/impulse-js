@@ -48,6 +48,12 @@ extend String {
 console.log("foo".capitalize());
 `;
 
+var test = `
+class Vector {
+
+}
+`;
+
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
 
 var operators = {
@@ -78,6 +84,13 @@ var Statement = {
     } else {
       return generate(node.id, level) + " = " + generate(node.init, level);
     }
+  },
+
+  ClassDeclaration: (node, level) => {
+    var id = generate(node.id, level);
+    var body = node.body.map(decl => generate(decl, level + 1, node)).join("\n");
+
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {

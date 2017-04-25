@@ -29,6 +29,7 @@ var Types = require("./runtime/types");
 var Tuple = require("./runtime/tuple.js");
 var Union = require("./runtime/union.js");
 
+var Class = require("./runtime/class.js");
 var Extension = require("./runtime/extension.js");
 var Parameters = require("./runtime/parameters.js");
 var Module = require("./runtime/module.js");
