@@ -33,7 +33,7 @@ Extension.extend = function (parent, type, funcs) {
   var scope = new Scope();
 
   for (var name in funcs) {
-    scope[name] = new this(parent ? parent[name] : null, type, funcs[name]);
+    scope[name] = new Extension(parent ? parent[name] : null, type, funcs[name]);
   }
 
   return scope;

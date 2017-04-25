@@ -812,6 +812,15 @@ ClassBody
       return extractList(body, 0);
     }
 
+ExtendDeclaration
+  = "extend" __ id:Identifier __ "{" __ body:ClassBody __ "}" {
+      return {
+        type: "ExtendDeclaration",
+        id: id,
+        body: body
+      };
+    }
+
 FunctionDeclaration
   = FunctionToken __ id:Identifier __ "(" __ params:(FormalParameterList __)? ")" __ "{" __ body:FunctionBody __ "}" {
       return {
@@ -872,6 +881,7 @@ SourceElement
   = Statement
   / FunctionDeclaration
   / ClassDeclaration
+  / ExtendDeclaration
 
 // ----- A.6 Universal Resource Identifier Character Classes -----
 

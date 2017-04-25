@@ -52,5 +52,6 @@ module.exports = {
   Union: Union,
   Extension: Extension,
   Parameters: Parameters,
-  Module: Module
+  Module: Module,
+  extend: Extension.extend
 };

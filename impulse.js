@@ -20,18 +20,32 @@ function indent(level) {
   return Array(length + 1).join("  ");
 }
 
+var temp = 0;
+
 var test = `
-var $, tuple = (1, 2);
+var $;
 
 // var f = (x, y) => x + y;
+
+// console.log(2 + 3);
 
 // function foo(items) {
 //   return items.map(n => n * n);
 // }
 
-// foo(1..5);
+// (1..5).map(n => n * n);
 
-//"foo".capitlaize(10);
+// function capitalize() {
+//   return "Foo";
+// }
+
+extend String {
+  function capitalize() {
+    return this.slice(0, 1).toUpperCase() + this.slice(1);
+  }
+}
+
+console.log("foo".capitalize());
 `;
 
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
@@ -66,10 +80,23 @@ var Statement = {
     }
   },
 
-  FunctionDeclaration: function (node, level) {
-    var params = node.params.map(param => generate(param, level));
+  ExtendDeclaration: (node, level) => {
+    var id = generate(node.id, level);
+    var body = node.body.map(decl => generate(decl, level + 1, node)).join("\n");
 
-    return "function " + generate(node.id, level) + "(" + params.join(", ") + ") " + generate(node.body, level, {functionDeclaration: true});
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body + "\n});";
+  },
+
+  FunctionDeclaration: function (node, level, parent) {
+    var params = node.params.map(param => generate(param, level));
+    var name = generate(node.id, level);
+    var body = generate(node.body, level, {functionDeclaration: true});
+
+    if (parent && parent.type === "ExtendDeclaration") {
+      return indent(level) + name + ": function (" + params.join(", ") + ") " + body;
+    } else {
+      return indent(level) + "function " + name + "(" + params.join(", ") + ") " + generate(node.body, level, {functionDeclaration: true});
+    }
   },
 
   //
@@ -83,16 +110,16 @@ var Statement = {
     });
 
     if (functionDeclaration) {
-      return indent(level) + "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + "\n" + indent(level) + "}";
+      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else if (functionExpression) {
-      return indent(level) + "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
+      return "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else {
       return indent(level) + "void function () {\n" + statements.join("\n") + "\n" + indent(level) + "}();";
     }
   },
 
   ReturnStatement: function (node, level) {
-    return indent(level) + "return " + generate(node.argument, level) + ";";
+    return "\n" + indent(level) + "return " + generate(node.argument, level) + ";";
   },
 
   ExpressionStatement: function (node, level) {
@@ -113,9 +140,10 @@ var Statement = {
 
   BinaryExpression: function (node, level) {
     var left = generate(node.left, level);
+    var right = generate(node.right, level);
 
     if (true) {
-      return "(" + generate(node.left, level) + "." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply(" + left + ", [" + generate(node.right, level) + "])";
+      return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";
     } else {
       return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
     }
@@ -139,9 +167,10 @@ var Statement = {
   CallExpression: function (node, level) {
     var arguments = node.arguments.map(argument => generate(argument, level));
     var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
+    var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
 
     if (object) {
-      return "($ = " + object + ", " + generate(node.callee,  level) + ").apply(" + "$" + ", [" + arguments + "])";
+      return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + arguments + "])";
     } else {
       return generate(node.callee,  level) + ".apply(" + "null" + ", [" + arguments + "])";
     }
@@ -186,7 +215,9 @@ var ast = Parser.parse(test);
 
 inspect(ast);
 
-console.log('var Impulse = require("./src/runtime");');
+console.log("'use strict'");
+console.log("var Impulse = require('./src/runtime');");
+console.log("String.prototype._add = function (that) { return this + that; };");
 
 generate(ast, 0);
 
