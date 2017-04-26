@@ -799,11 +799,12 @@ Finally
 // ----- A.5 Functions and Programs -----
 
 ClassDeclaration
-  = ClassToken __ id:Identifier __ "{" __ body:ClassBody __ "}" {
+  = ClassToken __ id:Identifier __ superclass:("extends" __ Identifier __)? "{" __ body:ClassBody __ "}" {
       return {
         type: "ClassDeclaration",
         id: id,
-        body: body
+        body: body,
+        superclass: extractOptional(superclass, 2)
       };
     }
 

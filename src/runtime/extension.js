@@ -27,6 +27,8 @@ Extension.prototype.apply = function (_this, args) {
       return scope.func.apply(_this, args);
     }
   }
+
+  throw new Error("No match for method '" + this.type.name + "' found for type '" + this.func.name + "'");
 };
 
 Extension.extend = function (parent, type, funcs) {

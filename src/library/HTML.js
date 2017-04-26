@@ -1,8 +1,5 @@
 var Parameters = require("../runtime/parameters.js");
 
-Function.prototype.isTypeOf = function(that) {
-
-}
 
 Map.isTypeOf = function(that) {
   return that instanceof this;

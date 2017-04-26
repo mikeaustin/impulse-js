@@ -23,16 +23,6 @@ function indent(level) {
 var temp = 0;
 
 var test = `
-var $;
-
-// var f = (x, y) => x + y;
-
-// console.log(2 + 3);
-
-// function foo(items) {
-//   return items.map(n => n * n);
-// }
-
 // (1..5).map(n => n * n);
 
 // function capitalize() {
@@ -41,12 +31,23 @@ var $;
 
 class Vector {
   constructor(x, y) {
+    this.x = x;
+    this.y = y;
   }
 
-  function add(that) { return this + that; }
+  function _add(that) {
+    return new Vector(this.x + that.x, this.y + that.y);
+  }
 }
 
-console.log(new Vector());
+extend Vector {
+  function _sub(that) {
+    return new Vector(this.x - that.x, this.y - that.y);
+  }
+}
+
+console.log(new Vector(1, 2) + new Vector(3, 4));
+console.log(new Vector(1, 2) - new Vector(3, 4));
 
 // extend String {
 //   function capitalize() {
@@ -74,6 +75,8 @@ var operators = {
 
 var Statement = {
   Program: function (node, level) {
+    console.log("var $;");
+
     for (var i = 0; i < node.body.length; i++) {
       console.log(generate(node.body[i], level));
     }
@@ -98,8 +101,9 @@ var Statement = {
   ClassDeclaration: (node, level) => {
     var id = generate(node.id, level);
     var body = node.body.map(decl => generate(decl, level + 1, node));
+    var superclass = node.superclass ? generate(node.superclass, level) : "Object";
 
-    return "var " + id + " = Impulse.define(Object, {\n" + body.join(",\n") + "\n});";
+    return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {
@@ -135,9 +139,9 @@ var Statement = {
     var functionDeclaration = options && options.functionDeclaration;
     var functionExpression = options && options.functionExpression;
 
-    var statements = node.body.map(statement => {
+    var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
       return generate(statement, level + 1);
-    });
+    }));
 
     if (functionDeclaration) {
       return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + (statements.length > 0 ? "\n" : "") + indent(level) + "}";
@@ -217,7 +221,8 @@ var Statement = {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    return object + "." + property + " || _methods." + property;
+    //return object + "." + property + " || _methods." + property;
+    return object + "." + property;
   },
 
   ThisExpression: (node, level) => {
@@ -255,6 +260,8 @@ inspect(ast);
 console.log("'use strict'");
 console.log("var Impulse = require('./src/runtime');");
 console.log("String.prototype._add = function (that) { return this + that; };");
+console.log("Number.prototype._add = function (that) { return this + that; };");
+console.log("Number.prototype._sub = function (that) { return this - that; };");
 
 generate(ast, 0);
 
