@@ -4,7 +4,7 @@ function Class() {
 
 Class.define = function(superclass, funcs) {
   var constructor = funcs.constructor;
-  
+
   constructor.prototype = new superclass();
   constructor.prototype.constructor = constructor;
 

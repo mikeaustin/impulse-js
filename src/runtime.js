@@ -54,5 +54,6 @@ module.exports = {
   Extension: Extension,
   Parameters: Parameters,
   Module: Module,
+  define: Class.define,
   extend: Extension.extend
 };

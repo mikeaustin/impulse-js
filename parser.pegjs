@@ -808,15 +808,25 @@ ClassDeclaration
     }
 
 ClassBody
-  = body:(FunctionDeclaration __)* {
+  = body:((ConstructorDeclaration / FunctionDeclaration) __)* {
       return extractList(body, 0);
     }
 
 ExtendDeclaration
-  = "extend" __ id:Identifier __ "{" __ body:ClassBody __ "}" {
+  = "extend" __ id:Identifier __ traits:("with" __ FormalParameterList)? __ "{" __ body:ClassBody __ "}" {
       return {
         type: "ExtendDeclaration",
         id: id,
+        body: body,
+        traits: optionalList(extractOptional(traits, 2))
+      };
+    }
+
+ConstructorDeclaration
+  = "constructor" __ "(" __ params:(FormalParameterList __)? ")" __ "{" __ body:FunctionBody __ "}" {
+      return {
+        type: "ConstructorDeclaration",
+        params: optionalList(extractOptional(params, 0)),
         body: body
       };
     }

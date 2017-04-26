@@ -39,19 +39,28 @@ var $;
 //   return "Foo";
 // }
 
-extend String {
-  function capitalize() {
-    return this.slice(0, 1).toUpperCase() + this.slice(1);
-  }
-}
-
-console.log("foo".capitalize());
-`;
-
-var test = `
 class Vector {
+  constructor(x, y) {
+  }
 
+  function add(that) { return this + that; }
 }
+
+console.log(new Vector());
+
+// extend String {
+//   function capitalize() {
+//     return this.slice(0, 1).toUpperCase() + this.slice(1);
+//   }
+// }
+
+// extend String with Iterable, Printable {
+//   function iterator() {
+//     return 0;
+//   }
+// }
+
+// console.log("foo".capitalize());
 `;
 
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
@@ -71,8 +80,8 @@ var Statement = {
   },
 
   VariableDeclaration: (node, level) => {
-    return "var " + node.declarations.map(decl => {
-      return indent(level) + generate(decl, level);
+    return indent(level) + "var " + node.declarations.map(decl => {
+      return generate(decl, level);
     }).join(", ") + ";";
   },
 
@@ -88,16 +97,24 @@ var Statement = {
 
   ClassDeclaration: (node, level) => {
     var id = generate(node.id, level);
-    var body = node.body.map(decl => generate(decl, level + 1, node)).join("\n");
+    var body = node.body.map(decl => generate(decl, level + 1, node));
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body + "\n});";
+    return "var " + id + " = Impulse.define(Object, {\n" + body.join(",\n") + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {
     var id = generate(node.id, level);
-    var body = node.body.map(decl => generate(decl, level + 1, node)).join("\n");
+    var body = node.body.map(decl => generate(decl, level + 1, node));
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body + "\n});";
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.join(",\n") + "\n});";
+  },
+
+  ConstructorDeclaration: (node, level, parent) => {
+    var params = node.params.map(param => generate(param, level));
+    var name = generate(parent.id, level);
+    var body = generate(node.body, level, {functionDeclaration: true});
+
+    return indent(level) + "constructor: function " + name + "(" + params.join(", ") + ") " + body;
   },
 
   FunctionDeclaration: function (node, level, parent) {
@@ -105,8 +122,8 @@ var Statement = {
     var name = generate(node.id, level);
     var body = generate(node.body, level, {functionDeclaration: true});
 
-    if (parent && parent.type === "ExtendDeclaration") {
-      return indent(level) + name + ": function (" + params.join(", ") + ") " + body;
+    if (parent && (parent.type === "ClassDeclaration" || parent.type === "ExtendDeclaration")) {
+      return indent(level) + name + ": function " + name + "(" + params.join(", ") + ") " + body;
     } else {
       return indent(level) + "function " + name + "(" + params.join(", ") + ") " + generate(node.body, level, {functionDeclaration: true});
     }
@@ -123,16 +140,16 @@ var Statement = {
     });
 
     if (functionDeclaration) {
-      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + "\n" + indent(level) + "}";
+      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + (statements.length > 0 ? "\n" : "") + indent(level) + "}";
     } else if (functionExpression) {
       return "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else {
-      return indent(level) + "void function () {\n" + statements.join("\n") + "\n" + indent(level) + "}();";
+      return indent(level) + "void function () {\n" + statements.join("\n") + (statements.length > 0 ? "\n" : "") + indent(level) + "}();";
     }
   },
 
   ReturnStatement: function (node, level) {
-    return "\n" + indent(level) + "return " + generate(node.argument, level) + ";";
+    return indent(level) + "return " + generate(node.argument, level) + ";";
   },
 
   ExpressionStatement: function (node, level) {
@@ -149,6 +166,13 @@ var Statement = {
     var params = node.params.map(param => generate(param, level));
 
     return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, {functionExpression: true});
+  },
+
+  NewExpression: (node, level) => {
+    var callee = generate(node.callee, level);
+    var args = node.arguments.map(arg => generate(arg, level));
+
+    return "new " + callee + "(" + args.join(", ") + ")";
   },
 
   BinaryExpression: function (node, level) {
