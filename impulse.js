@@ -20,6 +20,10 @@ function indent(level) {
   return Array(length + 1).join("  ");
 }
 
+Array.prototype.joinWithTrailing = function (separator) {
+  return this.join(separator) + (this.length > 0 ? separator : "");
+}
+
 var temp = 0;
 
 var test = `
@@ -103,14 +107,15 @@ var Statement = {
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var superclass = node.superclass ? generate(node.superclass, level) : "Object";
 
-    return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
+    return `var ${id} = Impulse.define(${superclass}, {\n${body.joinWithTrailing(",\n")}});`;
+    //return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {
     var id = generate(node.id, level);
     var body = node.body.map(decl => generate(decl, level + 1, node));
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.join(",\n") + "\n});";
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.joinWithTrailing(",\n") + "});";
   },
 
   ConstructorDeclaration: (node, level, parent) => {
@@ -144,11 +149,11 @@ var Statement = {
     }));
 
     if (functionDeclaration) {
-      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + (statements.length > 0 ? "\n" : "") + indent(level) + "}";
+      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.joinWithTrailing("\n") + indent(level) + "}";
     } else if (functionExpression) {
       return "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else {
-      return indent(level) + "void function () {\n" + statements.join("\n") + (statements.length > 0 ? "\n" : "") + indent(level) + "}();";
+      return indent(level) + "void function () {\n" + statements.joinWithTrailing("\n") + indent(level) + "}();";
     }
   },
 

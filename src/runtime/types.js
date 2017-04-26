@@ -40,12 +40,13 @@ Boolean.prototype.assertType = String.assertType = function (that) {
 // this.isTypeOf(that)
 //
 
-// Function.prototype.isTypeOf = function(that) {
-//   return Object.getPrototypeOf(this).isPrototypeOf(that);
-// }
+Function.prototype.isTypeOf = function (that) {
+  return that instanceof this;
+}
 
 Object.isTypeOf = function (that) {
-  return this.prototype.isPrototypeOf(Object(that));
+  //return this.prototype.isPrototypeOf(Object(that));
+  return Object(that) instanceof this;
 }
 
 Number.isTypeOf = function (that) {
