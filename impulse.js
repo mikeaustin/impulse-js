@@ -78,13 +78,21 @@ var operators = {
 }
 
 var Statement = {
-  Program: function (node, level) {
+  //
+  // Top Level
+  //
+
+  Program: (node, level) => {
     console.log("var $;");
 
     for (var i = 0; i < node.body.length; i++) {
       console.log(generate(node.body[i], level));
     }
   },
+
+  //
+  // Declarations
+  //
 
   VariableDeclaration: (node, level) => {
     return indent(level) + "var " + node.declarations.map(decl => {
@@ -125,7 +133,7 @@ var Statement = {
     return indent(level) + "constructor: function " + name + "(" + params.join(", ") + ") " + body;
   },
 
-  FunctionDeclaration: function (node, level, parent) {
+  FunctionDeclaration: (node, level, parent) => {
     var params = node.params.map(param => generate(param, level));
     var name = generate(node.id, level);
     var body = generate(node.body, level, node);
@@ -138,8 +146,10 @@ var Statement = {
   },
 
   //
+  // Statements
+  //
 
-  BlockStatement: function (node, level, parent) {
+  BlockStatement: (node, level, parent) => {
     var functionDeclaration = parent.type === "FunctionDeclaration" || parent.type === "ConstructorDeclaration";
     var functionExpression = parent.type === "FunctionExpression";
 
@@ -156,21 +166,23 @@ var Statement = {
     }
   },
 
-  ReturnStatement: function (node, level) {
+  ReturnStatement: (node, level) => {
     return indent(level) + "return " + generate(node.argument, level) + ";";
   },
 
-  ExpressionStatement: function (node, level) {
+  ExpressionStatement: (node, level) => {
     return indent(level) + generate(node.expression, level) + ";";
   },
 
   //
+  // Expressions
+  //
 
-  AssignmentExpression: function (node, level) {
+  AssignmentExpression: (node, level) => {
     return generate(node.left, level) + " = " + generate(node.right, level);
   },
 
-  FunctionExpression: function (node, level) {
+  FunctionExpression: (node, level) => {
     var params = node.params.map(param => generate(param, level));
 
     return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, {functionExpression: true});
@@ -183,7 +195,7 @@ var Statement = {
     return "new " + callee + "(" + args.join(", ") + ")";
   },
 
-  BinaryExpression: function (node, level) {
+  BinaryExpression: (node, level) => {
     var left = generate(node.left, level);
     var right = generate(node.right, level);
 
@@ -194,22 +206,22 @@ var Statement = {
     }
   },
 
-  ArrayExpression: function (node, level) {
+  ArrayExpression: (node, level) => {
     return "[" + node.elements.map(element => generate(element, level)).join(", ") + "]";
   },
 
-  TupleExpression: function (node, level) {
+  TupleExpression: (node, level) => {
     return "T(" + node.elements.map(element => generate(element, level)).join(", ") + ")";
   },
 
-  RangeExpression: function (node, level) {
+  RangeExpression: (node, level) => {
     var left = generate(node.left, level);
     var right = generate(node.right, level);
 
     return "R(" + left + ", " + right + ")";
   },
 
-  CallExpression: function (node, level) {
+  CallExpression: (node, level) => {
     var arguments = node.arguments.map(argument => generate(argument, level));
     var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
     var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
@@ -221,11 +233,10 @@ var Statement = {
     }
   },
 
-  MemberExpression: function (node, level) {
+  MemberExpression: (node, level) => {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    //return object + "." + property + " || _methods." + property;
     return object + "." + property;
   },
 
@@ -234,8 +245,10 @@ var Statement = {
   },
 
   //
+  // Primaries
+  //
 
-  Literal: function (node, level) {
+  Literal: (node, level) => {
     if (typeof node.value === "string") {
       return '"' + node.value + '"';
     } else {
@@ -243,7 +256,7 @@ var Statement = {
     }
   },
 
-  Identifier: function (node, level) {
+  Identifier: (node, level) => {
     return node.name;
   }
 };
