@@ -1,7 +1,7 @@
 'use strict';
 
-var Extension = require('../src/runtime/extension');
-var Trait = require('../src/runtime/module');
+var Extension = require('../../src/runtime/extension');
+var Trait = require('../../src/runtime/module');
 
 var Iterable = new Trait(Iterable, {
   map: function (iterator) {

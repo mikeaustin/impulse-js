@@ -2,8 +2,8 @@
 
 var Immutable = require('immutable');
 
-var Parameters = require('../src/runtime/parameters');
-var Union = require('../src/runtime/union');
+var Parameters = require('../../src/runtime/parameters');
+var Union = require('../../src/runtime/union');
 
 //
 // Parameters Tests

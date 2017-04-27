@@ -1,0 +1,62 @@
+
+//
+// Range and Tuple
+//
+
+var result = (1..5).map(n => n * n);
+
+console.log(result);
+
+
+//
+// Extension Methods
+//
+
+extend String {
+
+  function capitalize() {
+    return this.slice(0, 1).toUpperCase() + this.slice(1).toLowerCase();
+  }
+
+}
+
+var result = "fOO".capitalize();
+
+console.log(result);
+
+
+//
+// Class Inheritance
+//
+
+class Vector {
+
+  constructor(x, y) {
+    this._x = x;
+    this._y = y;
+  }
+
+}
+
+class Vector3D extends Vector {
+
+  constructor(x, y, z) {
+    //Vector.apply(this, [x, y]);
+    this._x = x;
+    this._y = y;
+    this._z = z;
+  }
+
+}
+
+extend Vector3D {
+  
+  function _add(that) {
+    return new Vector3D(this._x + that._x, this._y + that._y, this._z + that._z);
+  }
+
+}
+
+var result = new Vector3D(1, 2, 3) + new Vector3D(1, 2, 3);
+
+console.log(result);

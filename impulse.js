@@ -94,7 +94,21 @@ var foo = new Foo();
 console.log(map(foo.bar));
 `;
 
-//fs.readFile("parser.pegjs", "utf8", function (error, data) {
+fs.readFile(process.argv[2], "utf8", function (error, data) {
+  var ast = Parser.parse(data);
+
+  inspect(ast);
+
+  console.log("'use strict'");
+  console.log("var Impulse = require('./src/runtime');");
+  console.log("var R = require('immutable').Range;");
+  console.log("String.prototype._add = function (that) { return this + that; };");
+  console.log("Number.prototype._add = function (that) { return this + that; };");
+  console.log("Number.prototype._sub = function (that) { return this - that; };");
+  console.log("Number.prototype._mul = function (that) { return this * that; };");
+
+  generate(ast, 0);
+});
 
 var operators = {
   "+": "_add",
@@ -263,7 +277,7 @@ var Statement = {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    if (node.object.type === "ThisExpression") {
+    if (property.startsWith("_")) {
       return object + "." + property;
     } else {
       return object + "." + property + ".bind(" + object + ")";
@@ -290,19 +304,6 @@ var Statement = {
     return node.name;
   }
 };
-
-
-var ast = Parser.parse(test);
-
-inspect(ast);
-
-console.log("'use strict'");
-console.log("var Impulse = require('./src/runtime');");
-console.log("String.prototype._add = function (that) { return this + that; };");
-console.log("Number.prototype._add = function (that) { return this + that; };");
-console.log("Number.prototype._sub = function (that) { return this - that; };");
-
-generate(ast, 0);
 
 /*
 

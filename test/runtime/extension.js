@@ -1,9 +1,9 @@
 'use strict';
 
-var Class = require('../src/runtime/class');
-var Trait = require('../src/runtime/module');
-var Extension = require('../src/runtime/extension');
-var Parameters = require('../src/runtime/parameters');
+var Class = require('../../src/runtime/class');
+var Trait = require('../../src/runtime/module');
+var Extension = require('../../src/runtime/extension');
+var Parameters = require('../../src/runtime/parameters');
 
 console.log('\nextension.js\n');
 

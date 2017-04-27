@@ -1,5 +1,11 @@
 "use strict";
 
+var execSync = require('child_process').execSync;
+
+function system(command) {
+  console.log(execSync(command).toString());
+}
+
 var passed = 0;
 var failed = 0;
 
@@ -27,13 +33,15 @@ require("./src/runtime/types");
 
 // Runtime
 
-require("./test/types");
-require('./test/tuple');
-require('./test/Union');
-require('./test/extension');
-require('./test/module');
-require('./test/operator');
-require('./test/parameters');
+require("./test/runtime/types");
+require('./test/runtime/tuple');
+require('./test/runtime/Union');
+require('./test/runtime/extension');
+require('./test/runtime/module');
+require('./test/runtime/operator');
+require('./test/runtime/parameters');
+
+system('node impulse.js ./test/impulse/basics.im | node');
 
 // // Runtime
 
