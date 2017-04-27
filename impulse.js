@@ -107,8 +107,7 @@ var Statement = {
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var superclass = node.superclass ? generate(node.superclass, level) : "Object";
 
-    return `var ${id} = Impulse.define(${superclass}, {\n${body.joinWithTrailing(",\n")}});`;
-    //return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
+    return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {
@@ -121,7 +120,7 @@ var Statement = {
   ConstructorDeclaration: (node, level, parent) => {
     var params = node.params.map(param => generate(param, level));
     var name = generate(parent.id, level);
-    var body = generate(node.body, level, {functionDeclaration: true});
+    var body = generate(node.body, level, node);
 
     return indent(level) + "constructor: function " + name + "(" + params.join(", ") + ") " + body;
   },
@@ -129,20 +128,20 @@ var Statement = {
   FunctionDeclaration: function (node, level, parent) {
     var params = node.params.map(param => generate(param, level));
     var name = generate(node.id, level);
-    var body = generate(node.body, level, {functionDeclaration: true});
+    var body = generate(node.body, level, node);
 
     if (parent && (parent.type === "ClassDeclaration" || parent.type === "ExtendDeclaration")) {
       return indent(level) + name + ": function " + name + "(" + params.join(", ") + ") " + body;
     } else {
-      return indent(level) + "function " + name + "(" + params.join(", ") + ") " + generate(node.body, level, {functionDeclaration: true});
+      return indent(level) + "function " + name + "(" + params.join(", ") + ") " + body;
     }
   },
 
   //
 
-  BlockStatement: function (node, level, options) {
-    var functionDeclaration = options && options.functionDeclaration;
-    var functionExpression = options && options.functionExpression;
+  BlockStatement: function (node, level, parent) {
+    var functionDeclaration = parent.type === "FunctionDeclaration" || parent.type === "ConstructorDeclaration";
+    var functionExpression = parent.type === "FunctionExpression";
 
     var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
       return generate(statement, level + 1);
