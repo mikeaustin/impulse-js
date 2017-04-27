@@ -408,8 +408,8 @@ ArrayLiteral
     }
 
 ElementList
-  = head:AssignmentExpression tail:(__ "," __ element:AssignmentExpression)* {
-      return Array.prototype.concat.apply(head, tail);
+  = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
+      return buildList(head, tail, 3);
     }
 
 ObjectLiteral

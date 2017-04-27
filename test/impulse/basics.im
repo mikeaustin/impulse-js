@@ -7,6 +7,21 @@ var result = (1..5).map(n => n * n);
 
 console.log(result);
 
+var result = [(1, 2), (3, 4)];
+
+console.log(result);
+
+
+//
+// Bound 'this'
+//
+
+var callback = "foo".slice;
+
+var result = callback(0, 1);
+
+console.log(result);
+
 
 //
 // Extension Methods

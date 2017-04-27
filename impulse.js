@@ -102,6 +102,7 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("'use strict'");
   console.log("var Impulse = require('./src/runtime');");
   console.log("var R = require('immutable').Range;");
+  console.log("var T = require('./src/runtime/tuple').of;");
   console.log("String.prototype._add = function (that) { return this + that; };");
   console.log("Number.prototype._add = function (that) { return this + that; };");
   console.log("Number.prototype._sub = function (that) { return this - that; };");

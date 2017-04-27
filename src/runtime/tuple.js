@@ -46,6 +46,10 @@ Tuple.prototype.isEqual = function (that) {
   return true;
 }
 
+Tuple.prototype.inspect = function () {
+  return "(" + this.values.map(value => value.toString()).join(", ") + ")";
+}
+
 // Concatinate two tuples
 
 Tuple.prototype.concat = function (tuple) {
