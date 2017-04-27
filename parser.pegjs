@@ -798,6 +798,10 @@ Finally
 
 // ----- A.5 Functions and Programs -----
 
+ImportDeclaration
+  = "import" __ id:Identifier __ "from" __ source:StringLiteral {
+    }
+
 ClassDeclaration
   = ClassToken __ id:Identifier __ superclass:("extends" __ Identifier __)? "{" __ body:ClassBody __ "}" {
       return {
@@ -893,6 +897,7 @@ SourceElement
   / FunctionDeclaration
   / ClassDeclaration
   / ExtendDeclaration
+  / ImportDeclaration
 
 // ----- A.6 Universal Resource Identifier Character Classes -----
 

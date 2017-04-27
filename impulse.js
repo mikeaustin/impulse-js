@@ -4,6 +4,14 @@ peg = require("pegjs");
 
 var Parser = require("./parser");
 
+function generate(node, level, options) {
+  if (Statement[node.type]) {
+    return Statement[node.type](node, level, options);
+  }
+
+  throw new Error("Unknown node type '" + node.type + "'");
+}
+
 function inspect() {
   var args = [];
 
@@ -33,25 +41,25 @@ var test = `
 //   return "Foo";
 // }
 
-class Vector {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
+// class Vector {
+//   constructor(x, y) {
+//     this.x = x;
+//     this.y = y;
+//   }
 
-  function _add(that) {
-    return new Vector(this.x + that.x, this.y + that.y);
-  }
-}
+//   function _add(that) {
+//     return new Vector(this.x + that.x, this.y + that.y);
+//   }
+// }
 
-extend Vector {
-  function _sub(that) {
-    return new Vector(this.x - that.x, this.y - that.y);
-  }
-}
+// extend Vector {
+//   function _sub(that) {
+//     return new Vector(this.x - that.x, this.y - that.y);
+//   }
+// }
 
-console.log(new Vector(1, 2) + new Vector(3, 4));
-console.log(new Vector(1, 2) - new Vector(3, 4));
+// console.log(new Vector(1, 2) + new Vector(3, 4));
+// console.log(new Vector(1, 2) - new Vector(3, 4));
 
 // extend String {
 //   function capitalize() {
@@ -66,6 +74,24 @@ console.log(new Vector(1, 2) - new Vector(3, 4));
 // }
 
 // console.log("foo".capitalize());
+
+function map(func) {
+  return func(5);
+}
+
+class Foo {
+  constructor() {
+    this._x = 1;
+  }
+
+  function bar(n) {
+    return this._x + n;
+  }
+}
+
+var foo = new Foo();
+
+console.log(map(foo.bar));
 `;
 
 //fs.readFile("parser.pegjs", "utf8", function (error, data) {
@@ -237,7 +263,11 @@ var Statement = {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    return object + "." + property;
+    if (node.object.type === "ThisExpression") {
+      return object + "." + property;
+    } else {
+      return object + "." + property + ".bind(" + object + ")";
+    }
   },
 
   ThisExpression: (node, level) => {
@@ -260,14 +290,6 @@ var Statement = {
     return node.name;
   }
 };
-
-function generate(node, level, options) {
-  if (Statement[node.type]) {
-    return Statement[node.type](node, level, options);
-  }
-
-  throw new Error("Unknown node type '" + node.type + "'");
-}
 
 
 var ast = Parser.parse(test);
