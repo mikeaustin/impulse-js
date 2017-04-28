@@ -9,7 +9,7 @@ console.log(result);
 
 var result = [(1, 2), (3, 4)];
 
-console.log(result);
+console.log(result[0], result[1]);
 
 
 //

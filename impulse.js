@@ -38,6 +38,10 @@ function indent(level) {
   return Array(length + 1).join("  ");
 }
 
+var knownProperties = {
+  console: { log: true }
+};
+
 var temp = 0;
 
 var test = `
@@ -277,7 +281,11 @@ var Statement = {
       var object = generate(node.callee.object, level);
       var property = generate(node.callee.property, level);
 
-      return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args + "])";
+      if (knownProperties[object] && knownProperties[object][property]) {
+        return object + "." + property + "(" + args + ")";
+      } else {
+        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args + "])";
+      }
     } else {
       return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args + "])";
     }
@@ -287,7 +295,9 @@ var Statement = {
     var object = generate(node.object, level);
     var property = generate(node.property, level);
 
-    if (property.startsWith("_")) {
+    if (node.computed) {
+      return object + "[" + property + "]";
+    } else if (property.startsWith("_")) {
       return object + "." + property;
     } else {
       return object + "." + property + ".bind(" + object + ")";
