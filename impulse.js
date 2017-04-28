@@ -1,8 +1,18 @@
-util = require("util");
-fs = require("fs");
-peg = require("pegjs");
+"use strict";
+
+// @flow
+
+var util = require("util");
+var fs = require("fs");
+var peg = require("pegjs");
 
 var Parser = require("./parser");
+
+//
+
+function joinWithTrailing(array, separator) {
+  return array.join(separator) + (array.length > 0 ? separator : "");
+}
 
 function generate(node, level, options) {
   if (Statement[node.type]) {
@@ -26,10 +36,6 @@ function indent(level) {
   var length = level || 0;
 
   return Array(length + 1).join("  ");
-}
-
-Array.prototype.joinWithTrailing = function (separator) {
-  return this.join(separator) + (this.length > 0 ? separator : "");
 }
 
 var temp = 0;
@@ -163,7 +169,7 @@ var Statement = {
     var id = generate(node.id, level);
     var body = node.body.map(decl => generate(decl, level + 1, node));
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.joinWithTrailing(",\n") + "});";
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});";
   },
 
   ConstructorDeclaration: (node, level, parent) => {
@@ -199,11 +205,11 @@ var Statement = {
     }));
 
     if (functionDeclaration) {
-      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.joinWithTrailing("\n") + indent(level) + "}";
+      return "{\n" + indent(level + 1) + "var _this = this;\n" + joinWithTrailing(statements, "\n") + indent(level) + "}";
     } else if (functionExpression) {
       return "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else {
-      return indent(level) + "void function () {\n" + statements.joinWithTrailing("\n") + indent(level) + "}();";
+      return indent(level) + "void function () {\n" + joinWithTrailing(statements, "\n") + indent(level) + "}();";
     }
   },
 
@@ -263,14 +269,17 @@ var Statement = {
   },
 
   CallExpression: (node, level) => {
-    var arguments = node.arguments.map(argument => generate(argument, level));
-    var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
-    var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
+    var args = node.arguments.map(arg => generate(arg, level));
+    // var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
+    // var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
 
-    if (object) {
-      return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + arguments + "])";
+    if (node.callee.type === "MemberExpression") {
+      var object = generate(node.callee.object, level);
+      var property = generate(node.callee.property, level);
+
+      return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args + "])";
     } else {
-      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + arguments + "])";
+      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args + "])";
     }
   },
 
