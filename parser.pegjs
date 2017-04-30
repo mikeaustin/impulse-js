@@ -545,7 +545,8 @@ AdditiveExpression
     { return buildBinaryExpression(head, tail); }
 
 AdditiveOperator
-  = "+"
+  = "++"
+  / "+"
   / "-"
 
 RelationalExpression
@@ -857,14 +858,14 @@ FunctionExpression
     }
 
 FatArrowFormalParameterList
- = "(" __ params:(FormalParameterList __)? ")" {
-     return optionalList(extractOptional(params, 0));
-   }
- / params:Identifier { return [params]; }
+  = "(" __ params:(FormalParameterList __)? ")" {
+      return optionalList(extractOptional(params, 0));
+    }
+  / params:Identifier { return [params]; }
 
 FatArrowFunctionBody
- = "{" __ body:FunctionBody __ "}" { return body; }
- / body:Expression
+  = "{" __ body:FunctionBody __ "}" { return body; }
+  / body:Expression
 
 FormalParameterList
   = head:Identifier tail:(__ "," __ Identifier)* {

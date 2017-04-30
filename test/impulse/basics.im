@@ -30,7 +30,7 @@ console.log(result);
 extend String {
 
   function capitalize() {
-    return this.slice(0, 1).toUpperCase() + this.slice(1).toLowerCase();
+    return this.slice(0, 1).toUpperCase() ++ this.slice(1).toLowerCase();
   }
 
 }
@@ -56,9 +56,7 @@ class Vector {
 class Vector3D extends Vector {
 
   constructor(x, y, z) {
-    //Vector.apply(this, [x, y]);
-    this._x = x;
-    this._y = y;
+    Vector.apply(this, [x, y]);
     this._z = z;
   }
 

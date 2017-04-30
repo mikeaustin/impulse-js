@@ -42,6 +42,7 @@ require('./test/runtime/operator');
 require('./test/runtime/parameters');
 
 system('node impulse.js ./test/impulse/basics.im | node');
+system('node impulse.js ./test/impulse/iterator.im | node');
 
 // // Runtime
 

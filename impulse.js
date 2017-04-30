@@ -113,10 +113,10 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("var Impulse = require('./src/runtime');");
   console.log("var R = require('immutable').Range;");
   console.log("var T = require('./src/runtime/tuple').of;");
-  console.log("String.prototype._add = function (that) { return this + that; };");
   console.log("Number.prototype._add = function (that) { return this + that; };");
   console.log("Number.prototype._sub = function (that) { return this - that; };");
   console.log("Number.prototype._mul = function (that) { return this * that; };");
+  console.log("Number.prototype._lt = function (that) { return this < that; };");
 
   generate(ast, 0);
 });
@@ -126,6 +126,13 @@ var operators = {
   "-": "_sub",
   "*": "_mul",
   "/": "_div",
+
+  "<": "_lt",
+  ">": "_gt",
+  "<=": "_lte",
+  ">=": "_gte",
+
+  "++": "concat"
 }
 
 var Statement = {
@@ -236,7 +243,8 @@ var Statement = {
   FunctionExpression: (node, level) => {
     var params = node.params.map(param => generate(param, level));
 
-    return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, {functionExpression: true});
+    //if (node.body.type === "Expression")
+    return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, node);
   },
 
   NewExpression: (node, level) => {
@@ -255,6 +263,10 @@ var Statement = {
     } else {
       return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
     }
+  },
+
+  ObjectExpression: (node, level) => {
+
   },
 
   ArrayExpression: (node, level) => {
@@ -282,12 +294,12 @@ var Statement = {
       var property = generate(node.callee.property, level);
 
       if (knownProperties[object] && knownProperties[object][property]) {
-        return object + "." + property + "(" + args + ")";
+        return object + "." + property + "(" + args.join(", ") + ")";
       } else {
-        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args + "])";
+        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
       }
     } else {
-      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args + "])";
+      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 
