@@ -30,7 +30,7 @@ console.log(result);
 extend String {
 
   function capitalize() {
-    return this.slice(0, 1).toUpperCase() ++ this.slice(1).toLowerCase();
+    return this.slice(begin: 0, end: 1).toUpperCase() ++ this.slice(begin: 1).toLowerCase();
   }
 
 }

@@ -57,3 +57,5 @@ module.exports = {
   define: Class.define,
   extend: Extension.extend
 };
+
+String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
