@@ -14,6 +14,16 @@ function joinWithTrailing(array, separator) {
   return array.join(separator) + (array.length > 0 ? separator : "");
 }
 
+function stringifyKeywords(keywordArguments) {
+  var array = [];
+
+  for (var keyword in keywordArguments) {
+    array.push(keyword + ":" + " " + keywordArguments[keyword]);
+  }
+
+  return "{" + array.join(", ") + "}";
+}
+
 function generate(node, level, options) {
   if (Statement[node.type]) {
     return Statement[node.type](node, level, options);
@@ -117,6 +127,8 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("Number.prototype._sub = function (that) { return this - that; };");
   console.log("Number.prototype._mul = function (that) { return this * that; };");
   console.log("Number.prototype._lt = function (that) { return this < that; };");
+  console.log("Number.prototype._gt = function (that) { return this > that; };");
+  console.log("Number.prototype._gte = function (that) { return this >= that; };");
 
   generate(ast, 0);
 });
@@ -209,7 +221,7 @@ var Statement = {
 
   BlockStatement: (node, level, parent) => {
     var functionDeclaration = parent.type === "FunctionDeclaration" || parent.type === "ConstructorDeclaration";
-    var functionExpression = parent.type === "FunctionExpression";
+    var functionExpression = parent.type === "FunctionExpression" || parent.type === "IfStatement";
 
     var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
       return generate(statement, level + 1);
@@ -224,8 +236,18 @@ var Statement = {
     }
   },
 
+  IfStatement: (node, level, parent) => {
+    var test = generate(node.test, level, node);
+    var consequent = generate(node.consequent, level, node);
+    var alternate = generate(node.alternate, level, node);
+
+    return indent(level) + "if (" + test + ") " + consequent + " else " + alternate;
+  },
+
   ReturnStatement: (node, level) => {
-    return indent(level) + "return " + generate(node.argument, level) + ";";
+    var argument = node.argument ? " " + generate(node.argument, level) : "";
+
+    return indent(level) + "return" + argument + ";";
   },
 
   ExpressionStatement: (node, level) => {
@@ -285,7 +307,17 @@ var Statement = {
   },
 
   CallExpression: (node, level) => {
-    var args = node.arguments.map(arg => generate(arg, level));
+    var args = [];
+    var keywordArgs = {};
+
+    node.arguments.forEach(arg => {
+      if (arg.type === "KeywordArgument") {
+        keywordArgs[arg.keyword.name] = generate(arg.expression, level);
+        //return generate(arg.expression, level);
+      } else {
+        args.push(generate(arg, level));
+      }
+    });
     // var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
     // var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
 
@@ -296,7 +328,7 @@ var Statement = {
       if (knownProperties[object] && knownProperties[object][property]) {
         return object + "." + property + "(" + args.join(", ") + ")";
       } else {
-        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
+        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
       }
     } else {
       return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args.join(", ") + "])";

@@ -505,8 +505,22 @@ Arguments
     }
 
 ArgumentList
-  = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
+  // = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
+  = head:KeywordArgument tail:(__ "," __ Argument)* {
       return buildList(head, tail, 3);
+    }
+
+KeywordArgument
+  = keyword:(Identifier ":")? __ expression:AssignmentExpression {
+      if (keyword) {
+        return {
+          type: "KeywordArgument",
+          keyword: keyword[0],
+          expression: expression
+        }
+      } else {
+        return expression;
+      }
     }
 
 LeftHandSideExpression
