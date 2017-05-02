@@ -1,18 +1,14 @@
 class Iterator {
   constructor(range) {
-    this._range = range;
-    this._value = this._range.begin;
+    this.range = range;
+    this.value = this.range.begin;
   }
   
   function next() {
-    this._value = this._value + 1;
-    this._done  = this._value > this._range.end;
+    this.value = this.value + 1;
+    this.done  = this.value > this.range.end;
 
     return this;
-  }
-  
-  function value() {
-    return this._value;
   }
 }
 
@@ -52,10 +48,10 @@ function map(selector, iterables) {
   function _map(selector, iterators, values) {
     var iterators = iterators.map(iter => iter.next());
 
-    if (iterators.some(iter => iter._done)) {
+    if (iterators.some(iter => iter.done)) {
       return values;
     } else {
-      return _map(selector, iterators, iterators.map((iterator, i) => values[i] ++ selector(iterator.value())));
+      return _map(selector, iterators, iterators.map((iterator, i) => values[i] ++ selector(iterator.value)));
     }
   }
 
