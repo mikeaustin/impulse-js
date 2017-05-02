@@ -174,12 +174,16 @@ var Statement = {
     }
   },
 
-  ClassDeclaration: (node, level) => {
+  ClassDeclaration: (node, level, parent) => {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var superclass = node.superclass ? generate(node.superclass, level, node) : "Object";
 
-    return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
+    if (parent.type === "ClassDeclaration") {
+      return indent(level) + id + ": Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n})";
+    } else {
+      return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
+    }
   },
 
   ExtendDeclaration: (node, level) => {
@@ -267,7 +271,7 @@ var Statement = {
     var callee = generate(node.callee, level, node);
     var args = node.arguments.map(arg => generate(arg, level, node));
 
-    return "new " + callee + "(" + args.join(", ") + ")";
+    return "new (" + callee + ")(" + args.join(", ") + ")";
   },
 
   BinaryExpression: (node, level) => {

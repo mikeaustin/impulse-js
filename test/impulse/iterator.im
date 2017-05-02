@@ -1,17 +1,3 @@
-class Iterator {
-  constructor(range) {
-    this.range = range;
-    this.value = this.range.begin;
-  }
-  
-  function next() {
-    this.value = this.value + 1;
-    this.done  = this.value > this.range.end;
-
-    return this;
-  }
-}
-
 class Range {
   constructor(begin, end) {
     this.begin = begin - 1;
@@ -19,7 +5,21 @@ class Range {
   }
 
   function iterator() {
-    return new Iterator(this);
+    return new this.Iterator(this);
+  }
+
+  class Iterator {
+    constructor(range) {
+      this.range = range;
+      this.value = this.range.begin;
+    }
+    
+    function next() {
+      this.value = this.value + 1;
+      this.done  = this.value > this.range.end;
+
+      return this;
+    }
   }
 }
 

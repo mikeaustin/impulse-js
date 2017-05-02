@@ -4620,7 +4620,7 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
-    s1 = peg$parseArgument();
+    s1 = peg$parseKeywordArgument();
     if (s1 !== peg$FAILED) {
       s2 = [];
       s3 = peg$currPos;
@@ -4636,7 +4636,7 @@ function peg$parse(input, options) {
         if (s5 !== peg$FAILED) {
           s6 = peg$parse__();
           if (s6 !== peg$FAILED) {
-            s7 = peg$parseArgument();
+            s7 = peg$parseKeywordArgument();
             if (s7 !== peg$FAILED) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -4671,7 +4671,7 @@ function peg$parse(input, options) {
           if (s5 !== peg$FAILED) {
             s6 = peg$parse__();
             if (s6 !== peg$FAILED) {
-              s7 = peg$parseArgument();
+              s7 = peg$parseKeywordArgument();
               if (s7 !== peg$FAILED) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -4708,7 +4708,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseArgument() {
+  function peg$parseKeywordArgument() {
     var s0, s1, s2, s3;
 
     s0 = peg$currPos;
@@ -7205,9 +7205,12 @@ function peg$parse(input, options) {
     s0 = peg$currPos;
     s1 = [];
     s2 = peg$currPos;
-    s3 = peg$parseConstructorDeclaration();
+    s3 = peg$parseClassDeclaration();
     if (s3 === peg$FAILED) {
-      s3 = peg$parseFunctionDeclaration();
+      s3 = peg$parseConstructorDeclaration();
+      if (s3 === peg$FAILED) {
+        s3 = peg$parseFunctionDeclaration();
+      }
     }
     if (s3 !== peg$FAILED) {
       s4 = peg$parse__();
@@ -7225,9 +7228,12 @@ function peg$parse(input, options) {
     while (s2 !== peg$FAILED) {
       s1.push(s2);
       s2 = peg$currPos;
-      s3 = peg$parseConstructorDeclaration();
+      s3 = peg$parseClassDeclaration();
       if (s3 === peg$FAILED) {
-        s3 = peg$parseFunctionDeclaration();
+        s3 = peg$parseConstructorDeclaration();
+        if (s3 === peg$FAILED) {
+          s3 = peg$parseFunctionDeclaration();
+        }
       }
       if (s3 !== peg$FAILED) {
         s4 = peg$parse__();

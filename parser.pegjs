@@ -506,7 +506,7 @@ Arguments
 
 ArgumentList
   // = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
-  = head:KeywordArgument tail:(__ "," __ Argument)* {
+  = head:KeywordArgument tail:(__ "," __ KeywordArgument)* {
       return buildList(head, tail, 3);
     }
 
@@ -828,7 +828,7 @@ ClassDeclaration
     }
 
 ClassBody
-  = body:((ConstructorDeclaration / FunctionDeclaration) __)* {
+  = body:((ClassDeclaration / ConstructorDeclaration / FunctionDeclaration) __)* {
       return extractList(body, 0);
     }
 
