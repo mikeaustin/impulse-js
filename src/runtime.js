@@ -60,4 +60,11 @@ module.exports = {
   extend: Extension.extend
 };
 
+Number.prototype._add = function (that) { return this + that; };
+Number.prototype._sub = function (that) { return this - that; };
+Number.prototype._mul = function (that) { return this * that; };
+Number.prototype._lt = function (that) { return this < that; };
+Number.prototype._gt = function (that) { return this > that; };
+Number.prototype._gte = function (that) { return this >= that; };
+
 String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);

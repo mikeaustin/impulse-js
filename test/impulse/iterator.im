@@ -2,7 +2,6 @@ class Iterator {
   constructor(range) {
     this._range = range;
     this._value = this._range.begin;
-    //this._done  = false;
   }
   
   function next() {
