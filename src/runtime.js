@@ -3,6 +3,8 @@
 var passed = 0;
 var failed = 0;
 
+Object.prototype.bind = function() { return this.valueOf(); }
+
 console.log("Impulse-JS Tests");
 
 global.test = function (expression, onException) {

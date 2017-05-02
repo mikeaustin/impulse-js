@@ -156,7 +156,7 @@ var Statement = {
     console.log("var $;");
 
     for (var i = 0; i < node.body.length; i++) {
-      console.log(generate(node.body[i], level));
+      console.log(generate(node.body[i], level, node));
     }
   },
 
@@ -166,46 +166,46 @@ var Statement = {
 
   VariableDeclaration: (node, level) => {
     return indent(level) + "var " + node.declarations.map(decl => {
-      return generate(decl, level);
+      return generate(decl, level, node);
     }).join(", ") + ";";
   },
 
   VariableDeclarator: (node, level) => {
     if (!node.init) {
-      return generate(node.id, level);
+      return generate(node.id, level, node);
     } else if (node.init.value === null) {
-      return generate(node.id, level) + " = " + "null";
+      return generate(node.id, level, node) + " = " + "null";
     } else {
-      return generate(node.id, level) + " = " + generate(node.init, level);
+      return generate(node.id, level, node) + " = " + generate(node.init, level, node);
     }
   },
 
   ClassDeclaration: (node, level) => {
-    var id = generate(node.id, level);
+    var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
-    var superclass = node.superclass ? generate(node.superclass, level) : "Object";
+    var superclass = node.superclass ? generate(node.superclass, level, node) : "Object";
 
     return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
   },
 
   ExtendDeclaration: (node, level) => {
-    var id = generate(node.id, level);
+    var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
 
     return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});";
   },
 
   ConstructorDeclaration: (node, level, parent) => {
-    var params = node.params.map(param => generate(param, level));
-    var name = generate(parent.id, level);
+    var params = node.params.map(param => generate(param, level, node));
+    var name = generate(parent.id, level, node);
     var body = generate(node.body, level, node);
 
     return indent(level) + "constructor: function " + name + "(" + params.join(", ") + ") " + body;
   },
 
   FunctionDeclaration: (node, level, parent) => {
-    var params = node.params.map(param => generate(param, level));
-    var name = generate(node.id, level);
+    var params = node.params.map(param => generate(param, level, node));
+    var name = generate(node.id, level, node);
     var body = generate(node.body, level, node);
 
     if (parent && (parent.type === "ClassDeclaration" || parent.type === "ExtendDeclaration")) {
@@ -224,7 +224,7 @@ var Statement = {
     var functionExpression = parent.type === "FunctionExpression" || parent.type === "IfStatement";
 
     var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
-      return generate(statement, level + 1);
+      return generate(statement, level + 1, node);
     }));
 
     if (functionDeclaration) {
@@ -245,13 +245,13 @@ var Statement = {
   },
 
   ReturnStatement: (node, level) => {
-    var argument = node.argument ? " " + generate(node.argument, level) : "";
+    var argument = node.argument ? " " + generate(node.argument, level, node) : "";
 
     return indent(level) + "return" + argument + ";";
   },
 
   ExpressionStatement: (node, level) => {
-    return indent(level) + generate(node.expression, level) + ";";
+    return indent(level) + generate(node.expression, level, node) + ";";
   },
 
   //
@@ -259,31 +259,31 @@ var Statement = {
   //
 
   AssignmentExpression: (node, level) => {
-    return generate(node.left, level) + " = " + generate(node.right, level);
+    return generate(node.left, level, node) + " = " + generate(node.right, level, node);
   },
 
   FunctionExpression: (node, level) => {
-    var params = node.params.map(param => generate(param, level));
+    var params = node.params.map(param => generate(param, level, node));
 
     //if (node.body.type === "Expression")
     return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, node);
   },
 
   NewExpression: (node, level) => {
-    var callee = generate(node.callee, level);
-    var args = node.arguments.map(arg => generate(arg, level));
+    var callee = generate(node.callee, level, node);
+    var args = node.arguments.map(arg => generate(arg, level, node));
 
     return "new " + callee + "(" + args.join(", ") + ")";
   },
 
   BinaryExpression: (node, level) => {
-    var left = generate(node.left, level);
-    var right = generate(node.right, level);
+    var left = generate(node.left, level, node);
+    var right = generate(node.right, level, node);
 
     if (true) {
       return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";
     } else {
-      return "(" + generate(node.left, level) + " " + node.operator + " " + generate(node.right, level) + ")";
+      return "(" + generate(node.left, level, node) + " " + node.operator + " " + generate(node.right, level, node) + ")";
     }
   },
 
@@ -292,16 +292,16 @@ var Statement = {
   },
 
   ArrayExpression: (node, level) => {
-    return "[" + node.elements.map(element => generate(element, level)).join(", ") + "]";
+    return "[" + node.elements.map(element => generate(element, level, node)).join(", ") + "]";
   },
 
   TupleExpression: (node, level) => {
-    return "T(" + node.elements.map(element => generate(element, level)).join(", ") + ")";
+    return "T(" + node.elements.map(element => generate(element, level, node)).join(", ") + ")";
   },
 
   RangeExpression: (node, level) => {
-    var left = generate(node.left, level);
-    var right = generate(node.right, level);
+    var left = generate(node.left, level, node);
+    var right = generate(node.right, level, node);
 
     return "R(" + left + ", " + right + ")";
   },
@@ -312,18 +312,18 @@ var Statement = {
 
     node.arguments.forEach(arg => {
       if (arg.type === "KeywordArgument") {
-        keywordArgs[arg.keyword.name] = generate(arg.expression, level);
+        keywordArgs[arg.keyword.name] = generate(arg.expression, level, node);
         //return generate(arg.expression, level);
       } else {
-        args.push(generate(arg, level));
+        args.push(generate(arg, level, node));
       }
     });
     // var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
     // var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
 
     if (node.callee.type === "MemberExpression") {
-      var object = generate(node.callee.object, level);
-      var property = generate(node.callee.property, level);
+      var object = generate(node.callee.object, level, node);
+      var property = generate(node.callee.property, level, node);
 
       if (knownProperties[object] && knownProperties[object][property]) {
         return object + "." + property + "(" + args.join(", ") + ")";
@@ -331,17 +331,17 @@ var Statement = {
         return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
       }
     } else {
-      return generate(node.callee,  level) + ".apply(" + "null" + ", [" + args.join(", ") + "])";
+      return generate(node.callee, level, node) + ".apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 
-  MemberExpression: (node, level) => {
-    var object = generate(node.object, level);
-    var property = generate(node.property, level);
+  MemberExpression: (node, level, parent) => {
+    var object = generate(node.object, level, node);
+    var property = generate(node.property, level, node);
 
     if (node.computed) {
       return object + "[" + property + "]";
-    } else if (property.startsWith("_")) {
+    } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;
     } else {
       return object + "." + property + ".bind(" + object + ")";
