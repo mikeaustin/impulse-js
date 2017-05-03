@@ -16,7 +16,9 @@ function Trait(parent, funcs) {
   this.methods = parent ? parent.methods : { };
 
   for (var name in funcs) {
-    this.methods[name] = funcs[name];
+    if (funcs.hasOwnProperty(name)) {
+      this.methods[name] = funcs[name];
+    }
   }
 }
 
@@ -42,11 +44,13 @@ Trait.prototype.isTypeOf = function (value) {
   return false;
 }
 
-Trait.prototype.bind = function () {
+Trait.prototype.bindMethods = function bind() {
   var methods = { };
 
   for (var name in this.methods) {
-    methods[name] = this.methods[name].apply(null, arguments);
+    if (this.methods.hasOwnProperty(name)) {
+      methods[name] = this.methods[name].apply(null, arguments);
+    }
   }
 
   return methods;

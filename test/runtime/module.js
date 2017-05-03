@@ -35,7 +35,7 @@ var _methods = Extension.extend(_methods, String, {
   }
 });
 
-var _methods = Extension.extend(_methods, String, Iterable.bind(_methods.iterator));
+var _methods = Extension.extend(_methods, String, Iterable.bindMethods(_methods.iterator));
 
 global._methods = _methods;
 global.Iterable = Iterable;

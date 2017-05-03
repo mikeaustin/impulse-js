@@ -61,3 +61,45 @@ function map(selector, iterables) {
 console.log("=====");
 
 console.log(map(n => n * n, [new Range(1, 3), new Range(2, 5)])); // [[1, 4, 9], [1, 4, 9]]
+
+
+class StringIterator {
+  constructor(string) {
+    this.string = string;
+    this.index = 0;
+  }
+
+  function next() {
+    var charCode = this.string.charCodeAt(this.index);
+    var nextCharCode = this.string.charCodeAt(this.index + 1);
+
+    if ((charCode >= 0xD800 && charCode <= 0xDBFF) && (nextCharCode >= 0xDC00 && nextCharCode <= 0xDFFF)) {
+      this.value = this.string.slice(this.index, this.index + 2);
+      this.index = this.index + 2;
+    } else {
+      this.value = this.string.charAt(this.index);
+      this.index = this.index + 1;
+    }
+
+    this.done = this.index > this.string.length;
+
+    return this;
+  }
+}
+
+extend String with Iterable {
+  function iterator() {
+    return new StringIterator(this);
+  }
+
+  function map(func) {
+    return this.reduce((array, item) => array ++ [func(item)], []);
+  }
+
+  function _length() {
+    return this.reduce((length, char) => length + 1, 0);
+  }
+}
+
+console.log("f💩o".map(c => c.toUpperCase()));
+console.log("f💩o"._length());

@@ -189,8 +189,14 @@ var Statement = {
   ExtendDeclaration: (node, level) => {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
+    var traits = node.traits.map(trait => {
+      var methods = "Iterable.bindMethods(" + id + ".prototype." + "iterator" + " || _methods." + "iterator" + ")";
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});";
+      return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");\n";
+      //return "var _methods = Impulse.extend(_methods, " + id + ", { reduce: Iterable.methods.reduce(_methods.iterator) });\n";
+    });
+
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});\n" + traits.join("");
   },
 
   ConstructorDeclaration: (node, level, parent) => {
@@ -287,6 +293,13 @@ var Statement = {
 
   ObjectExpression: (node, level) => {
 
+  },
+
+  LogicalExpression: (node, level, parent) => {
+    var left = generate(node.left, level, node);
+    var right = generate(node.right, level, node);
+
+    return left + " " + node.operator + " " + right;
   },
 
   ArrayExpression: (node, level) => {

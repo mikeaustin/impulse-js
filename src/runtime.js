@@ -3,7 +3,7 @@
 var passed = 0;
 var failed = 0;
 
-Object.prototype.bind = function() { return this.valueOf(); }
+Object.prototype.bind = function bind() { return this.valueOf(); }
 
 console.log("Impulse-JS Tests");
 
@@ -34,7 +34,7 @@ var Union = require("./runtime/union.js");
 var Class = require("./runtime/class.js");
 var Extension = require("./runtime/extension.js");
 var Parameters = require("./runtime/parameters.js");
-var Module = require("./runtime/module.js");
+var Trait = require("./runtime/module.js");
 var Operator = require("./runtime/operator.js");
 
 // Library
@@ -55,7 +55,7 @@ module.exports = {
   Union: Union,
   Extension: Extension,
   Parameters: Parameters,
-  Module: Module,
+  Module: Trait,
   define: Class.define,
   extend: Extension.extend
 };
@@ -65,57 +65,78 @@ Number.prototype._sub = function (that) { return this - that; };
 Number.prototype._mul = function (that) { return this * that; };
 Number.prototype._lt = function (that) { return this < that; };
 Number.prototype._gt = function (that) { return this > that; };
+Number.prototype._lte = function (that) { return this <= that; };
 Number.prototype._gte = function (that) { return this >= that; };
 
 String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
 
 
-String.Iterator = Class.define(Object, {
-  constructor: function (string) {
-    this.string = string;
-    this.index = 0;
-  },
+// String.Iterator = Class.define(Object, {
+//   constructor: function (string) {
+//     this.string = string;
+//     this.index = 0;
+//   },
 
-  next: function () {
-    var charCode;
+//   next: function () {
+//     var charCode;
 
-    if ((charCode = this.string.charCodeAt(this.index), charCode >= 0xD800 && charCode <= 0xDBFF) &&
-        (charCode = this.string.charCodeAt(this.index + 1), charCode >= 0xDC00 && charCode <= 0xDFFF)) {
-      this.value = this.string.slice(this.index, this.index + 2);
-      this.index += 2;
-    } else {
-      this.value = this.string.charAt(this.index);
-      this.index += 1;
+//     if ((charCode = this.string.charCodeAt(this.index), charCode >= 0xD800 && charCode <= 0xDBFF) &&
+//         (charCode = this.string.charCodeAt(this.index + 1), charCode >= 0xDC00 && charCode <= 0xDFFF)) {
+//       this.value = this.string.slice(this.index, this.index + 2);
+//       this.index += 2;
+//     } else {
+//       this.value = this.string.charAt(this.index);
+//       this.index += 1;
+//     }
+
+//     this.done = this.index > this.string.length;
+
+//     return this;
+//   }
+// })
+
+// String.prototype.iterator = function () {
+//   return new String.Iterator(this);
+// }
+
+// String.prototype.reduce = function (func, init) {
+//   var accum = init;
+
+//   for (var iter = this.iterator().next(); !iter.done; iter = iter.next()) {
+//     accum = func(accum, iter.value);
+//   }
+
+//   return accum;
+// }
+
+// String.prototype.map = function (func) {
+//   return this.reduce((array, c) => array.concat([func(c)]), []);
+// }
+
+// String.prototype._length = function () {
+//   return this.reduce((length, c) => length + 1, 0);
+// }
+
+// console.log("=====");
+
+// for (var iter = "f💩o".iterator().next(); !iter.done; iter = iter.next()) {
+//   console.log(iter.value);
+// }
+
+// console.log("'f💩o'.length == 3", "f💩o"._length() === 3);
+
+// console.log('f💩o'.map(c => c.toUpperCase()));
+
+var Iterable = global.Iterable = new Trait(Iterable, {
+  reduce: function _reduce(iterator) {
+    return function reduce(func, init) {
+      var accum = init, iter = iterator.apply(this);
+
+      for (var iter = iter.next(); !iter.done; iter = iter.next()) {
+        accum = func(accum, iter.value);
+      }
+      
+      return accum;
     }
-
-    this.done = this.index > this.string.length;
-
-    return this;
   }
-})
-
-String.prototype.iterator = function () {
-  return new String.Iterator(this);
-}
-
-String.prototype.reduce = function (func, init) {
-  var accum = init;
-
-  for (var iter = this.iterator().next(); !iter.done; iter = iter.next()) {
-    accum = func(accum, iter.value);
-  }
-
-  return accum;
-}
-
-String.prototype._length = function () {
-  return this.reduce((length, c) => length + 1, 0);
-}
-
-console.log("=====");
-
-for (var iter = "f💩o".iterator().next(); !iter.done; iter = iter.next()) {
-  console.log(iter.value);
-}
-
-console.log("'f💩o'.length ==", "f💩o"._length());
+});

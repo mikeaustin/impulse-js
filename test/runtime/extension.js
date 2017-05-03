@@ -82,7 +82,7 @@ console.log(Numeric.methods);
 
 var Numeric = new Trait.addtrait(Vector, Numeric);
 
-var _methods = Extension.extend(_methods, Vector, Numeric.bind());
+var _methods = Extension.extend(_methods, Vector, Numeric.bindMethods());
 
 console.log(Numeric.isTypeOf(new Vector3D()));
 console.log(">>>", _methods.isNumeric);
