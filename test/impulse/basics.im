@@ -1,5 +1,25 @@
 
 //
+// Object Equality
+//
+
+console.log(1 == 1);
+console.log([1, 2, 3] == [1, 2, 3]);
+console.log((10, "foo") == (10, "foo"));
+
+
+//
+// Type Validation
+//
+
+console.log(Number.isTypeOf(1));
+console.log([Number].isTypeOf([1, 2, 3]));
+console.log((Number, String).isTypeOf((10, "foo")));
+
+console.log(__LINE__);
+
+
+//
 // Range and Tuple
 //
 

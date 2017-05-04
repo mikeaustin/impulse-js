@@ -560,6 +560,7 @@ AdditiveExpression
 
 AdditiveOperator
   = "++"
+  = "<<"
   / "+"
   / "-"
 

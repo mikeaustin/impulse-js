@@ -25,6 +25,7 @@ global.foo = "foo";
 
 test(' foo.slice.apply(foo, [1]) === "oo" ');
 test(' foo.slice.apply(foo, [{begin: 1}]) === "oo" ');
+test(' foo.slice.apply(foo, [0, 1]) === "f" ');
 test(' foo.slice.apply(foo, [0, {end: 1}]) === "f" ');
 test(' foo.slice.apply(foo, [{begin: 0, end: 1}]) === "f" ');
 
