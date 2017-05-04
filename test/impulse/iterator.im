@@ -96,13 +96,13 @@ extend String with Iterable {
   }
 
   function map(func) {
-    return this.reduce((array, item) => array ++ [func(item)], []);
+    return this.reduce((array, item) => array << func(item), []);
   }
 
   function _length() {
     return this.reduce((length, char) => length + 1, 0);
   }
-  
+
 }
 
 console.log("f💩o".map(c => c.toUpperCase()));

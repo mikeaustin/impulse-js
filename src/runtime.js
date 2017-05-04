@@ -127,3 +127,7 @@ Map.prototype.update = function update(key, callback, init) {
 }
 
 Map.prototype.update.parameters = new Parameters([{key: Object}, {callback: Function}, {init: Object}]);
+
+Array.prototype.append = String.prototype.append = function (value) {
+  return this.push(value), this;
+}

@@ -141,7 +141,8 @@ var operators = {
   "<=" : "_lte",
   ">=" : "_gte",
 
-  "++" : "concat"
+  "<<" : "append",
+  "++" : "concat",
 }
 
 var Statement = {
