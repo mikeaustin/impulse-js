@@ -46,6 +46,8 @@ Tuple.prototype.isEqual = function (that) {
   return true;
 }
 
+Tuple.prototype._eql = Tuple.prototype.isEqual;
+
 Tuple.prototype.inspect = function () {
   return "(" + this.values.map(value => value.toString()).join(", ") + ")";
 }

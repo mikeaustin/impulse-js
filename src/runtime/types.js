@@ -110,6 +110,8 @@ Array.prototype.isEqual = function (that) {
   return true;
 }
 
+Array.prototype._eql = Array.prototype.isEqual;
+
 
 //
 // this.from(value)

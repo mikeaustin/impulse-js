@@ -3,13 +3,17 @@
 
 function getParameterName(parameter) {
   for (var parameterName in parameter) {
-    if (parameterName !== "$") return parameterName;
+    if (parameter.hasOwnProperty(parameterName)) {
+      if (parameterName !== "$") return parameterName;
+    }
   }
 }
 
 function getParameterType(parameter) {
   for (var parameterName in parameter) {
-    if (parameterName !== "$") return parameter[parameterName];
+    if (parameter.hasOwnProperty(parameterName)) {
+      if (parameterName !== "$") return parameter[parameterName];
+    }
   }
 }
 
@@ -45,9 +49,9 @@ Parameters.prototype.apply = function (_arguments) {
   while (i < _arguments.length && Object.getPrototypeOf(_arguments[i]) !== Object.prototype) {
     var argument = _arguments[i];
 
-    if (this[0].type.from) {
-      argument = this[0].type.from(_arguments[i]);
-    }
+    // if (this[0].type.from) {
+    //   argument = this[0].type.from(_arguments[i]);
+    // }
 
     args.push(argument);
 

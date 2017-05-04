@@ -171,10 +171,12 @@ var Iterable = global.Iterable = new Trait(Iterable, {
   }
 });
 
-Map.prototype.update = function update(key, callback, defval) {
+Map.prototype.update = function update(key, callback, init) {
   var value = this.get(key);
 
-  this.set(key, callback(value ? value : defval));
+  this.set(key, callback(value ? value : init));
 
   return this;
 }
+
+Map.prototype.update.parameters = new Parameters([{key: Object}, {callback: Function}, {init: Object}]);

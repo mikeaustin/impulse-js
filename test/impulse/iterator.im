@@ -106,17 +106,17 @@ console.log("f💩o"._length());
 console.log("f,💩,o"._split(","));
 
 
-function add(a, b) {
-  if (b is undefined)
-    return (b) => a + b;
-  else
-    return a + b;
-}
-
-var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, 0), new Map());
-var result = "f💩o💩oo".reduce((map, c) => map.update(c, add(1), 0), new Map());
+var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, init: 0), new Map());
 
 console.log(result);
 
 
 //assertBoolean("foo");
+
+console.log(1 == 1);
+console.log([1, 2, 3] == [1, 2, 3]);
+console.log((10, "foo") == (10, "foo"));
+
+console.log(Number.isTypeOf(1));
+console.log([Number].isTypeOf([1, 2, 3]));
+console.log((Number, String).isTypeOf((10, "foo")));

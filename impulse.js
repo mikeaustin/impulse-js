@@ -117,7 +117,7 @@ console.log(map(foo.bar));
 fs.readFile(process.argv[2], "utf8", function (error, data) {
   var ast = Parser.parse(data);
 
-  inspect(ast);
+  //inspect(ast);
 
   console.log("'use strict'");
   console.log("var Impulse = require('./src/runtime');");
@@ -128,19 +128,19 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
 });
 
 var operators = {
-  "+": "_add",
-  "-": "_sub",
-  "*": "_mul",
-  "/": "_div",
+  "+"  : "_add",
+  "-"  : "_sub",
+  "*"  : "_mul",
+  "/"  : "_div",
 
-  "==": "_eql",
-  "!=": "_neql",
-  "<": "_lt",
-  ">": "_gt",
-  "<=": "_lte",
-  ">=": "_gte",
+  "==" : "_eql",
+  "!=" : "_neql",
+  "<"  : "_lt",
+  ">"  : "_gt",
+  "<=" : "_lte",
+  ">=" : "_gte",
 
-  "++": "concat"
+  "++" : "concat"
 }
 
 var Statement = {
