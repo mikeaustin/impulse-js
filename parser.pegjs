@@ -469,7 +469,7 @@ NewExpression
 CallExpression
   = head:(
       callee:MemberExpression __ args:Arguments {
-        return { type: "CallExpression", callee: callee, arguments: args };
+        return { type: "CallExpression", callee: callee, arguments: args, line: location().start.line };
       }
     )
     tail:(
@@ -582,6 +582,7 @@ EqualityExpression
 EqualityOperator
   = "=="
   / "!="
+  / "is"
 
 LogicalANDExpression
   = head:EqualityExpression tail:(__ LogicalANDOperator __ EqualityExpression)* {

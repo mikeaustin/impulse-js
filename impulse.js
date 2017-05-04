@@ -117,7 +117,7 @@ console.log(map(foo.bar));
 fs.readFile(process.argv[2], "utf8", function (error, data) {
   var ast = Parser.parse(data);
 
-  //inspect(ast);
+  inspect(ast);
 
   console.log("'use strict'");
   console.log("var Impulse = require('./src/runtime');");
@@ -133,6 +133,8 @@ var operators = {
   "*": "_mul",
   "/": "_div",
 
+  "==": "_eql",
+  "!=": "_neql",
   "<": "_lt",
   ">": "_gt",
   "<=": "_lte",
@@ -245,7 +247,7 @@ var Statement = {
     var consequent = generate(node.consequent, level, node);
     var alternate = generate(node.alternate, level, node);
 
-    return indent(level) + "if (" + test + ") " + consequent + " else " + alternate;
+    return indent(level) + "if (assertBoolean(" + test + ")) " + consequent + " else " + alternate;
   },
 
   ReturnStatement: (node, level) => {
@@ -284,11 +286,14 @@ var Statement = {
     var left = generate(node.left, level, node);
     var right = generate(node.right, level, node);
 
-    if (true) {
-      return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";
-    } else {
-      return "(" + generate(node.left, level, node) + " " + node.operator + " " + generate(node.right, level, node) + ")";
-    }
+    // if (true) {
+      if (node.operator === "is")
+        return left + " === " + right;
+      else
+        return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";
+    // } else {
+    //   return "(" + generate(node.left, level, node) + " " + node.operator + " " + generate(node.right, level, node) + ")";
+    // }
   },
 
   ObjectExpression: (node, level) => {
@@ -336,13 +341,13 @@ var Statement = {
       var object = generate(node.callee.object, level, node);
       var property = generate(node.callee.property, level, node);
 
-      if (knownProperties[object] && knownProperties[object][property]) {
-        return object + "." + property + "(" + args.join(", ") + ")";
-      } else {
-        return "($ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
-      }
+      // if (knownProperties[object] && knownProperties[object][property]) {
+      //   return object + "." + property + "(" + args.join(", ") + ")";
+      // } else {
+        return "(global.line = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
+      // }
     } else {
-      return generate(node.callee, level, node) + ".apply(" + "null" + ", [" + args.join(", ") + "])";
+      return "(global.line = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 

@@ -103,3 +103,20 @@ extend String with Iterable {
 
 console.log("f💩o".map(c => c.toUpperCase()));
 console.log("f💩o"._length());
+console.log("f,💩,o"._split(","));
+
+
+function add(a, b) {
+  if (b is undefined)
+    return (b) => a + b;
+  else
+    return a + b;
+}
+
+var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, 0), new Map());
+var result = "f💩o💩oo".reduce((map, c) => map.update(c, add(1), 0), new Map());
+
+console.log(result);
+
+
+//assertBoolean("foo");

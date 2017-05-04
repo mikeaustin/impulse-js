@@ -5,8 +5,6 @@ var failed = 0;
 
 Object.prototype.bind = function bind() { return this.valueOf(); }
 
-console.log("Impulse-JS Tests");
-
 global.test = function (expression, onException) {
   var result;
 
@@ -68,8 +66,18 @@ Number.prototype._gt = function (that) { return this > that; };
 Number.prototype._lte = function (that) { return this <= that; };
 Number.prototype._gte = function (that) { return this >= that; };
 
+Object.prototype._eql = function (that) { return this === that; }
+Object.prototype._neql = function (that) { return this !== that; }
+
 String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
 
+global.assertBoolean = function(value) {
+  if (typeof value !== "boolean") {
+    throw Error("X on line " + global.line + " is not a boolean expression");
+  }
+
+  return value;
+}
 
 // String.Iterator = Class.define(Object, {
 //   constructor: function (string) {
@@ -138,5 +146,35 @@ var Iterable = global.Iterable = new Trait(Iterable, {
       
       return accum;
     }
+  },
+
+  _split: function _split(iterator) {
+    return function split(separator) {
+      var iter = iterator.apply(this);
+      var array = [];
+      var part = [];
+
+      for (var iter = iter.next(); !iter.done; iter = iter.next()) {
+        if (iter.value === separator) {
+          array.push(part);
+
+          part = [];
+        } else {
+          part.push(iter.value);
+        }
+      }
+
+      array.push(part);
+
+      return array.join("");
+    }
   }
 });
+
+Map.prototype.update = function update(key, callback, defval) {
+  var value = this.get(key);
+
+  this.set(key, callback(value ? value : defval));
+
+  return this;
+}

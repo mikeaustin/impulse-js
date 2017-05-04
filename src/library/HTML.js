@@ -23,7 +23,7 @@ function joinAttrs(attrs) {
   return (str !== "" ? " " : "") + str;
 }
 
-console.log("\nhtml.js\n");
+// console.log("\nhtml.js\n");
 
 global.html = (
   ul (new Map([["class", "parts"]]), [
@@ -31,4 +31,4 @@ global.html = (
   ])
 );
 
-test(' html === "<ul class=\\"parts\\"><li>text</li></ul>" ');
+// test(' html === "<ul class=\\"parts\\"><li>text</li></ul>" ');
