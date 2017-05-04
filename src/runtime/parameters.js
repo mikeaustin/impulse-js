@@ -35,12 +35,16 @@ function Parameters(signature) {
     this[i] = {
       name:    parameterName,
       type:    parameterType,
-      default: signature[i].$
+      //default: signature[i].$
     };
+
+    if (signature[i].hasOwnProperty("$")) {
+      this[i]["default"] = signature[i].$;
+    }
   }
 }
 
-Parameters.prototype.apply = function (_arguments) {
+Parameters.prototype.apply = function (_arguments, _object, _function) {
   var _arguments = _arguments || [];
   var args = [], i = 0;
 
@@ -48,10 +52,6 @@ Parameters.prototype.apply = function (_arguments) {
 
   while (i < _arguments.length && Object.getPrototypeOf(_arguments[i]) !== Object.prototype) {
     var argument = _arguments[i];
-
-    // if (this[0].type.from) {
-    //   argument = this[0].type.from(_arguments[i]);
-    // }
 
     args.push(argument);
 
@@ -71,7 +71,11 @@ Parameters.prototype.apply = function (_arguments) {
     } else if (this[i].hasOwnProperty("default")) {
       argument = this[i]["default"];
     } else {
-      throw Error("Missing parameter: '" + this[i].name + "' in call to function '" + "XXX" + "'");
+      // //var parameterFunc = (_object ? _object.constructor.name + "#" : "") + _function.name;
+      // var parameterFunc = "";
+
+      // throw TypeError("[" + global.__FILE__ + " : " + global.__LINE__ + "] " +
+      //                 "Missing parameter '" + this[i].name + "' in call to function '" + parameterFunc + "'.");
     }
   
     args.push(argument);
@@ -86,8 +90,11 @@ Parameters.prototype.apply = function (_arguments) {
     var parameterType = this[i].type;
 
     if (!parameterType.isTypeOf(args[i])) {
-      throw Error("Type mismatch for parameter '" + parameterName + "' in call to function '" + "XXX" + "'" +
-                  "; Expected type " + parameterType.name + " but found '" + args[i] + "'.");
+      var parameterFunc = _object.constructor.name + "#" + _function.name;
+
+      throw TypeError("[" + global.__FILE__ + " : " + global.__LINE__ + "] " +
+                      // "Expected type '" + parameterType.name + "' but found '" + args[i] +
+                      "Expected type '" + parameterType.name + "' for parameter '" + parameterName + "' in call to function '" + parameterFunc + "'.");
     }
   }
 
@@ -110,7 +117,7 @@ Parameters.define = function (params, func) {
 var _apply = Function.prototype.apply;
 
 Function.prototype.apply = function apply(_this, args) {
-  var args = this.parameters ? this.parameters.apply(args) : args;
+  var args = this.parameters ? this.parameters.apply(args, _this, this) : args;
 
   return _apply.call(this, _this, args);
 }

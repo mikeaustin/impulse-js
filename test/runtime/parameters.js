@@ -4,6 +4,7 @@ var Immutable = require('immutable');
 
 var Parameters = require('../../src/runtime/parameters');
 var Union = require('../../src/runtime/union');
+require('../../src/runtime/types');
 
 //
 // Parameters Tests
@@ -18,14 +19,14 @@ test(' params.apply([{foo: 10}])[0] === 10 ');
 test(' params.apply([])[0] === 1 ');
 
 
-String.prototype.slice.parameters = new Parameters([{beginIndex: Number}, {endIndex: Union.of(Number, Undefined), $: undefined}]);
+String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
 
 global.foo = "foo";
 
 test(' foo.slice.apply(foo, [1]) === "oo" ');
-test(' foo.slice.apply(foo, [{beginIndex: 1}]) === "oo" ');
-test(' foo.slice.apply(foo, [0, {endIndex: 1}]) === "f" ');
-test(' foo.slice.apply(foo, [{beginIndex: 0, endIndex: 1}]) === "f" ');
+test(' foo.slice.apply(foo, [{begin: 1}]) === "oo" ');
+test(' foo.slice.apply(foo, [0, {end: 1}]) === "f" ');
+test(' foo.slice.apply(foo, [{begin: 0, end: 1}]) === "f" ');
 
 
 Number.case = String.case = Array.prototype.case = function (that) {

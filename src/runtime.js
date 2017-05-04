@@ -25,6 +25,8 @@ global.test = function (expression, onException) {
 
 // Runtime
 
+global.__FILE__ = "runtime.js";
+
 var Types = require("./runtime/types");
 var Tuple = require("./runtime/tuple.js");
 var Union = require("./runtime/union.js");

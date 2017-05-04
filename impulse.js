@@ -119,7 +119,8 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
 
   //inspect(ast);
 
-  console.log("'use strict'");
+  console.log("'use strict';");
+  console.log("global.__FILE__ = '" + process.argv[2] + "';");
   console.log("var Impulse = require('./src/runtime');");
   console.log("var R = require('immutable').Range;");
   console.log("var T = require('./src/runtime/tuple').of;");
@@ -344,10 +345,13 @@ var Statement = {
       // if (knownProperties[object] && knownProperties[object][property]) {
       //   return object + "." + property + "(" + args.join(", ") + ")";
       // } else {
-        return "(global.line = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
+        if (stringifyKeywords(keywordArgs) === "{}")
+          return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
+        else
+          return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
       // }
     } else {
-      return "(global.line = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
+      return "(global.__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 
