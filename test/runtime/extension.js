@@ -7,12 +7,6 @@ var Parameters = require('../../src/runtime/parameters');
 
 console.log('\nextension.js\n');
 
-// var _methods = String.extend(_methods, null, {
-//  capitalize: function () {
-//    return this[0].toUpperCase() + this.slice(1);
-//  }
-// });
-
 var _methods = Extension.extend(_methods, String, {
   capitalize: function () {
     return this[0].toUpperCase() + this.slice(1);
@@ -85,4 +79,4 @@ var Numeric = new Trait.addtrait(Vector, Numeric);
 var _methods = Extension.extend(_methods, Vector, Numeric.bindMethods());
 
 console.log(Numeric.isTypeOf(new Vector3D()));
-console.log(">>>", _methods.isNumeric);
+console.log(_methods.isNumeric);

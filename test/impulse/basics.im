@@ -16,7 +16,7 @@ console.log(Number.isTypeOf(1));
 console.log([Number].isTypeOf([1, 2, 3]));
 console.log((Number, String).isTypeOf((10, "foo")));
 
-console.log(__LINE__);
+console.log("__LINE__ ==", __LINE__);
 
 
 //
@@ -50,14 +50,15 @@ console.log(result);
 extend String {
 
   function capitalize() {
-    return this.slice(begin: 0, end: 1).toUpperCase() ++ this.slice(begin: 1).toLowerCase();
+    //return this.slice(begin: 0, end: 1).toUpperCase() ++ this.slice(begin: 1).toLowerCase();
+    return this._idx(0..1).toUpperCase() ++ this._idx(1..undefined).toLowerCase();
   }
 
 }
 
 var result = "fOO".capitalize();
 
-console.log(result);
+console.log("'fOO'.capitlize() == 'Foo'", result);
 
 
 //

@@ -131,3 +131,7 @@ Map.prototype.update.parameters = new Parameters([{key: Object}, {callback: Func
 Array.prototype.append = String.prototype.append = function (value) {
   return this.push(value), this;
 }
+
+Array.prototype._idx = String.prototype._idx = function (range) {
+  return this.slice(range.begin, range.end);
+}

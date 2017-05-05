@@ -24,6 +24,14 @@ function stringifyKeywords(keywordArguments) {
   return "{" + array.join(", ") + "}";
 }
 
+function isKeywordArgsEmpty(keywordArguments) {
+  for (var p in keywordArguments) {
+    return false;
+  }
+
+  return true;
+}
+
 function generate(node, level, options) {
   if (Statement[node.type]) {
     return Statement[node.type](node, level, options);
@@ -122,8 +130,9 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("'use strict';");
   console.log("global.__FILE__ = '" + process.argv[2] + "';");
   console.log("var Impulse = require('./src/runtime');");
-  console.log("var R = require('immutable').Range;");
+  //console.log("var R = require('immutable').Range;");
   console.log("var T = require('./src/runtime/tuple').of;");
+  console.log("var R = require('./src/runtime/range').of;");
 
   generate(ast, 0);
 });
@@ -343,14 +352,10 @@ var Statement = {
       var object = generate(node.callee.object, level, node);
       var property = generate(node.callee.property, level, node);
 
-      // if (knownProperties[object] && knownProperties[object][property]) {
-      //   return object + "." + property + "(" + args.join(", ") + ")";
-      // } else {
-        if (stringifyKeywords(keywordArgs) === "{}")
-          return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
-        else
-          return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
-      // }
+      if (isKeywordArgsEmpty(keywordArgs))
+        return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
+      else
+        return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
     } else {
       return "(global.__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
     }
