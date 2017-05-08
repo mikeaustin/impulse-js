@@ -1,0 +1,26 @@
+"use strict";
+
+var _Array = Array;
+
+void function () {
+}();
+
+global.xArray = function () {
+  this.push.apply(this, arguments);
+}
+
+global.xArray.prototype = new _Array();
+global.xArray.prototype.constructor = global.xArray;
+global.xArray.prototype.length = 0;
+global.xArray.prototype.inspect = function () { return this.slice(); }
+global.xArray.prototype.toString = function () { return this.slice().toString(); }
+
+var a = new xArray();
+a.push(1, 2, 3);
+
+var b = new Array();
+b.push(1, 2, 3);
+
+console.log(a, b);
+console.log(a.length, b.length);
+

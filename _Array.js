@@ -1,20 +1,37 @@
 "use strict";
 
-var _Array = Array;
+var Impulse = { };
 
-global.Array = function () {
-console.log(_Array);
-  var array = new _Array();
-
-  array.foo = function() {
-    console.log("foo");
+Impulse.Array = (function (_Array) {
+  var Array = function () {
+    this.push.apply(this, arguments);
   }
 
-  return array;
-}
+  Array.prototype = new _Array();
+  Array.prototype.constructor = Array;
+  Array.prototype.length = 0;
+  Array.prototype.inspect = function () { return this.slice(); }
+  Array.prototype.toString = function () { return this.slice().toString(); }
+  Array.prototype.foo = function () { return "foo"; }
+  Array.from = _Array.from;
 
-a = new Array();
-a.push(1, 2, 3);
+  return Array;
+})(Array);
 
-console.log(a);
+(function () {
+  var Array = Impulse.Array;
+
+  var a = new global.Array();
+  a.push(1, 2, 3);
+  var a1 = global.Array.from([1, 2, 3]);
+
+  var b = new Array();
+  b.push(1, 2, 3);
+  var b1 = Array.from([1, 2, 3]);
+
+  console.log(a, b);
+  console.log(a.length, b.length);
+
+  console.log(b.foo());
+})();
 

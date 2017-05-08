@@ -3,7 +3,7 @@
 var passed = 0;
 var failed = 0;
 
-Object.prototype.bind = function bind() { return this.valueOf(); }
+Function.prototype.valueOf = function (thisArg) { return this.bind(thisArg); }
 
 global.test = function (expression, onException) {
   var result;
@@ -29,6 +29,7 @@ global.__FILE__ = "runtime.js";
 
 var Types = require("./runtime/types");
 var Tuple = require("./runtime/tuple.js");
+var Range = require("./runtime/range.js");
 var Union = require("./runtime/union.js");
 
 var Class = require("./runtime/class.js");
@@ -132,6 +133,10 @@ Array.prototype.append = String.prototype.append = function (value) {
   return this.push(value), this;
 }
 
-Array.prototype._idx = String.prototype._idx = function (range) {
-  return this.slice(range.begin, range.end);
+Array.prototype._idx = String.prototype._idx = function (value) {
+  if (Number.isTypeOf(value)) {
+    return this[value];
+  } else if (Range.isTypeOf(value)) {
+    return this.slice(value.begin, value.end);
+  }
 }

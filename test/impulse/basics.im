@@ -50,15 +50,17 @@ console.log(result);
 extend String {
 
   function capitalize() {
-    //return this.slice(begin: 0, end: 1).toUpperCase() ++ this.slice(begin: 1).toLowerCase();
-    return this._idx(0..1).toUpperCase() ++ this._idx(1..undefined).toLowerCase();
+    // return this.slice(begin: 0, end: 1).toUpperCase() ++ this.slice(begin: 1).toLowerCase();
+    // return this.slice(0..1).toUpperCase() ++ this.slice(1..undefined).toLowerCase();
+    // return this._idx(0..1).toUpperCase() ++ this._idx(1..undefined).toLowerCase();
+    return this[0..1].toUpperCase() ++ this[1..Infinity].toLowerCase();
   }
 
 }
 
 var result = "fOO".capitalize();
 
-console.log("'fOO'.capitlize() == 'Foo'", result);
+console.log("'fOO'.capitlize() ==", result);
 
 
 //

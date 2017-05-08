@@ -340,22 +340,20 @@ var Statement = {
     node.arguments.forEach(arg => {
       if (arg.type === "KeywordArgument") {
         keywordArgs[arg.keyword.name] = generate(arg.expression, level, node);
-        //return generate(arg.expression, level);
       } else {
         args.push(generate(arg, level, node));
       }
     });
-    // var object = node.callee.type === "MemberExpression" ? generate(node.callee.object, level) : null;
-    // var property = node.callee.type === "MemberExpression" ? generate(node.callee.property, level) : null;
 
     if (node.callee.type === "MemberExpression") {
       var object = generate(node.callee.object, level, node);
       var property = generate(node.callee.property, level, node);
 
-      if (isKeywordArgsEmpty(keywordArgs))
-        return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
-      else
-        return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + joinWithTrailing(args, ", ") + stringifyKeywords(keywordArgs) + "])";
+      if (!isKeywordArgsEmpty(keywordArgs)) {
+        args.push(stringifyKeywords(keywordArgs));
+      }
+
+      return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
     } else {
       return "(global.__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
     }
@@ -366,11 +364,12 @@ var Statement = {
     var property = generate(node.property, level, node);
 
     if (node.computed) {
-      return object + "[" + property + "]";
+      return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx).apply(" + "$" + ", [" + property + "])";
+      //return object + "[" + property + "]";
     } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;
     } else {
-      return object + "." + property + ".bind(" + object + ")";
+      return object + "." + property + ".valueOf(" + object + ")";
     }
   },
 
