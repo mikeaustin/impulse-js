@@ -25,8 +25,8 @@ console.log("");
 
 test(' Number.from("1.5") === 1.5 ');
 test(' Int.from("FF", 16) === 255 ');
-test(' Number.from("foo") === "TypeError" ', function (e) { return e instanceof TypeError; } );
-test(' Int.from("1.5") === "TypeError" ', function (e) { return e instanceof TypeError; } );
+test(' Number.from("foo") === "TypeError" ', { }, function (e) { return e instanceof TypeError; } );
+test(' Int.from("1.5") === "TypeError" ', { }, function (e) { return e instanceof TypeError; } );
 test(' String.from(["a", "b"]) === "ab" ');
 test(' String.from(["a", "b"], ", ") === "a, b" ');
 test(' Boolean.from("false") === false ');

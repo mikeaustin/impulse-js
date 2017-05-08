@@ -60,67 +60,6 @@ var knownProperties = {
   console: { log: true }
 };
 
-var temp = 0;
-
-var test = `
-// (1..5).map(n => n * n);
-
-// function capitalize() {
-//   return "Foo";
-// }
-
-// class Vector {
-//   constructor(x, y) {
-//     this.x = x;
-//     this.y = y;
-//   }
-
-//   function _add(that) {
-//     return new Vector(this.x + that.x, this.y + that.y);
-//   }
-// }
-
-// extend Vector {
-//   function _sub(that) {
-//     return new Vector(this.x - that.x, this.y - that.y);
-//   }
-// }
-
-// console.log(new Vector(1, 2) + new Vector(3, 4));
-// console.log(new Vector(1, 2) - new Vector(3, 4));
-
-// extend String {
-//   function capitalize() {
-//     return this.slice(0, 1).toUpperCase() + this.slice(1);
-//   }
-// }
-
-// extend String with Iterable, Printable {
-//   function iterator() {
-//     return 0;
-//   }
-// }
-
-// console.log("foo".capitalize());
-
-function map(func) {
-  return func(5);
-}
-
-class Foo {
-  constructor() {
-    this._x = 1;
-  }
-
-  function bar(n) {
-    return this._x + n;
-  }
-}
-
-var foo = new Foo();
-
-console.log(map(foo.bar));
-`;
 
 fs.readFile(process.argv[2], "utf8", function (error, data) {
   var ast = Parser.parse(data);
@@ -128,14 +67,15 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   //inspect(ast);
 
   console.log("'use strict';");
-  console.log("global.__FILE__ = '" + process.argv[2] + "';");
+  console.log("var __FILE__ = '" + process.argv[2] + "';");
+  console.log("var __LINE__ = '" + 0 + "';");
   console.log("var Impulse = require('./src/runtime');");
-  //console.log("var R = require('immutable').Range;");
   console.log("var T = require('./src/runtime/tuple').of;");
   console.log("var R = require('./src/runtime/range').of;");
 
   generate(ast, 0);
 });
+
 
 var operators = {
   "+"  : "_add",
@@ -353,9 +293,9 @@ var Statement = {
         args.push(stringifyKeywords(keywordArgs));
       }
 
-      return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
     } else {
-      return "(global.__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
+      return "(__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 
@@ -364,7 +304,7 @@ var Statement = {
     var property = generate(node.property, level, node);
 
     if (node.computed) {
-      return "(global.__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx).apply(" + "$" + ", [" + property + "])";
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx).apply(" + "$" + ", [" + property + "])";
       //return object + "[" + property + "]";
     } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;

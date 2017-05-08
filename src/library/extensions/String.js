@@ -8,6 +8,4 @@ var _methods = Extension.extend(_methods, String, {
   }
 });
 
-global._methods = _methods;
-
-// test(' _methods.capitalize.apply("foo") === "Foo" ');
+// test(' _methods.capitalize.apply("foo") === "Foo" ', {_methods: methods});

@@ -23,11 +23,9 @@ var _methods = Extension.extend(_methods, Number, {
   }
 });
 
-global._methods = _methods;
-
-test(' var foo = "foo"; (foo.capitalize || _methods.capitalize).apply(foo) === "Foo" ');
-test(' var foo = "foo"; (foo.toUpperCase || _methods.toUppderCase).apply(foo) === "FOO" ');
-test(' var num = 5; (num.factorial || _methods.factorial).apply(num, []) === 120 ');
+test(' (foo.capitalize || _methods.capitalize).apply(foo) === "Foo" ', { foo: "foo", _methods: _methods });
+test(' (foo.toUpperCase || _methods.toUppderCase).apply(foo) === "FOO" ', { foo: "foo", _methods: _methods });
+test(' (num.factorial || _methods.factorial).apply(num, []) === 120 ', { num: 5, _methods: _methods });
 
 
 var Vector = Class.define(Object, {

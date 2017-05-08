@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 var execSync = require('child_process').execSync;
 
@@ -11,11 +11,14 @@ var failed = 0;
 
 console.log("Impulse-JS Tests");
 
-global.test = function (expression, onException) {
+global.test = function (expression, context, onException) {
+  var context = context || { };
   var result;
 
   try {
-    result = global.eval(expression);
+    with (context) {
+      result = eval(expression);
+    }
   } catch (e) {
     if (onException) {
       result = onException(e);

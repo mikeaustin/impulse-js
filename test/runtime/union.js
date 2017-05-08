@@ -8,11 +8,8 @@ var Union = require('../../src/runtime/Union');
 
 console.log("\nunion.js\n");
 
-global.Union = Union;
-//global.Option = Option;
-
-test(' Union.of(Number).isTypeOf(10) === true ');
-test(' Union.of(Number, String).isTypeOf(10) === true');
-test(' Union.of(Number, String).isTypeOf("foo") === true');
-test(' Union.of(Number, String).isTypeOf(true) === false ')
-test(' Union.of(Int, String).isTypeOf(1.5) === false ')
+test(' Union.of(Number).isTypeOf(10) === true ', {Union: Union});
+test(' Union.of(Number, String).isTypeOf(10) === true', {Union: Union});
+test(' Union.of(Number, String).isTypeOf("foo") === true', {Union: Union});
+test(' Union.of(Number, String).isTypeOf(true) === false ', {Union: Union});
+test(' Union.of(Int, String).isTypeOf(1.5) === false ', {Union: Union});

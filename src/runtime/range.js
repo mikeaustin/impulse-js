@@ -16,6 +16,14 @@ Range.of = function (begin, end) {
   return new Range(begin, end);
 };
 
+Range.prototype.includes = function(value) {
+  return value >= this.begin && value <= this.end;
+}
+
+Range.prototype.case = function(value) {
+  return Number.isTypeOf(value) && this.includes(value);
+}
+
 Range.prototype.map = function(func) {
   var array = [];
 
@@ -25,6 +33,7 @@ Range.prototype.map = function(func) {
 
   return array;
 }
+
 
 //
 // Exports

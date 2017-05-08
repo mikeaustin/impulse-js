@@ -25,7 +25,7 @@ function joinAttrs(attrs) {
 
 // console.log("\nhtml.js\n");
 
-global.html = (
+var html = (
   ul (new Map([["class", "parts"]]), [
     li (new Map(), ["text"])
   ])

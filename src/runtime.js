@@ -5,23 +5,27 @@ var failed = 0;
 
 Function.prototype.valueOf = function (thisArg) { return this.bind(thisArg); }
 
-global.test = function (expression, onException) {
-  var result;
+// global.test = function (expression, scope, onException) {
+//   var result;
 
-  try {
-    result = global.eval(expression);
-  } catch (e) {
-    if (onException) {
-      result = onException(e);
-    } else {
-      console.log(e);
-    }
-  }
+//     console.log("here -1");
+//   try {
+//     console.log("here 0");
+//     result = global.eval(expression);
+//   } catch (e) {
+//     if (onException) {
+//       console.log("here 1");
+//       result = onException(e);
+//     } else {
+//       console.log("here 2");
+//       console.log(e);
+//     }
+//   }
 
-  result ? ++passed : ++failed;
+//   result ? ++passed : ++failed;
 
-  console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
-}
+//   console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
+// }
 
 // Runtime
 

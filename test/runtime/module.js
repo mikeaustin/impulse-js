@@ -37,26 +37,18 @@ var _methods = Extension.extend(_methods, String, {
 
 var _methods = Extension.extend(_methods, String, Iterable.bindMethods(_methods.iterator));
 
-global._methods = _methods;
-global.Iterable = Iterable;
-
 //
 
 console.log("\nmodule.js\n");
 
-test(' _methods.map.apply("abc", [c => c.charCodeAt(0)]).isEqual([97, 98, 99]) ');
+test(' _methods.map.apply("abc", [c => c.charCodeAt(0)]).isEqual([97, 98, 99]) ', {_methods: _methods});
 
 void function () {
   var Iterable = new Trait.addtrait([Number], Iterable);
 
-  var temp = global.Iterable;
-  global.Iterable = Iterable;
-
-  test(' Iterable.isTypeOf([1, 2, 3]) === true ');
+  test(' Iterable.isTypeOf([1, 2, 3]) === true ', {Iterable: Iterable});
   test(' [Number].isTypeOf([1, 2, 3]) === true ');
-  test(' Iterable.isTypeOf(["foobar"]) === false ');
-
-  global.Iterable = temp;
+  test(' Iterable.isTypeOf(["foobar"]) === false ', {Iterable: Iterable});
 }();
 
-test(' Iterable.isTypeOf([1, 2, 3]) === false ');
+test(' Iterable.isTypeOf([1, 2, 3]) === false ', {Iterable: Iterable});
