@@ -71,11 +71,7 @@ Parameters.prototype.apply = function (_arguments, _object, _function) {
     } else if (this[i].hasOwnProperty("default")) {
       argument = this[i]["default"];
     } else {
-      // //var parameterFunc = (_object ? _object.constructor.name + "#" : "") + _function.name;
-      // var parameterFunc = "";
-
-      // throw TypeError("[" + global.__FILE__ + " : " + global.__LINE__ + "] " +
-      //                 "Missing parameter '" + this[i].name + "' in call to function '" + parameterFunc + "'.");
+      argument = undefined;
     }
   
     args.push(argument);

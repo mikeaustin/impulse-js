@@ -11,14 +11,14 @@ require('../../src/runtime/types');
 
 console.log("\nparameters.js\n");
 
-var params = new Parameters([{foo: Int, $: 1}, {bar: Union.of(Int, Undefined)}]);
+var params = new Parameters([{foo: Int, $: 1}, {bar: Undefined.or(Int)}]);
 
 test(' params.apply([10])[0] === 10 ', {params: params});
 test(' params.apply([{foo: 10}])[0] === 10 ', {params: params});
 test(' params.apply([])[0] === 1 ', {params: params});
 
 
-String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
+String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Undefined.or(Number)}]);
 
 var foo = "foo";
 

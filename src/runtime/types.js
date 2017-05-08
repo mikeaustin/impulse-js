@@ -1,5 +1,7 @@
 "use strict";
 
+var Union = require('../../src/runtime/union');
+
 
 //
 // class DivideByZero
@@ -23,9 +25,19 @@ global.Int = function Int() { }
 global.Int.prototype = new Number();
 global.Int.prototype.constructor = Int;
 
-global.Undefined = function Undefined() { }
-global.Undefined.isTypeOf = function (that) { return that === undefined; }
 
+//
+// class Undefined
+//
+
+global.Undefined = function Undefined() { }
+global.Undefined.isTypeOf = function (value) { return value === undefined; }
+global.Undefined.or = function (that) { return Union.of(this, that); }
+
+
+//
+// assertType(that)
+//
 
 Boolean.prototype.assertType = String.assertType = function (that) {
   if (!(this instanceof that)) {

@@ -5,27 +5,6 @@ var failed = 0;
 
 Function.prototype.valueOf = function (thisArg) { return this.bind(thisArg); }
 
-// global.test = function (expression, scope, onException) {
-//   var result;
-
-//     console.log("here -1");
-//   try {
-//     console.log("here 0");
-//     result = global.eval(expression);
-//   } catch (e) {
-//     if (onException) {
-//       console.log("here 1");
-//       result = onException(e);
-//     } else {
-//       console.log("here 2");
-//       console.log(e);
-//     }
-//   }
-
-//   result ? ++passed : ++failed;
-
-//   console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
-// }
 
 // Runtime
 
@@ -76,7 +55,7 @@ Number.prototype._gte = function (that) { return this >= that; };
 Object.prototype._eql = function (that) { return this === that; }
 Object.prototype._neql = function (that) { return this !== that; }
 
-String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Union.of(Number, Undefined), $: undefined}]);
+String.prototype.slice.parameters = new Parameters([{begin: Number}, {end: Undefined.or(Number)}]);
 
 global.assertBoolean = function(value) {
   if (typeof value !== "boolean") {
