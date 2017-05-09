@@ -884,8 +884,17 @@ FatArrowFunctionBody
   / body:Expression
 
 FormalParameterList
-  = head:Identifier tail:(__ "," __ Identifier)* {
+  = head:FormalParameter tail:(__ "," __ FormalParameter)* {
       return buildList(head, tail, 3);
+    }
+
+FormalParameter
+  = id:Identifier argtype:(":" __ Identifier)? defval:(__ "=" Expression)? {
+      return {
+        type: "FormalParameter",
+        id: id,
+        argtype: extractOptional(argtype, null)
+      };
     }
 
 FunctionBody

@@ -321,6 +321,10 @@ var Statement = {
   // Primaries
   //
 
+  FormalParameter: (node, level) => {
+    return generate(node.id, level);
+  },
+
   Literal: (node, level) => {
     if (typeof node.value === "string") {
       return '"' + node.value + '"';
