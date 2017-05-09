@@ -71,18 +71,20 @@ class StringIterator {
   }
 
   function next() {
-    var charCode = this.string.charCodeAt(this.index);
-    var nextCharCode = this.string.charCodeAt(this.index + 1);
+    var string = this.string, index = this.index;
+
+    var charCode = this.string.charCodeAt(index);
+    var nextCharCode = this.string.charCodeAt(index + 1);
 
     if ((charCode >= 0xD800 && charCode <= 0xDBFF) && (nextCharCode >= 0xDC00 && nextCharCode <= 0xDFFF)) {
-      this.value = this.string.slice(this.index, this.index + 2);
-      this.index = this.index + 2;
+      this.value = string.slice(index, index + 2);
+      this.index = index + 2;
     } else {
-      this.value = this.string.charAt(this.index);
-      this.index = this.index + 1;
+      this.value = string.charAt(index);
+      this.index = index + 1;
     }
 
-    this.done = this.index > this.string.length;
+    this.done = index > string.length;
 
     return this;
   }
