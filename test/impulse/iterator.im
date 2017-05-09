@@ -84,7 +84,7 @@ class StringIterator {
       this.index = index + 1;
     }
 
-    this.done = index > string.length;
+    this.done = this.index > string.length;
 
     return this;
   }
