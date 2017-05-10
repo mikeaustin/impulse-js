@@ -100,3 +100,18 @@ extend Vector3D {
 var result = new Vector3D(1, 2, 3) + new Vector3D(1, 2, 3);
 
 console.log(result);
+
+
+//
+// CPS Transformation
+//
+
+function cps() {
+  var value <= new Promise((resolve, reject) => {
+    setTimeout(() => resolve(10), 0);
+  });
+
+  console.log(">>>", value);
+}
+
+cps();

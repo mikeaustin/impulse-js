@@ -643,6 +643,7 @@ Expression
 Statement
   = Block
   / VariableStatement
+  / ContinuationStatement
   / ExpressionStatement
   / IfStatement
   / ReturnStatement
@@ -669,6 +670,15 @@ VariableStatement
         type: "VariableDeclaration",
         declarations: declarations,
         kind: "var"
+      };
+    }
+
+ContinuationStatement
+  = VarToken __ id:Identifier init:(__ "<=" __ AssignmentExpression) EOS {
+      return {
+        type: "ContinuationDeclaration",
+        id: id,
+        init: init[3]
       };
     }
 

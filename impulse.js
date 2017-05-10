@@ -177,12 +177,34 @@ var Statement = {
   //
 
   BlockStatement: (node, level, parent) => {
+    function buildStatements(body, level) {
+      var statements = [];
+    
+      while (body.length > 0) {
+        var statement = body.shift();
+
+        if (statement.type === "ContinuationDeclaration") {
+          var init = generate(statement.init, level, node);
+          var id = generate(statement.id, level, node);
+          var cont = buildStatements(body, level + 1);
+
+          statements.push(indent(level + 1) + init + ".then(" + id + " => {\n" + cont + "\n" + indent(level + 1) + "});");
+        } else {
+          statements.push(generate(statement, level + 1, node));
+        }
+      }
+
+      return statements.join("\n");
+    }
+
     var functionDeclaration = parent.type === "FunctionDeclaration" || parent.type === "ConstructorDeclaration";
     var functionExpression = parent.type === "FunctionExpression" || parent.type === "IfStatement";
 
-    var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
-      return generate(statement, level + 1, node);
-    }));
+    // var statements = [indent(level + 1) + "var $;\n"].concat(node.body.map(statement => {
+    //   return generate(statement, level + 1, node);
+    // }));
+
+    var statements = [indent(level + 1) + "var $;\n"].concat(buildStatements(node.body.slice(), level));
 
     if (functionDeclaration) {
       return "{\n" + indent(level + 1) + "var _this = this;\n" + joinWithTrailing(statements, "\n") + indent(level) + "}";
