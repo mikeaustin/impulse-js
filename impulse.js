@@ -238,7 +238,7 @@ var Statement = {
     var right = generate(node.right, level, node);
 
     // if (true) {
-      if (node.operator === "is")
+      if (node.operator === "===")
         return left + " === " + right;
       else
         return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";

@@ -581,10 +581,10 @@ EqualityExpression
     }
 
 EqualityOperator
-  = "=="
+  = "==="
+  / "=="
   / "!="
-  / "is"
-
+  
 LogicalANDExpression
   = head:EqualityExpression tail:(__ LogicalANDOperator __ EqualityExpression)* {
       return buildLogicalExpression(head, tail);

@@ -447,12 +447,12 @@ function peg$parse(input, options) {
       peg$c207 = peg$literalExpectation("<", false),
       peg$c208 = ">",
       peg$c209 = peg$literalExpectation(">", false),
-      peg$c210 = "==",
-      peg$c211 = peg$literalExpectation("==", false),
-      peg$c212 = "!=",
-      peg$c213 = peg$literalExpectation("!=", false),
-      peg$c214 = "is",
-      peg$c215 = peg$literalExpectation("is", false),
+      peg$c210 = "===",
+      peg$c211 = peg$literalExpectation("===", false),
+      peg$c212 = "==",
+      peg$c213 = peg$literalExpectation("==", false),
+      peg$c214 = "!=",
+      peg$c215 = peg$literalExpectation("!=", false),
       peg$c216 = function(head, tail) {
             return buildLogicalExpression(head, tail);
           },
@@ -5283,9 +5283,9 @@ function peg$parse(input, options) {
   function peg$parseEqualityOperator() {
     var s0;
 
-    if (input.substr(peg$currPos, 2) === peg$c210) {
+    if (input.substr(peg$currPos, 3) === peg$c210) {
       s0 = peg$c210;
-      peg$currPos += 2;
+      peg$currPos += 3;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$c211); }
