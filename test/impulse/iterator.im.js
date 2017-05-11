@@ -107,11 +107,11 @@ extend String with Iterable {
 
 }
 
-console.log("f💩o".map(c => c.toUpperCase()));
-console.log("f💩o"._length());
-console.log("f,💩,o"._split(","));
+// console.log("f💩o".map(c => c.toUpperCase()));
+// console.log("f💩o"._length());
+// console.log("f,💩,o"._split(","));
 
 
-var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, init: 0), new Map());
+// var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, init: 0), new Map());
 
-console.log(result);
+// console.log(result);

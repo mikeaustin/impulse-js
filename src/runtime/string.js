@@ -1,30 +1,19 @@
 "use strict";
 
 
-String.prototype.toArray = function () {
-  var array = [];
-
-  for (var index = 0; index < this.length; ++index) {
-    var charCode = this.charCodeAt(index);
-
-    if (charCode >= 0xD800 && charCode <= 0xDBFF) {
-      var nextCharCode = this.charCodeAt(index + 1);
-
-      if (nextCharCode >= 0xDC00 && nextCharCode <= 0xDFFF) {
-        array.push(this.slice(index, index + 2));
-
-        ++index;
-      }
-    } else {
-      array.push(this.charAt(index));
-    }
-  }
-
-  return array;
+function Iterator(array) {
+  this.array = array;
+  this.index = 0;
 }
 
-var UString = function UString(string) {
-//  this.value = string;
+Iterator.prototype.next = function () {
+  this.value = this.array[index];
+  this.done  = this.index > string.length;
+
+  return this;
+}
+
+var StringArray = function StringArray(string) {
   this.chars = [];
 
   for (var index = 0; index < string.length; ++index) {
@@ -46,32 +35,23 @@ var UString = function UString(string) {
   this.length = this.chars.length;
 }
 
-UString.prototype.constructor = UString;
-UString.prototype.valueOf = UString.prototype.inspect = function () { return this.value; }
-UString.prototype._idx = function (index) { return this.chars[index]; }
-UString.prototype.slice = function (begin, end) { return this.chars.slice(begin, end); }
-UString.prototype.substr = function (begin, length) { return this.chars.slice(begin, begin + length); }
-//UString.prototype.toLowerCase = function () { return this.value.toUpperCase(); }
-//UString.prototype.toUpperCase = function () { return this.value.toUpperCase(); }
-UString.prototype.concat = function (that) { return this.value.concat(that); }
+StringArray.prototype.constructor = StringArray;
+StringArray.prototype._idx = function (index) { return this.chars[index]; }
+StringArray.prototype.slice = function (begin, end) { return this.chars.slice(begin, end); }
+StringArray.prototype.substr = function (begin, length) { return this.chars.slice(begin, begin + length); }
+StringArray.prototype.concat = function (that) { return this.value.concat(that); }
+StringArray.prototype.iterator = function() { return new Iterator(this.chars); }
 
-UString.from = function(iterable) {
-  // ...
-}
 
 //
 // Exports
 //
 
-module.exports = UString;
+module.exports = StringArray;
 
 
-// var str = new UString("🍅🌽🍇");
+var str = new StringArray("🍅🌽🍇");
 
-// console.log("str == 🍅🌽🍇", str == "🍅🌽🍇");
-// console.log(str, str.length, str._idx(0));
-// console.log(str.slice(1, 2), str.substr(1, 2));
-
-var array = "🍅🌽🍇".toArray();
-
-console.log(">>>", array, array.length);
+console.log(str);
+console.log(str.length);
+console.log(str._idx(0), str.slice(1, 2), str.substr(1, 2));
