@@ -115,3 +115,13 @@ function cps() {
 }
 
 cps();
+
+{
+  var value <= new Promise((resolve, reject) => {
+    setTimeout(() => resolve(10), 0);
+  });
+
+  console.log(">>>", value);
+}
+
+console.log("here");

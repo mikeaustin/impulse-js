@@ -145,11 +145,11 @@ var Statement = {
     var traits = node.traits.map(trait => {
       var methods = "Iterable.bindMethods(" + id + ".prototype." + "iterator" + " || _methods." + "iterator" + ")";
 
-      return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");\n";
+      return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
       //return "var _methods = Impulse.extend(_methods, " + id + ", { reduce: Iterable.methods.reduce(_methods.iterator) });\n";
     });
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});\n" + traits.join("");
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});" + traits.join("");
   },
 
   ConstructorDeclaration: (node, level, parent) => {
@@ -184,7 +184,7 @@ var Statement = {
         var statement = body.shift();
 
         if (statement.type === "ContinuationDeclaration") {
-          var init = generate(statement.init, level, node);
+          var init = generate(statement.init, level + 1, node);
           var id = generate(statement.id, level, node);
           var cont = buildStatements(body, level + 1);
 
@@ -204,7 +204,7 @@ var Statement = {
     //   return generate(statement, level + 1, node);
     // }));
 
-    var statements = [indent(level + 1) + "var $;\n"].concat(buildStatements(node.body.slice(), level));
+    var statements = [indent(level + 1) + "var $;"].concat(buildStatements(node.body.slice(), level));
 
     if (functionDeclaration) {
       return "{\n" + indent(level + 1) + "var _this = this;\n" + joinWithTrailing(statements, "\n") + indent(level) + "}";
