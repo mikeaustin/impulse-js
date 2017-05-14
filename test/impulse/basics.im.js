@@ -108,20 +108,26 @@ console.log(result);
 
 function cps() {
   var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 0);
+    setTimeout(() => resolve(10), 2000);
   });
 
-  console.log(">>>", value);
+  console.log(">>> 0", value);
 }
 
 cps();
 
 {
   var value <= new Promise((resolve, reject) => {
+    setTimeout(() => resolve(10), 1000);
+  });
+
+  console.log(">>> 1", value);
+
+  var value <= new Promise((resolve, reject) => {
     setTimeout(() => resolve(10), 0);
   });
 
-  console.log(">>>", value);
+  console.log(">>> 2", value);
 }
 
 console.log("here");

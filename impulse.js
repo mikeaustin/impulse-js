@@ -188,7 +188,7 @@ var Statement = {
           var id = generate(statement.id, level, node);
           var cont = buildStatements(body, level + 1);
 
-          statements.push(indent(level + 1) + init + ".then(" + id + " => {\n" + cont + "\n" + indent(level + 1) + "});");
+          statements.push(indent(level + 1) + "return " + init + ".then(" + id + " => {\n" + cont + "\n" + indent(level + 1) + "});");
         } else {
           statements.push(generate(statement, level + 1, node));
         }
