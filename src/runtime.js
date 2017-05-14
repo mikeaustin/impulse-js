@@ -103,6 +103,7 @@ var Iterable = global.Iterable = new Trait(Iterable, {
   }
 });
 
+Map.prototype._idx = Map.prototype.get;
 Map.prototype.update = function update(key, callback, init) {
   var value = this.get(key);
 

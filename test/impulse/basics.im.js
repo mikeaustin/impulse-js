@@ -17,7 +17,7 @@ var data = {
   id: ("date", 10), 1: "one"
 };
 
-console.log(data.get(id) == ("date", 10));
+console.log(data[id] == ("date", 10));
 
 
 //
