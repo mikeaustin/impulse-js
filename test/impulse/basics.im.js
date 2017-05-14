@@ -11,6 +11,14 @@ var x;
 
 console.log(x === undefined);
 
+var id = new Date();
+
+var data = {
+  id: ("date", 10), 1: "one"
+};
+
+console.log(data.get(id) == ("date", 10));
+
 
 //
 // Type Validation
