@@ -146,10 +146,12 @@ var Statement = {
       var methods = "Iterable.bindMethods(" + id + ".prototype." + "iterator" + " || _methods." + "iterator" + ")";
 
       return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
-      //return "var _methods = Impulse.extend(_methods, " + id + ", { reduce: Iterable.methods.reduce(_methods.iterator) });\n";
+      //return "var _methods = Impulse.extend(_methods, " + id +
+      // ", { reduce: Iterable.methods.reduce(_methods.iterator) });\n";
     });
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});" + traits.join("");
+    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});" +
+           traits.join("");
   },
 
   ConstructorDeclaration: (node, level, parent) => {
@@ -188,7 +190,8 @@ var Statement = {
           var id = generate(statement.id, level, node);
           var cont = buildStatements(body, level + 1);
 
-          statements.push(indent(level + 1) + "return " + init + ".then(" + id + " => {\n" + cont + "\n" + indent(level + 1) + "});");
+          statements.push(indent(level + 1) + "return " + init + ".then(" + id +
+                                              " => {\n" + cont + "\n" + indent(level + 1) + "});");
         } else {
           statements.push(generate(statement, level + 1, node));
         }
@@ -258,14 +261,17 @@ var Statement = {
   BinaryExpression: (node, level) => {
     var left = generate(node.left, level, node);
     var right = generate(node.right, level, node);
+    var operator = operators[node.operator];
 
     // if (true) {
       if (node.operator === "===")
         return left + " === " + right;
       else
-        return "($ = " + left + ", $." + operators[node.operator] + " || _methods." + operators[node.operator] + ")" + ".apply($, [" + right + "])";
+        return "($ = " + left + ", $." + operator + " || _methods." + operator + ")" +
+               ".apply($, [" + right + "])";
     // } else {
-    //   return "(" + generate(node.left, level, node) + " " + node.operator + " " + generate(node.right, level, node) + ")";
+    //   return "(" + generate(node.left, level, node) + " " + node.operator + " " +
+    //   generate(node.right, level, node) + ")";
     // }
   },
 
@@ -323,9 +329,11 @@ var Statement = {
         args.push(stringifyKeywords(keywordArgs));
       }
 
-      return "(__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ").apply(" + "$" + ", [" + args.join(", ") + "])";
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ")" +
+             ".apply(" + "$" + ", [" + args.join(", ") + "])";
     } else {
-      return "(__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ").apply(" + "null" + ", [" + args.join(", ") + "])";
+      return "(__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ")" +
+             ".apply(" + "null" + ", [" + args.join(", ") + "])";
     }
   },
 
@@ -334,7 +342,8 @@ var Statement = {
     var property = generate(node.property, level, node);
 
     if (node.computed) {
-      return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx).apply(" + "$" + ", [" + property + "])";
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx)" +
+             ".apply(" + "$" + ", [" + property + "])";
       //return object + "[" + property + "]";
     } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;
