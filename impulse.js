@@ -71,6 +71,7 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("var __LINE__ = '" + 0 + "';");
   console.log("var Impulse = require('./src/runtime');");
   console.log("var T = require('./src/runtime/tuple').of;");
+  console.log("var Range = require('./src/runtime/range');");
   console.log("var R = require('./src/runtime/range').of;");
 
   generate(ast, 0);
@@ -82,6 +83,7 @@ var operators = {
   "-"  : "_sub",
   "*"  : "_mul",
   "/"  : "_div",
+  "%"  : "_mod",
 
   "==" : "_eql",
   "!=" : "_neql",

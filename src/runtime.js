@@ -48,6 +48,9 @@ module.exports = {
 Number.prototype._add = function (that) { return this + that; };
 Number.prototype._sub = function (that) { return this - that; };
 Number.prototype._mul = function (that) { return this * that; };
+Number.prototype._div = function (that) { return this / that; };
+Number.prototype._mod = function (that) { return this % that; };
+
 Number.prototype._lt = function (that) { return this < that; };
 Number.prototype._gt = function (that) { return this > that; };
 Number.prototype._lte = function (that) { return this <= that; };
@@ -76,6 +79,20 @@ var Iterable = global.Iterable = new Trait(Iterable, {
         accum = func(accum, result.value);
       }
       
+      return accum;
+    }
+  },
+
+  filter: function _filter(iterator) {
+    return function filter(predicate) {
+      var accum = [], iter = iterator.apply(this);
+
+      for (var result = iter.next(); !result.done; result = iter.next()) {
+        if (predicate(result.value)) {
+          accum.push(result.value);
+        }
+      }
+
       return accum;
     }
   },

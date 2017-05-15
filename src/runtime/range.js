@@ -7,6 +7,22 @@
  * @summary A tuple type that supports structural typing and multi-value mapping on iterables.
 **/
 
+// function Iterator(range) {
+//   this.range = range;
+//   this.index = range.begin;
+//   this.result = { };
+// }
+
+// Iterator.prototype.constructor = Iterator;
+
+// Iterator.prototype.next = function () {
+//   this.result.value = this.index;
+//   this.result.done = this.value > this.range.end;
+
+//   return this.result;
+// };
+
+
 function Range(begin, end) {
   this.begin = begin;
   this.end   = end;
