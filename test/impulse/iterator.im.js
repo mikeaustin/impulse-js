@@ -68,25 +68,26 @@ class StringIterator {
   constructor(string) {
     this.string = string;
     this.index = 0;
+    this.result = { };
   }
 
   function next() {
     var string = this.string, index = this.index;
 
-    var charCode = this.string.charCodeAt(index);
-    var nextCharCode = this.string.charCodeAt(index + 1);
+    var charCode = string.charCodeAt(index);
+    var nextCharCode = string.charCodeAt(index + 1);
 
     if ((charCode >= 0xD800 && charCode <= 0xDBFF) && (nextCharCode >= 0xDC00 && nextCharCode <= 0xDFFF)) {
-      this.value = string.slice(index, index + 2);
+      this.result.value = string.slice(index, index + 2);
       this.index = index + 2;
     } else {
-      this.value = string.charAt(index);
+      this.result.value = string.charAt(index);
       this.index = index + 1;
     }
 
-    this.done = this.index > string.length;
+    this.result.done = this.index > string.length;
 
-    return this;
+    return this.result;
   }
 
 }
@@ -107,9 +108,9 @@ extend String with Iterable {
 
 }
 
-// console.log("f💩o".map(c => c.toUpperCase()));
-// console.log("f💩o"._length());
-// console.log("f,💩,o"._split(","));
+console.log("f💩o".map(c => c.toUpperCase()));
+console.log("f💩o"._length());
+console.log("f💩o,b💩r"._split(","));
 
 
 // var result = "f💩o💩oo".reduce((map, c) => map.update(c, v => v + 1, init: 0), new Map());
