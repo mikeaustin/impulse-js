@@ -4,13 +4,14 @@
 function Iterator(array) {
   this.array = array;
   this.index = 0;
+  this.result = { };
 }
 
 Iterator.prototype.next = function () {
-  this.value = this.array[index];
-  this.done  = this.index > string.length;
+  this.result.value = this.array[index];
+  this.result.done  = this.index > string.length;
 
-  return this;
+  return this.result;
 }
 
 var StringArray = function StringArray(string) {

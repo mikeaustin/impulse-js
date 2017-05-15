@@ -72,8 +72,8 @@ var Iterable = global.Iterable = new Trait(Iterable, {
     return function reduce(func, init) {
       var accum = init, iter = iterator.apply(this);
 
-      for (var iter = iter.next(); !iter.done; iter = iter.next()) {
-        accum = func(accum, iter.value);
+      for (var result = iter.next(); !result.done; result = iter.next()) {
+        accum = func(accum, result.value);
       }
       
       return accum;
@@ -84,21 +84,21 @@ var Iterable = global.Iterable = new Trait(Iterable, {
     return function split(separator) {
       var iter = iterator.apply(this);
       var array = [];
-      var part = [];
+      var part = new this.constructor().valueOf();
 
-      for (var iter = iter.next(); !iter.done; iter = iter.next()) {
-        if (iter.value === separator) {
+      for (var result = iter.next(); !result.done; result = iter.next()) {
+        if (result.value === separator) {
           array.push(part);
 
-          part = [];
+          part = new this.constructor().valueOf();
         } else {
-          part.push(iter.value);
+          part = part.append(result.value);
         }
       }
 
       array.push(part);
 
-      return array.join("");
+      return array;
     }
   }
 });
@@ -120,8 +120,12 @@ Map.prototype.update = function update(key, callback, init) {
 
 Map.prototype.update.parameters = new Parameters([{key: Object}, {callback: Function}, {init: Object}]);
 
-Array.prototype.append = String.prototype.append = function (value) {
-  return this.push(value), this;
+Array.prototype.append = function (value) {
+  return this.concat([value]);
+}
+
+String.prototype.append = function (value) {
+  return this + value;
 }
 
 Array.prototype._idx = String.prototype._idx = function (value) {
