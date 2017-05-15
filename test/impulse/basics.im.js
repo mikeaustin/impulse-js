@@ -14,10 +14,15 @@ console.log(x === undefined);
 var id = new Date();
 
 var data = {
-  id: ("date", 10), 1: "one"
+  id: 10, 1: "one"
 };
 
-console.log(data[id] == ("date", 10));
+data << (2, "two");
+data ++ { "name": "Joe", "age": 20 };
+
+console.log(data[id] === 10);
+console.log(data[2] === "two");
+console.log(data["name"] === "Joe");
 
 
 //
@@ -116,7 +121,7 @@ console.log(result);
 
 function cps() {
   var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 2000);
+    setTimeout(() => resolve(10), 20);
   });
 
   console.log(">>> 0", value);
@@ -126,7 +131,7 @@ cps();
 
 {
   var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 1000);
+    setTimeout(() => resolve(10), 10);
   });
 
   console.log(">>> 1", value);

@@ -104,6 +104,12 @@ var Iterable = global.Iterable = new Trait(Iterable, {
 });
 
 Map.prototype._idx = Map.prototype.get;
+Map.prototype.concat = function(map) {
+  for (var x of map) {
+    this.set(x[0], x[1]);
+  }
+};
+Map.prototype.append = function (tuple) { return this.set(tuple.values[0], tuple.values[1]); };
 Map.prototype.update = function update(key, callback, init) {
   var value = this.get(key);
 
