@@ -93,7 +93,11 @@ var Iterable = global.Iterable = new Trait(Iterable, {
         }
       }
 
-      return accum;
+      if ([Object].isTypeOf(this) || Range.isTypeOf(this)) {
+        return accum;
+      } else {
+        return this.constructor.from(accum);
+      }
     }
   },
 
