@@ -69,6 +69,17 @@ global.assertBoolean = function(value) {
   return value;
 }
 
+var TestTrait = global.TestTrait = new Trait(TestTrait, {
+  //constructor: function TestTrait() {},
+
+  test: function _test(a, b) {
+    return function test() {
+      return [a.apply(this), b.apply(this)];
+    }
+  }
+});
+
+TestTrait.required = ["a", "b"];
 
 var Iterable = global.Iterable = new Trait(Iterable, {
   reduce: function _reduce(iterator) {
@@ -123,6 +134,8 @@ var Iterable = global.Iterable = new Trait(Iterable, {
     }
   }
 });
+
+Iterable.required = ["iterator"];
 
 Map.prototype._idx = Map.prototype.get;
 Map.prototype.concat = function(map) {

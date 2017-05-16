@@ -56,6 +56,28 @@ Trait.prototype.bindMethods = function bind() {
   return methods;
 }
 
+Trait.prototype.bindMethods2 = function bind(_proto, _methods) {
+  var methods = { };
+
+  var _arguments = this.required.map(name => {
+    var func = _proto[name] || _methods[name];
+
+    if (func === undefined) {
+      throw Error("Required property '" + name + "' from trait '" + this.methods.constructor.name + "' not found on class '" + _proto.constructor.name + "'.");
+    }
+
+    return func;
+  });
+
+  for (var name in this.methods) {
+    if (this.methods.hasOwnProperty(name)) {
+      methods[name] = this.methods[name].apply(null, _arguments);
+    }
+  }
+
+  return methods;
+}
+
 Trait.addtrait = function(type, parent) {
   var trait = new Trait(parent);
 

@@ -52,7 +52,7 @@ function clone(object) {
     return object;
   }
 
-  var copy = object.constructor();
+  var copy = new object.constructor();
 
   for (var property in object) {
     if (object.hasOwnProperty(property)) {

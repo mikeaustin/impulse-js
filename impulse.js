@@ -145,11 +145,9 @@ var Statement = {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var traits = node.traits.map(trait => {
-      var methods = "Iterable.bindMethods(" + id + ".prototype." + "iterator" + " || _methods." + "iterator" + ")";
+      var methods = trait.id.name + ".bindMethods2(" + id + ".prototype, _methods)";
 
       return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
-      //return "var _methods = Impulse.extend(_methods, " + id +
-      // ", { reduce: Iterable.methods.reduce(_methods.iterator) });\n";
     });
 
     return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});" +
