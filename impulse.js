@@ -74,7 +74,14 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("var Range = require('./src/runtime/range');");
   console.log("var R = require('./src/runtime/range').of;");
 
-  generate(ast, 0);
+  var statements = generate(ast, 0);
+
+  console.log("try {");
+  statements.forEach(statement => console.log(statement));
+  console.log("} catch (e) {");
+  console.log("var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n')");
+  console.log("console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
+  console.log("};");
 });
 
 
@@ -102,11 +109,15 @@ var Statement = {
   //
 
   Program: (node, level) => {
-    console.log("var $;");
+    var statements = [];
+
+    statements.push("var $;");
 
     for (var i = 0; i < node.body.length; i++) {
-      console.log(generate(node.body[i], level, node));
+      statements.push(generate(node.body[i], level, node));
     }
+
+    return statements;
   },
 
   //

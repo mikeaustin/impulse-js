@@ -8,8 +8,6 @@ Function.prototype.valueOf = function (thisArg) { return this.bind(thisArg); }
 
 // Runtime
 
-global.__FILE__ = "runtime.js";
-
 var Types = require("./runtime/types");
 var Tuple = require("./runtime/tuple.js");
 var Range = require("./runtime/range.js");

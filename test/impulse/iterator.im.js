@@ -67,6 +67,7 @@ extend Test with TestTrait {
 var test = new Test();
 console.log(test.test());
 
+
 class StringIterator {
 
   constructor(string) {
