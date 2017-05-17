@@ -148,7 +148,7 @@ var Statement = {
     if (parent.type === "ClassDeclaration") {
       return indent(level) + id + ": Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n})";
     } else {
-      return "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n});";
+      return indent(level) + "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});";
     }
   },
 
@@ -168,10 +168,10 @@ var Statement = {
     var traits = node.traits.map(trait => {
       var methods = trait.id.name + ".bindMethods2(" + id + ".prototype, _methods)";
 
-      return "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
+      return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
     });
 
-    return "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + "});" +
+    return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + indent(level) + "});\n" +
            traits.join("");
   },
 
