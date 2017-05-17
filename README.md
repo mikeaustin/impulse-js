@@ -1,10 +1,17 @@
 # impulse-js
-TODO: A cleaner, more strict dialect of JavaScript with extension methods, named parameters, traits, operator overloading, range and tuple literals and more. More details can be found here:
+A modern dialect of JavaScript with traits, extension methods, operator overloading, range and tuple literals and more.
 
-https://docs.google.com/document/d/1LqEP5ERAjBa1b0iryn88pessVohDyVAPIGgZvMK8IC4/edit?usp=sharing
+More details can be found here:
 
-## Status
+* [Impulse: A Better JavaScript](https://docs.google.com/presentation/d/1DAiQf5LDcpC30-V0dS8yE1UuQ-flXBZXLBgHUb7RLdw/edit?usp=sharing)  
+  A presentation describing the language in a nut shell.
+* [Impulse-JS Language Spec](https://docs.google.com/document/d/1LqEP5ERAjBa1b0iryn88pessVohDyVAPIGgZvMK8IC4/edit?usp=sharing)  
+  Language specs, examples, and implementation status.
 
-Currently there is a parser, using PEG.js, and a handful of runtime code, but there is no bridge between the two just yet. I've only been exploring syntax and semantics, and when that's done, I'll start looking at emitting JavaScript.
+### Status
 
-Right now, you can run "node runt-tests.js" and see all the runtime tests run. Some files need immutable.js.
+Many features are implemented, but there are plenty of holes, edge cases and bugs. See (Current Status)[] to find the status of each feature.
+
+To try it out, all you need is Node:
+
+```$ node impulse.js test/impulse/basics.im.js | node```
