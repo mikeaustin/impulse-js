@@ -10,9 +10,9 @@ var Parser = require("./parser");
 
 //
 
-function joinWithTrailing(array, separator) {
-  return array.join(separator) + (array.length > 0 ? separator : "");
-}
+// function joinWithTrailing(array, separator) {
+//   return array.join(separator) + (array.length > 0 ? separator : "");
+// }
 
 function stringifyKeywords(keywordArguments) {
   var array = [];
@@ -79,7 +79,7 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("try {");
   statements.forEach(statement => console.log(statement));
   console.log("} catch (e) {");
-  console.log("  var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n')");
+  console.log("  var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n');");
   console.log("  console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
   console.log("};");
 });
@@ -146,7 +146,7 @@ var Statement = {
     var superclass = node.superclass ? generate(node.superclass, level, node) : "Object";
 
     if (parent.type === "ClassDeclaration") {
-      return indent(level) + id + ": Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n})";
+      return indent(level) + id + ": Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});";
     } else {
       return indent(level) + "var " + id + " = Impulse.define(" + superclass + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});";
     }
@@ -154,12 +154,12 @@ var Statement = {
 
   TraitDeclaration: (node, level, parent) => {
     var id = generate(node.id, level, node);
-    var body = node.body.map(decl => {
-      return indent(level + 1) + decl.id.name + ": function (iterator) {\n" + generate(decl, level + 2, node) + "\n" + indent(level + 1) + "}";
-    });
     var required = node.required.map(req => req.id.name);
+    var body = node.body.map(decl => {
+      return indent(level + 1) + decl.id.name + ": function (" + required.join(", ") + ") {\n" + generate(decl, level + 2, node) + "\n" + indent(level + 1) + "}";
+    });
 
-    return indent(level) + "var " + id + " = new Impulse.Trait(TestTrait, {\n" + body.join(",\n") + "\n" + indent(level) + "}" + ");";
+    return indent(level) + "var " + id + " = new Impulse.Trait(" + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "}" + ", [" + required.map(r => '"' + r + '"').join(", ") + "]);";
   },
 
   ExtendDeclaration: (node, level) => {
@@ -171,7 +171,7 @@ var Statement = {
       return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
     });
 
-    return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", {\n" + joinWithTrailing(body, ",\n") + indent(level) + "});\n" +
+    return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});\n" +
            traits.join("");
   },
 
@@ -233,11 +233,11 @@ var Statement = {
     var statements = [indent(level + 1) + "var $;"].concat(buildStatements(node.body.slice(), level));
 
     if (functionDeclaration) {
-      return "{\n" + indent(level + 1) + "var _this = this;\n" + joinWithTrailing(statements, "\n") + indent(level) + "}";
+      return "{\n" + indent(level + 1) + "var _this = this;\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else if (functionExpression) {
       return "{\n" + statements.join("\n") + "\n" + indent(level) + "}";
     } else {
-      return indent(level) + "void function () {\n" + joinWithTrailing(statements, "\n") + indent(level) + "}();";
+      return indent(level) + "(function () {\n" + statements.join("\n") + "\n" + indent(level) + "})();";
     }
   },
 
@@ -270,7 +270,6 @@ var Statement = {
   FunctionExpression: (node, level) => {
     var params = node.params.map(param => generate(param, level, node));
 
-    //if (node.body.type === "Expression")
     return "(" + params.join(", ") + ")" + " => " + generate(node.body, level, node);
   },
 
@@ -286,16 +285,11 @@ var Statement = {
     var right = generate(node.right, level, node);
     var operator = operators[node.operator];
 
-    // if (true) {
-      if (node.operator === "===")
-        return left + " === " + right;
-      else
-        return "($ = " + left + ", $." + operator + " || _methods." + operator + ")" +
-               ".apply($, [" + right + "])";
-    // } else {
-    //   return "(" + generate(node.left, level, node) + " " + node.operator + " " +
-    //   generate(node.right, level, node) + ")";
-    // }
+    if (node.operator === "===")
+      return left + " === " + right;
+    else
+      return "($ = " + left + ", $." + operator + " || _methods." + operator + ")" +
+             ".apply($, [" + right + "])";
   },
 
   ObjectExpression: (node, level) => {
@@ -367,7 +361,6 @@ var Statement = {
     if (node.computed) {
       return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx)" +
              ".apply(" + "$" + ", [" + property + "])";
-      //return object + "[" + property + "]";
     } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;
     } else {

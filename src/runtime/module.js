@@ -10,10 +10,11 @@ var Extension = require("../runtime/extension");
  * @summary Traits allow classes to be extended without modification, and support isTypeOf() when used as parameters.
 **/
 
-function Trait(parent, funcs) {
+function Trait(parent, funcs, required) {
   this.parent = parent || null;
   this.types = new Set();
   this.methods = parent ? parent.methods : { };
+  this.required = required;
 
   for (var name in funcs) {
     if (funcs.hasOwnProperty(name)) {

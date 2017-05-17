@@ -75,9 +75,7 @@ var TestTrait = global.TestTrait = new Trait(TestTrait, {
       return a.apply(this) + b.apply(this);
     }
   }
-});
-
-TestTrait.required = ["a", "b"];
+}, ["a", "b"]);
 
 var Iterable = global.Iterable = new Trait(Iterable, {
   reduce: function _reduce(iterator) {
