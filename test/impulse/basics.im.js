@@ -11,19 +11,6 @@ var x;
 
 console.log(x === undefined);
 
-var id = new Date();
-
-var data = {
-  id: 10, 1: "one"
-};
-
-data << (2, "two");
-data ++ { "name": "Joe", "age": 20 };
-
-console.log(data[id] === 10);
-console.log(data[2] === "two");
-console.log(data["name"] === "Joe");
-
 
 //
 // Type Validation
@@ -50,6 +37,24 @@ console.log(result[0], result[1]);
 
 
 //
+// Map
+//
+
+var id = new Date();
+
+var data = {
+  id: 10, 1: "one"
+};
+
+data << (2, "two");
+data ++ { "name": "Joe", "age": 20 };
+
+console.log(data[id] === 10);
+console.log(data[2] === "two");
+console.log(data["name"] === "Joe");
+
+
+//
 // Bound 'this'
 //
 
@@ -58,6 +63,24 @@ var callback = "foo".slice;
 var result = callback(0, 1);
 
 console.log(result);
+
+
+//
+// Traits
+//
+
+trait Test (required) {
+  function test(that) {
+    return required.apply(this, [that]);
+  }
+}
+
+extend Number with Test {
+  function required(that) { return this + that; }
+}
+
+var result = (1).test(2);
+console.log(result == 3);
 
 
 //
