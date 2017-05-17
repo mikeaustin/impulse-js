@@ -154,6 +154,14 @@ var Statement = {
     var required = node.required.map(req => req.id.name);
     var body = node.body.map(decl => generate(decl, level + 2, node));
 
+    return `
+      var ${id} = new Impulse.Trait(${id}, function(${required.join(", ")}) {
+        return {
+          ${body.join(",\n")}
+        };
+      }, [${required.map(req => '"' + req + '"').join(", ")}]);
+    `;
+
     return indent(level) + "var " + id + " = new Impulse.Trait(" + id + ", function (" + required.join(", ") + ") {\n" + indent(level + 1) +
            "return {\n" + body.join(",\n") + "\n" + indent(level + 1) + "};" + "\n" + indent(level) + "}" +
            ", [" + required.map(r => '"' + r + '"').join(", ") + "]);";
@@ -386,5 +394,5 @@ var Statement = {
   Identifier: (node, level) => {
     return node.name;
   }
-  
+
 };
