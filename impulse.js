@@ -74,13 +74,13 @@ fs.readFile(process.argv[2], "utf8", function (error, data) {
   console.log("var Range = require('./src/runtime/range');");
   console.log("var R = require('./src/runtime/range').of;");
 
-  var statements = generate(ast, 0);
+  var statements = generate(ast, 1);
 
   console.log("try {");
   statements.forEach(statement => console.log(statement));
   console.log("} catch (e) {");
-  console.log("var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n')");
-  console.log("console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
+  console.log("  var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n')");
+  console.log("  console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
   console.log("};");
 });
 
@@ -111,7 +111,7 @@ var Statement = {
   Program: (node, level) => {
     var statements = [];
 
-    statements.push("var $;");
+    statements.push(indent(level) + "var $;");
 
     for (var i = 0; i < node.body.length; i++) {
       statements.push(generate(node.body[i], level, node));
@@ -152,6 +152,16 @@ var Statement = {
     }
   },
 
+  TraitDeclaration: (node, level, parent) => {
+    var id = generate(node.id, level, node);
+    var body = node.body.map(decl => {
+      return indent(level + 1) + decl.id.name + ": function (iterator) {\n" + generate(decl, level + 2, node) + "\n" + indent(level + 1) + "}";
+    });
+    var required = node.required.map(req => req.id.name);
+
+    return indent(level) + "var " + id + " = new Impulse.Trait(TestTrait, {\n" + body.join(",\n") + "\n" + indent(level) + "}" + ");";
+  },
+
   ExtendDeclaration: (node, level) => {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
@@ -180,6 +190,8 @@ var Statement = {
 
     if (parent && (parent.type === "ClassDeclaration" || parent.type === "ExtendDeclaration")) {
       return indent(level) + name + ": function " + name + "(" + params.join(", ") + ") " + body;
+    } else if (parent && (parent.type === "TraitDeclaration")) {
+      return indent(level) + "return function " + name + "(" + params.join(", ") + ") " + body + ";";
     } else {
       return indent(level) + "function " + name + "(" + params.join(", ") + ") " + body;
     }

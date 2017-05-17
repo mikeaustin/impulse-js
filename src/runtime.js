@@ -38,7 +38,7 @@ module.exports = {
   Union: Union,
   Extension: Extension,
   Parameters: Parameters,
-  Module: Trait,
+  Trait: Trait,
   define: Class.define,
   extend: Extension.extend
 };
@@ -72,7 +72,7 @@ var TestTrait = global.TestTrait = new Trait(TestTrait, {
 
   test: function _test(a, b) {
     return function test() {
-      return [a.apply(this), b.apply(this)];
+      return a.apply(this) + b.apply(this);
     }
   }
 });

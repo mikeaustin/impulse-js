@@ -839,6 +839,16 @@ ClassDeclaration
       };
     }
 
+TraitDeclaration
+  = "trait" __ id:Identifier __ "(" __ required:FormalParameterList __ ")" __ "{" __ body:ClassBody __ "}" {
+      return {
+        type: "TraitDeclaration",
+        id: id,
+        required: required,
+        body: body
+      }
+    }
+
 ClassBody
   = body:((ClassDeclaration / ConstructorDeclaration / FunctionDeclaration) __)* {
       return extractList(body, 0);
@@ -932,6 +942,7 @@ SourceElement
   = Statement
   / FunctionDeclaration
   / ClassDeclaration
+  / TraitDeclaration
   / ExtendDeclaration
   / ImportDeclaration
 
