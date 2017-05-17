@@ -10,10 +10,6 @@ var Parser = require("./parser");
 
 //
 
-// function joinWithTrailing(array, separator) {
-//   return array.join(separator) + (array.length > 0 ? separator : "");
-// }
-
 function stringifyKeywords(keywordArguments) {
   var array = [];
 
@@ -104,6 +100,7 @@ var operators = {
 }
 
 var Statement = {
+
   //
   // Top Level
   //
@@ -155,20 +152,20 @@ var Statement = {
   TraitDeclaration: (node, level, parent) => {
     var id = generate(node.id, level, node);
     var required = node.required.map(req => req.id.name);
-    var body = node.body.map(decl => {
-      return indent(level + 1) + decl.id.name + ": function (" + required.join(", ") + ") {\n" + generate(decl, level + 2, node) + "\n" + indent(level + 1) + "}";
-    });
+    var body = node.body.map(decl => generate(decl, level + 2, node));
 
-    return indent(level) + "var " + id + " = new Impulse.Trait(" + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "}" + ", [" + required.map(r => '"' + r + '"').join(", ") + "]);";
+    return indent(level) + "var " + id + " = new Impulse.Trait(" + id + ", function (" + required.join(", ") + ") {\n" + indent(level + 1) +
+           "return {\n" + body.join(",\n") + "\n" + indent(level + 1) + "};" + "\n" + indent(level) + "}" +
+           ", [" + required.map(r => '"' + r + '"').join(", ") + "]);";
   },
 
   ExtendDeclaration: (node, level) => {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var traits = node.traits.map(trait => {
-      var methods = trait.id.name + ".bindMethods2(" + id + ".prototype, _methods)";
+      var required = trait.id.name + ".required.map(req => " + id + "[req] || _methods[req])";
 
-      return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", " + methods + ");";
+      return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", " + trait.id.name + ".methods.apply(null, " + required + ")" + ");";
     });
 
     return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});\n" +
@@ -188,10 +185,8 @@ var Statement = {
     var name = generate(node.id, level, node);
     var body = generate(node.body, level, node);
 
-    if (parent && (parent.type === "ClassDeclaration" || parent.type === "ExtendDeclaration")) {
+    if (parent && (parent.type === "ClassDeclaration" || parent.type === "TraitDeclaration" || parent.type === "ExtendDeclaration")) {
       return indent(level) + name + ": function " + name + "(" + params.join(", ") + ") " + body;
-    } else if (parent && (parent.type === "TraitDeclaration")) {
-      return indent(level) + "return function " + name + "(" + params.join(", ") + ") " + body + ";";
     } else {
       return indent(level) + "function " + name + "(" + params.join(", ") + ") " + body;
     }
@@ -391,4 +386,5 @@ var Statement = {
   Identifier: (node, level) => {
     return node.name;
   }
+  
 };

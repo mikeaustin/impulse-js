@@ -67,19 +67,19 @@ global.assertBoolean = function(value) {
   return value;
 }
 
-var TestTrait = global.TestTrait = new Trait(TestTrait, {
+var TestTrait = global.TestTrait = new Trait(TestTrait, function (a, b) {
   //constructor: function TestTrait() {},
 
-  test: function _test(a, b) {
-    return function test() {
+  return {
+    test: function _test(a, b) {
       return a.apply(this) + b.apply(this);
     }
   }
 }, ["a", "b"]);
 
-var Iterable = global.Iterable = new Trait(Iterable, {
-  reduce: function _reduce(iterator) {
-    return function reduce(func, init) {
+var Iterable = global.Iterable = new Trait(Iterable, function(iterator) {
+  return {
+    reduce: function reduce(func, init) {
       var accum = init, iter = iterator.apply(this);
 
       for (var result = iter.next(); !result.done; result = iter.next()) {
@@ -87,11 +87,9 @@ var Iterable = global.Iterable = new Trait(Iterable, {
       }
       
       return accum;
-    }
-  },
+    },
 
-  filter: function _filter(iterator) {
-    return function filter(predicate) {
+    filter: function _filter(predicate) {
       var accum = [], iter = iterator.apply(this);
 
       for (var result = iter.next(); !result.done; result = iter.next()) {
@@ -103,13 +101,11 @@ var Iterable = global.Iterable = new Trait(Iterable, {
       if ([Object].isTypeOf(this) || Range.isTypeOf(this)) {
         return accum;
       } else {
-        return this.constructor.from(accum);
+        return new this.constructor.from(accum);
       }
-    }
-  },
+    },
 
-  _split: function _split(iterator) {
-    return function split(separator) {
+    _split: function _split(separator) {
       var iter = iterator.apply(this);
       var array = [];
       var part = new this.constructor().valueOf();

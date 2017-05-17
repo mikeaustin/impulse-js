@@ -55,20 +55,6 @@ console.log((1..5).reduce((a, n) => a * n, 1));
 console.log((1..5).filter((n) => n % 2 == 1));
 
 
-class Test {
-  constructor() { }
-
-  function a() { return 2; }
-}
-
-extend Test with TestTrait {
-  function b() { return 3; }
-}
-
-var test = new Test();
-console.log(test.test());
-
-
 class StringIterator {
 
   constructor(string) {

@@ -13,14 +13,14 @@ var Extension = require("../runtime/extension");
 function Trait(parent, funcs, required) {
   this.parent = parent || null;
   this.types = new Set();
-  this.methods = parent ? parent.methods : { };
+  this.methods = funcs;
   this.required = required;
 
-  for (var name in funcs) {
-    if (funcs.hasOwnProperty(name)) {
-      this.methods[name] = funcs[name];
-    }
-  }
+  // for (var name in funcs) {
+  //   if (funcs.hasOwnProperty(name)) {
+  //     this.methods[name] = funcs[name];
+  //   }
+  // }
 }
 
 Trait.isTypeOf = function(that) {

@@ -1,6 +1,21 @@
 
 class Foo { }
 
+trait Test (a, b) {
+  function test() {
+    return (a.apply(this), b.apply(this));
+  }
+}
+
+extend Foo with Test {
+  function a() { return 1; }
+  function b() { return 2; }
+}
+
+var foo = new Foo();
+console.log(foo.test());
+
+/*
 trait Iterable2 (iterator) {
 
   function reduce(func, init) {
@@ -17,6 +32,9 @@ trait Iterable2 (iterator) {
     }
     
     return loop(init);
+  }
+
+  function map(func) {
   }
 
 }
@@ -57,4 +75,4 @@ extend String with Iterable2 {
 var result = "foo".reduce(length => length + 1, 0);
 
 console.log(">>>", result);
-
+*/
