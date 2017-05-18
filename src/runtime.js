@@ -161,3 +161,13 @@ Array.prototype._idx = String.prototype._idx = function (value) {
     return this.slice(value.begin, value.end);
   }
 }
+
+global.reduce = function (func, init) {
+  var accum = init;
+
+  for (var result = func(accum); result !== undefined; result = func(accum)) {
+    accum = result;
+  }
+
+  return accum;
+}

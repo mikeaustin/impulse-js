@@ -1,17 +1,19 @@
 
-trait Iterable2 (iterator) {
+// trait Iterable2 (iterator) {
 
-  function reduce(func, init) {
-    var accum = init, iter = iterator.apply(this);
+//   function reduce(func, init) {
+//     iter = iterator.apply(this);
 
-  //   for (var result = iter.next(); !result.done; result = iter.next()) {
-  //     accum = func(accum, result.value);
-  //   }
-    
-    return accum;
-  }
+//     return reduce(accum => {
+//       var result = iter.next();
 
-}
+//       if (result.done === false) {
+//         return func(accum, result.value);
+//       }
+//     }, init);
+//   }
+
+// }
 
 
 class IteratorResult {

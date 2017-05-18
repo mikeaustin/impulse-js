@@ -247,9 +247,9 @@ var Statement = {
   IfStatement: (node, level, parent) => {
     var test = generate(node.test, level, node);
     var consequent = generate(node.consequent, level, node);
-    var alternate = generate(node.alternate, level, node);
+    var alternate = node.alternate ? generate(node.alternate, level, node) : null;
 
-    return indent(level) + "if (assertBoolean(" + test + ")) " + consequent + " else " + alternate;
+    return indent(level) + "if (assertBoolean(" + test + ")) " + consequent + (alternate ? " else " + alternate : "");
   },
 
   ReturnStatement: (node, level) => {

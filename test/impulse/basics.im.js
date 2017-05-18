@@ -69,18 +69,25 @@ console.log(result);
 // Traits
 //
 
-trait Test (required) {
-  function test(that) {
-    return required.apply(this, [that]);
+trait TestTrait (foo, bar) {
+  function test() {
+    return foo.apply(this, []) + bar.apply(this, []);
   }
 }
 
-extend Number with Test {
-  function required(that) { return this + that; }
+class TestClass {
+  function foo() { return 2; }
 }
 
-var result = (1).test(2);
-console.log(result == 3);
+extend TestClass with TestTrait {
+  function bar() { return 3; }
+}
+
+var test = new TestClass();
+
+var result = test.test();
+
+console.log(result == 5);
 
 
 //
@@ -167,3 +174,16 @@ cps();
 }
 
 console.log("here");
+
+
+//
+// Iteration
+//
+
+var result = reduce(x => {
+  if (x < 5) {
+    return x + 1;
+  }
+}, 0);
+
+console.log(result);
