@@ -13,8 +13,8 @@ var Immutable = require("../../node_modules/immutable/dist/immutable.js");
 
 function Extension(parent, type, func) {
 //  this.parent = parent || null;
-//  this.type = type;
-//  this.func = func;
+    this.type = type;
+    this.func = func;
     this.methods = parent ? new Map(parent.methods) : new Map();
     this.methods.set(type.prototype, func);
 }
@@ -25,6 +25,14 @@ Extension.prototype.apply = function (_this, _arguments) {
   //     return scope.func.apply(_this, args);
   //   }
   // }
+
+  var __this = this;
+
+  if (_this instanceof Scope) {
+    return function () {
+      return __this.apply(arguments[0], _arguments);
+    }
+  }
 
   for (var proto = Object.getPrototypeOf(_this); proto !== null; proto = Object.getPrototypeOf(proto)) {
     var method = this.methods.get(proto);
@@ -37,8 +45,27 @@ Extension.prototype.apply = function (_this, _arguments) {
   throw new Error("No match for method '" + this.type.name + "' found for type '" + this.func.name + "'");
 };
 
+Extension.prototype.bind = function (thisArg) {
+  var _this = this;
+
+  return function () {
+    return _this.apply(thisArg, arguments);
+  }
+}
+
+Extension.prototype.bindArgs = function () {
+  var _this = this;
+  var _arguments = arguments;
+
+  return function () {
+    return _this.apply(arguments[0], _arguments);
+  }
+}
+
+function Scope() { }
+
 Extension.extend = function (parent, type, funcs) {
-  var scope = parent ? clone(parent) : new Object();
+  var scope = parent ? clone(parent) : new Scope();
 
   for (var name in funcs) {
     scope[name] = new Extension(parent ? parent[name] : null, type, funcs[name]);

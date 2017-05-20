@@ -6,26 +6,36 @@ function Args(_arguments) {
 
 Object.prototype.args = false;
 
-function loop(func) {
-  function k() {
-    accum = arguments;
-    return undefined;
-  }
-
-  func = func(function () { return new Args(arguments); });
-
-  var accum, result = { _arguments: undefined };
+function loop(callee) {
+  var accum, result, func = callee(function() { accum = arguments; });
 
   do {
-    accum = result._arguments;
     result = func.apply(null, accum);
   }
-  while (result instanceof Args);
+  while (result === undefined);
 
   return result;
 }
 
-var result, x = 1;
+function ycomb(f) { return (x => f(y => x(x, y)))(x => f(y => x(x, y))); }
+
+function xY(le) {
+    return (function(f) {
+        return f(f);
+    })(function(f) {
+        return le(function(x, y) {
+            return f(f)(x, y);
+        });
+    });
+}
+function Y(le) {
+    return ((f) => f(f))((f) => le((x, y) => f(f)(x, y)));
+}
+
+
+
+
+var result, x = 2;
 
 switch (x) {
   case 1:
@@ -35,6 +45,12 @@ switch (x) {
     });
   break;
   case 2:
+    result = Y(fact => (n = 10000000, acc = 1) => {
+      if (n == 1) return acc;
+      else return fact(n - 1, acc * n); // Requires tail call
+    })();
+  break;
+  case 3:
     result = ((n = 10000000, acc = 1) => {
       fact: while (true) {
         if (n == 1) return acc;
@@ -44,7 +60,7 @@ switch (x) {
       }
     })();
   break;
-  case 3:
+  case 4:
     for (var n = 10000000, result = 1; n > 1; n -= 1) {
       result *= n;
     }
