@@ -2,7 +2,6 @@
   "name": "impulse-js",
   "version": "0.1.0",
   "description": "A cleaner, more modern dialect of JavaScript with extension methods, operator overloading, map, range, and tuple literals and more",
-  "private": true,
   "main": "lib/impulse-js",
   "author": "Mike Austin <mike@mike-austin.com>",
   "license": "MIT",
