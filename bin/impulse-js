@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+"use strict";
+
+let impulse = require("../impulse-js");
+
+impulse.compile(process.argv[2]);
+

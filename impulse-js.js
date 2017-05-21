@@ -4,10 +4,12 @@
 
 var util = require("util");
 var fs = require("fs");
-var peg = require("pegjs");
 
 var Parser = require("./parser");
 
+
+//
+// Helper functions
 //
 
 function stringifyKeywords(keywordArguments) {
@@ -56,30 +58,44 @@ var knownProperties = {
   console: { log: true }
 };
 
+function compile(path) {
+  fs.readFile(process.argv[2], "utf8", function (error, data) {
+    var ast = Parser.parse(data);
 
-fs.readFile(process.argv[2], "utf8", function (error, data) {
-  var ast = Parser.parse(data);
+    //inspect(ast);
 
-  //inspect(ast);
+    console.log("'use strict';");
+    console.log("var __FILE__ = '" + process.argv[2] + "';");
+    console.log("var __LINE__ = '" + 0 + "';");
+    console.log("var Impulse = require('./src/runtime');");
+    console.log("var T = require('./src/runtime/tuple').of;");
+    console.log("var Range = require('./src/runtime/range');");
+    console.log("var R = require('./src/runtime/range').of;");
 
-  console.log("'use strict';");
-  console.log("var __FILE__ = '" + process.argv[2] + "';");
-  console.log("var __LINE__ = '" + 0 + "';");
-  console.log("var Impulse = require('./src/runtime');");
-  console.log("var T = require('./src/runtime/tuple').of;");
-  console.log("var Range = require('./src/runtime/range');");
-  console.log("var R = require('./src/runtime/range').of;");
+    var statements = generate(ast, 1);
 
-  var statements = generate(ast, 1);
+    console.log("try {");
+    statements.forEach(statement => console.log(statement));
+    console.log("} catch (e) {");
+    console.log("  var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n');");
+    console.log("  console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
+    console.log("};");
+  });
+}
 
-  console.log("try {");
-  statements.forEach(statement => console.log(statement));
-  console.log("} catch (e) {");
-  console.log("  var stack = '\\n' + e.stack.toString().split('\\n').slice(1).join('\\n');");
-  console.log("  console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);");
-  console.log("};");
-});
 
+//
+// Exports
+//
+
+module.exports = {
+  compile: compile
+};
+
+
+//
+// Emitters
+//
 
 var operators = {
   "+"  : "_add",
