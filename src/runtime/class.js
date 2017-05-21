@@ -25,7 +25,7 @@ var Vector3D = Class.subclass(Vector, {
   }
 })
 
-var _methods = Trait.extend(_methods, Vector, {
+var _ = Trait.extend(_, Vector, {
     _sub: function (that) {
     
     }

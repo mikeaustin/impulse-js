@@ -7,7 +7,7 @@ var StringExtensions = require("./extensions/String.js");
 var Stringify = require("./traits/Stringify");
 var Iterable = require("./traits/Iterable");
 
-var _methods = Extension.extend(_methods, Object, {
+var _ = Extension.extend(_, Object, {
   toString: function (hideProperties) {
     if (this === Object.prototype) {
       return "Object";
@@ -35,7 +35,7 @@ var _methods = Extension.extend(_methods, Object, {
   }
 });
 
-var _methods = Extension.extend(_methods, Number, {
+var _ = Extension.extend(_, Number, {
   toString: function () {
     if (this === Number.prototype) {
       return "Number";
@@ -45,7 +45,7 @@ var _methods = Extension.extend(_methods, Number, {
   }
 });
 
-var _methods = Extension.extend(_methods, Array, {
+var _ = Extension.extend(_, Array, {
   toString: function () {
     if (this === Array.prototype) {
       return "Array";
@@ -55,7 +55,7 @@ var _methods = Extension.extend(_methods, Array, {
   }
 });
 
-var _methods = Extension.extend(_methods, Immutable.Map().constructor, {
+var _ = Extension.extend(_, Immutable.Map().constructor, {
   toString: function () {
     if (this === Immutable.Map().constructor.prototype) {
       return "Map";
@@ -74,5 +74,5 @@ var _methods = Extension.extend(_methods, Immutable.Map().constructor, {
 
 
 module.exports = {
-  _methods: _methods
+  _: _
 }

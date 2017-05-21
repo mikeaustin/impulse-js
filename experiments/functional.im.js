@@ -18,8 +18,6 @@ var firstTwoLetters = (words) => {
 console.log(firstTwoLetters(["jim", "kate"]));
 
 
-var _ = _methods;
-
 var firstTwoLetters2 = _.map(_.slice(0, 2));
 
 console.log(firstTwoLetters2(["jim", "kate"]));

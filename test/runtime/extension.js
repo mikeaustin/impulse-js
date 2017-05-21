@@ -7,13 +7,13 @@ var Parameters = require('../../src/runtime/parameters');
 
 console.log('\nextension.js\n');
 
-var _methods = Extension.extend(_methods, String, {
+var _ = Extension.extend(_, String, {
   capitalize: function () {
     return this[0].toUpperCase() + this.slice(1);
   }
 });
 
-var _methods = Extension.extend(_methods, Number, {
+var _ = Extension.extend(_, Number, {
   factorial: function _factorial() {
     if (this.valueOf() === 0) {
       return 1;
@@ -23,9 +23,9 @@ var _methods = Extension.extend(_methods, Number, {
   }
 });
 
-test(' (foo.capitalize || _methods.capitalize).apply(foo) === "Foo" ', { foo: "foo", _methods: _methods });
-test(' (foo.toUpperCase || _methods.toUppderCase).apply(foo) === "FOO" ', { foo: "foo", _methods: _methods });
-test(' (num.factorial || _methods.factorial).apply(num, []) === 120 ', { num: 5, _methods: _methods });
+test(' (foo.capitalize || _.capitalize).apply(foo) === "Foo" ', { foo: "foo", _: _ });
+test(' (foo.toUpperCase || _.toUppderCase).apply(foo) === "FOO" ', { foo: "foo", _: _ });
+test(' (num.factorial || _.factorial).apply(num, []) === 120 ', { num: 5, _: _ });
 
 
 var Vector = Class.define(Object, {
@@ -51,15 +51,15 @@ var Vector3D = Class.define(Vector, {
 
 
 var $;
-console.log(($ = new Vector3D(1, 2, 3), $._add || _methods._add).apply($, [new Vector3D(2, 3, 4)]));
+console.log(($ = new Vector3D(1, 2, 3), $._add || _._add).apply($, [new Vector3D(2, 3, 4)]));
 
-var _methods = Extension.extend(_methods, Vector3D, {
+var _ = Extension.extend(_, Vector3D, {
   _sub: function (that) {
     return new Vector3D(this.x - that.x, this.y - that.y, this.z - that.z);
   }
 });
 
-console.log(($ = new Vector3D(1, 2, 3), $._sub || _methods._sub).apply($, [new Vector3D(2, 3, 4)]));
+console.log(($ = new Vector3D(1, 2, 3), $._sub || _._sub).apply($, [new Vector3D(2, 3, 4)]));
 
 console.log(new Vector3D() instanceof Vector);
 
@@ -74,7 +74,7 @@ console.log(Numeric.methods);
 
 var Numeric = new Trait.addtrait(Vector, Numeric);
 
-var _methods = Extension.extend(_methods, Vector, Numeric.bindMethods());
+var _ = Extension.extend(_, Vector, Numeric.bindMethods());
 
 console.log(Numeric.isTypeOf(new Vector3D()));
-console.log(_methods.isNumeric);
+console.log(_.isNumeric);

@@ -26,19 +26,19 @@ Number.prototype._cmp = function(that) {
 
 var x = 2;
 
-var _methods = Extension.extend(_methods, Number, {
+var _ = Extension.extend(_, Number, {
     _mul: function (that) { return this * that; }
 });
 
 
-//test(' (x.eql || _methods.eql).apply(x, [2]) === true ');
-test(' (x._cmp || _methods.cmp).apply(x, [1]) === 1 ', { x: x, _methods: _methods });
-test(' (x._cmp || _methods.cmp).apply(x, [2]) === 0 ', { x: x, _methods: _methods });
-test(' (x._cmp || _methods.cmp).apply(x, [3]) === -1 ', { x: x, _methods: _methods });
+//test(' (x.eql || _.eql).apply(x, [2]) === true ');
+test(' (x._cmp || _.cmp).apply(x, [1]) === 1 ', { x: x, _: _ });
+test(' (x._cmp || _.cmp).apply(x, [2]) === 0 ', { x: x, _: _ });
+test(' (x._cmp || _.cmp).apply(x, [3]) === -1 ', { x: x, _: _ });
 
-test(' (x._add || _methods._add).apply(x, [3]) === 5 ', { x: x, _methods: _methods });
-test(' (x._mul || _methods._mul).apply(x, [3]) === 6 ', { x: x, _methods: _methods });
-test(' (x._div || _methods._dib)(0) === "DivideByZeroError" ', { x: x, _methods: _methods }, function (e) { return e instanceof DivideByZeroError; })
+test(' (x._add || _._add).apply(x, [3]) === 5 ', { x: x, _: _ });
+test(' (x._mul || _._mul).apply(x, [3]) === 6 ', { x: x, _: _ });
+test(' (x._div || _._dib)(0) === "DivideByZeroError" ', { x: x, _: _ }, function (e) { return e instanceof DivideByZeroError; })
 
 function Vector(x, y) {
   this.x = x;

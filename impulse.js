@@ -171,12 +171,12 @@ var Statement = {
     var id = generate(node.id, level, node);
     var body = node.body.map(decl => generate(decl, level + 1, node));
     var traits = node.traits.map(trait => {
-      var required = trait.id.name + ".required.map(req => " + id + "[req] || _methods[req])";
+      var required = trait.id.name + ".required.map(req => " + id + "[req] || _[req])";
 
-      return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", " + trait.id.name + ".methods.apply(null, " + required + ")" + ");";
+      return indent(level) + "var _ = Impulse.extend(_, " + id + ", " + trait.id.name + ".methods.apply(null, " + required + ")" + ");";
     });
 
-    return indent(level) + "var _methods = Impulse.extend(_methods, " + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});\n" +
+    return indent(level) + "var _ = Impulse.extend(_, " + id + ", {\n" + body.join(",\n") + "\n" + indent(level) + "});\n" +
            traits.join("");
   },
 
@@ -291,7 +291,7 @@ var Statement = {
     if (node.operator === "===")
       return left + " === " + right;
     else
-      return "($ = " + left + ", $." + operator + " || _methods." + operator + ")" +
+      return "($ = " + left + ", $." + operator + " || _." + operator + ")" +
              ".apply($, [" + right + "])";
   },
 
@@ -349,7 +349,7 @@ var Statement = {
         args.push(stringifyKeywords(keywordArgs));
       }
 
-      return "(__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _methods." + property + ")" +
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $." + property + " || _." + property + ")" +
              ".apply(" + "$" + ", [" + args.join(", ") + "])";
     } else {
       return "(__LINE__ = " + node.line + ", " + generate(node.callee, level, node) + ")" +
@@ -362,7 +362,7 @@ var Statement = {
     var property = generate(node.property, level, node);
 
     if (node.computed) {
-      return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _methods._idx)" +
+      return "(__LINE__ = " + node.line + ", $ = " + object + ", $._idx || _._idx)" +
              ".apply(" + "$" + ", [" + property + "])";
     } else if (parent.type === "AssignmentExpression") {
       return object + "." + property;

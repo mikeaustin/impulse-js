@@ -29,19 +29,19 @@ var Iterator = function Iterator(array) {
 Iterator.prototype.moveNext = function () { return ++this.index < this.array.length; }
 Iterator.prototype.value = function () { return this.array[this.index]; }
 
-var _methods = Extension.extend(_methods, String, {
+var _ = Extension.extend(_, String, {
   iterator: function () {
     return new Iterator(this);
   }
 });
 
-var _methods = Extension.extend(_methods, String, Iterable.bindMethods(_methods.iterator));
+var _ = Extension.extend(_, String, Iterable.bindMethods(_.iterator));
 
 //
 
 console.log("\nmodule.js\n");
 
-test(' _methods.map.apply("abc", [c => c.charCodeAt(0)]).isEqual([97, 98, 99]) ', {_methods: _methods});
+test(' _.map.apply("abc", [c => c.charCodeAt(0)]).isEqual([97, 98, 99]) ', {_: _});
 
 void function () {
   var Iterable = new Trait.addtrait([Number], Iterable);
