@@ -32,20 +32,20 @@ global.test = function (expression, context, onException) {
   console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
 }
 
-require("./lib/runtime/types");
+require("../lib/runtime/types");
 
 // Runtime
 
-require("./test/runtime/types");
-require('./test/runtime/tuple');
-require('./test/runtime/Union');
-require('./test/runtime/extension');
-require('./test/runtime/module');
-require('./test/runtime/operator');
-require('./test/runtime/parameters');
+require("./runtime/types");
+require('./runtime/tuple');
+require('./runtime/Union');
+require('./runtime/extension');
+require('./runtime/module');
+require('./runtime/operator');
+require('./runtime/parameters');
 
-system('bin/impulse-js ./test/impulse/basics.im.js | node');
-system('bin/impulse-js ./test/impulse/iterator.im.js | node');
+system('./bin/impulse-js ./test/impulse/basics.im.js | node');
+system('./bin/impulse-js ./test/impulse/iterator.im.js | node');
 
 // // Runtime
 
@@ -63,3 +63,4 @@ system('bin/impulse-js ./test/impulse/iterator.im.js | node');
 // var Extensions = require("./library/HTML.js");
 
 console.log("\n" + passed + " tests passed, " + failed + " tests failed.\n");
+
