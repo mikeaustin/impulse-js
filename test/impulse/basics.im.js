@@ -187,3 +187,22 @@ var result = reduce(x => {
 }, 0);
 
 console.log(result);
+
+
+//
+// Partial Application
+//
+
+extend Array {
+  function map(func) {
+    return this.map(func);
+  }
+}
+
+extend String {
+  function slice(begin, end) {
+    return this.slice(begin, end);
+  }
+}
+
+console.log("_.map(_.slice(0, 2)", _.map(_.slice(0, 2))(["jim", "kate"]) == ["ji", "ka"]);
