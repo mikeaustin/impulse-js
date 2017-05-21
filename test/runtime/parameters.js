@@ -1,9 +1,9 @@
 'use strict';
 
-var Parameters = require('../../src/runtime/parameters');
-var Union = require('../../src/runtime/union');
-var Range = require('../../src/runtime/range');
-require('../../src/runtime/types');
+var Parameters = require('../../lib/runtime/parameters');
+var Union = require('../../lib/runtime/union');
+var Range = require('../../lib/runtime/range');
+require('../../lib/runtime/types');
 
 //
 // Parameters Tests

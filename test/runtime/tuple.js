@@ -1,6 +1,6 @@
 'use strict';
 
-var Tuple = require('../../src/runtime/tuple');
+var Tuple = require('../../lib/runtime/tuple');
 
 console.log("\ntuple.js\n");
 

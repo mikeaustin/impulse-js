@@ -2,7 +2,7 @@
 
 "use strict";
 
-let impulse = require("../impulse-js");
+let impulse = require("../lib/impulse-js");
 
 impulse.compile(process.argv[2]);
 

@@ -32,7 +32,7 @@ global.test = function (expression, context, onException) {
   console.log((result ? "  \x1B[32mpass\x1B[0m" : "  \x1B[31mfail\x1B[0m") + "  " + expression.trim());
 }
 
-require("./src/runtime/types");
+require("./lib/runtime/types");
 
 // Runtime
 
@@ -44,8 +44,8 @@ require('./test/runtime/module');
 require('./test/runtime/operator');
 require('./test/runtime/parameters');
 
-system('node impulse.js ./test/impulse/basics.im.js | node');
-system('node impulse.js ./test/impulse/iterator.im.js | node');
+system('bin/impulse-js ./test/impulse/basics.im.js | node');
+system('bin/impulse-js ./test/impulse/iterator.im.js | node');
 
 // // Runtime
 

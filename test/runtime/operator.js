@@ -1,6 +1,6 @@
 'use strict';
 
-var Extension = require('../../src/runtime/extension');
+var Extension = require('../../lib/runtime/extension');
 
 //
 

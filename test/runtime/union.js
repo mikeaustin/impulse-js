@@ -1,6 +1,6 @@
 'use strict';
 
-var Union = require('../../src/runtime/Union');
+var Union = require('../../lib/runtime/union');
 
 //
 // Union Tests

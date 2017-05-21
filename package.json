@@ -13,7 +13,8 @@
     "jsdoc": "^3.4.3"
   },
   "scripts": {
-    "test": "node run-tests.js"
+    "test": "node run-tests.js",
+    "build": "node_modules/.bin/pegjs -o lib/parser.js src/parser.pegjs"
   },
   "repository": {
     "type": "git",
