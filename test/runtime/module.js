@@ -3,9 +3,9 @@
 var Extension = require('../../src/runtime/extension');
 var Trait = require('../../src/runtime/module');
 
-var Iterable = new Trait(Iterable, {
-  map: function (iterator) {
-    return function (func) {
+var Iterable = new Trait(Iterable, function (iterator) {
+  return {
+    map: function map(func) {
       var array = [];
     
       var iter = iterator.apply(this);
@@ -16,7 +16,7 @@ var Iterable = new Trait(Iterable, {
       
       return array;
     }
-  }
+  };
 });
 
 //
@@ -35,7 +35,7 @@ var _ = Extension.extend(_, String, {
   }
 });
 
-var _ = Extension.extend(_, String, Iterable.bindMethods(_.iterator));
+var _ = Extension.extend(_, String, Iterable.methods(_.iterator));
 
 //
 

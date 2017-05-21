@@ -45,45 +45,28 @@ Trait.prototype.isTypeOf = function (value) {
   return false;
 }
 
-Trait.prototype.bindMethods = function bind() {
-  var methods = { };
-
-  for (var name in this.methods) {
-    if (this.methods.hasOwnProperty(name)) {
-      methods[name] = this.methods[name].apply(null, arguments);
-    }
-  }
-
-  return methods;
-}
-
-// Trait.prototype.bindMethods2 = function bind(_proto, _) {
-//   var methods = { };
-
-//   var _arguments = this.required.map(name => {
-//     var func = _proto[name] || _[name];
-
-//     if (func === undefined) {
-//       throw Error("Required property '" + name + "' from trait '" + this.methods.constructor.name + "' not found on class '" + _proto.constructor.name + "'.");
-//     }
-
-//     return func;
-//   });
-
-//   for (var name in this.methods) {
-//     if (this.methods.hasOwnProperty(name)) {
-//       methods[name] = this.methods[name].apply(null, _arguments);
-//     }
-//   }
-
-//   return methods;
-// }
-
 Trait.addtrait = function(type, parent) {
-  var trait = new Trait(parent);
+  var trait = parent ? clone(parent) : new Trait();
 
   return trait.add(type);
 }
+
+function clone(object) {
+  if (object == null || typeof object != "object") {
+    return object;
+  }
+
+  var copy = new object.constructor();
+
+  for (var property in object) {
+    if (object.hasOwnProperty(property)) {
+      copy[property] = object[property];
+    }
+  }
+
+  return copy;
+}
+
 
 //
 // Exports

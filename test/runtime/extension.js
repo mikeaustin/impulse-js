@@ -64,17 +64,17 @@ console.log(($ = new Vector3D(1, 2, 3), $._sub || _._sub).apply($, [new Vector3D
 console.log(new Vector3D() instanceof Vector);
 
 
-var Numeric = new Trait(Numeric, {
-  isNumeric: function () {
-    return function () { return true; }
-  }
+var Numeric = new Trait(Numeric, function () {
+  return {
+    isNumeric: function () {
+      return true;
+    }
+  };
 });
 
-console.log(Numeric.methods);
 
 var Numeric = new Trait.addtrait(Vector, Numeric);
 
-var _ = Extension.extend(_, Vector, Numeric.bindMethods());
+var _ = Extension.extend(_, Vector, Numeric.methods());
 
 console.log(Numeric.isTypeOf(new Vector3D()));
-console.log(_.isNumeric);
