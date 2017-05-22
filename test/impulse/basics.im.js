@@ -215,15 +215,17 @@ console.log("_.map(_.slice(0, 2)", _.map(_.slice(0, 2))(["jim", "kate"]) == ["ji
 var fs = require("fs");
 var impulse = require("./lib/impulse-js");
 
-var imStats = fs.statSync("test/impulse/include.im.js");
+function cacheIsDirty(basePath) {
+  var imjsStats = fs.statSync(basePath ++ ".im.js");
+  var jsStats = fs.statSync(basePath ++ ".js");  
 
-if (fs.existsSync("test/impulse/include.js") === false || fs.statSync("test/impulse/include.js").mtime < imStats.mtime) {
+  return imjsStats.mtime > jsStats.mtime;
+}
+
+if (fs.existsSync("test/impulse/include.js") === false || cacheIsDirty("test/impulse/include")) {
   var js = impulse.compile("test/impulse/include.im.js");
 
   fs.writeFileSync("test/impulse/include.js", js);
 }
-
-// var stats = fs.statSync("test/impulse/include.js");
-// console.log(stats.mtime, Number.isTypeOf(stats.mtime));
 
 require("./test/impulse/include.js");
