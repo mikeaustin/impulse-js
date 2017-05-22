@@ -4,5 +4,6 @@
 
 let impulse = require("../lib/impulse-js");
 
-impulse.compile(process.argv[2]);
+var js = impulse.compile(process.argv[2], {mainFile: true});
 
+console.log(js);
