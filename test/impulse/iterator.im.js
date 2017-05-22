@@ -1,19 +1,4 @@
-
-// trait Iterable2 (iterator) {
-
-//   function reduce(func, init) {
-//     iter = iterator.apply(this);
-
-//     return reduce(accum => {
-//       var result = iter.next();
-
-//       if (result.done === false) {
-//         return func(accum, result.value);
-//       }
-//     }, init);
-//   }
-
-// }
+var  Iterable = require("./lib/library/traits/Iterable");
 
 
 class IteratorResult {

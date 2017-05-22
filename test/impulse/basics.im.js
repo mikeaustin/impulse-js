@@ -222,10 +222,15 @@ function cacheIsDirty(basePath) {
   return imjsStats.mtime > jsStats.mtime;
 }
 
-if (fs.existsSync("test/impulse/include.js") === false || cacheIsDirty("test/impulse/include")) {
-  var js = impulse.compile("test/impulse/include.im.js");
 
-  fs.writeFileSync("test/impulse/include.js", js);
-}
+impulse.require = (basePath) => {
+  if (fs.existsSync(basePath ++ ".js") === false || cacheIsDirty(basePath)) {
+    var js = impulse.compile(basePath ++ ".im.js");
 
-require("./test/impulse/include.js");
+    fs.writeFileSync(basePath ++ ".js", js);
+  }
+
+  return require(basePath);
+};
+
+impulse.require("./test/impulse/include");
