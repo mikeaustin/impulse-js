@@ -1,16 +1,16 @@
 "use strict";
 
 String.prototype.bind = function() {
-  if (this instanceof Impulse.String) {
+  if (this instanceof impulse.String) {
     return this;
   } else {
-    return new Impulse.String(this);
+    return new impulse.String(this);
   }
 }
 
-var Impulse = { };
+var impulse = { };
 
-Impulse.String = (function (_String) {
+impulse.String = (function (_String) {
   function String(string) {
     this.value = string;
     this.chars = [];
@@ -44,7 +44,7 @@ Impulse.String = (function (_String) {
 })(String);
 
 (function () {
-  var String = Impulse.String;
+  var String = impulse.String;
 
   var str = "🍅🌽🍇".bind();
 

@@ -1,8 +1,8 @@
 "use strict";
 
-var Impulse = { };
+var impulse = { };
 
-Impulse.Array = (function (_Array) {
+impulse.Array = (function (_Array) {
   var Array = function () {
     this.push.apply(this, arguments);
   }
@@ -19,7 +19,7 @@ Impulse.Array = (function (_Array) {
 })(Array);
 
 (function () {
-  var Array = Impulse.Array;
+  var Array = impulse.Array;
 
   var a = new global.Array();
   a.push(1, 2, 3);

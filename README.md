@@ -1,5 +1,5 @@
 # impulse-js
-Impulse-JS is a modern dialect of JavaScript with traits, extension methods, operator overloading, range and tuple literals and more. It moves legacy and low-level features such as binary operators and for loops to library code, and promotes functional programming and the use of immutable data types.
+Impulse-JS is a modern dialect of JavaScript with traits, extension methods, operator overloading, map, range and tuple literals and more. It moves legacy and low-level features such as binary operators and for loops to library code, and promotes functional programming and the use of immutable data types.
 
 The language lives happily together with existing JavaScript code and libraries. Each feature of the language is implemented as a module, so it can also be used to enhance existing JavaScript.
 
@@ -12,7 +12,7 @@ More details can be found here:
 
 ### Status
 
-Many features are implemented, but there are plenty of holes, edge cases and bugs. See (Current Status)[] to find the status of each feature.
+Many features are implemented, but there are plenty of holes, edge cases and bugs. See [Current Status](https://docs.google.com/document/d/1LqEP5ERAjBa1b0iryn88pessVohDyVAPIGgZvMK8IC4/edit#bookmark=id.dku14xd0594c) to find the status of each feature.
 
 To try it out, all you need is Node:
 
