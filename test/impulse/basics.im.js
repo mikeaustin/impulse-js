@@ -189,6 +189,11 @@ var result = reduce(x => {
 console.log(result);
 
 
+var result = ((x = 100, y = 200) => x + y)();
+
+console.log(result);
+
+
 //
 // Partial Application
 //

@@ -920,11 +920,12 @@ FormalParameterList
     }
 
 FormalParameter
-  = id:Identifier argtype:(":" __ Identifier)? defval:(__ "=" Expression)? {
+  = id:Identifier argtype:(":" __ Identifier)? init:(__ Initialiser)? {
       return {
         type: "FormalParameter",
         id: id,
-        argtype: extractOptional(argtype, null)
+        argtype: extractOptional(argtype, null),
+        init: extractOptional(init, 1)
       };
     }
 
