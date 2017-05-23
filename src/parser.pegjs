@@ -383,7 +383,12 @@ PrimaryExpression
   / TupleLiteral
   / ArrayLiteral
   / ObjectLiteral
-  / "(" __ expression:Expression __ ")" { return expression; }
+  / "(" __ expression:Expression __ ")" {
+      return {
+        type: "GroupedExpression",
+        expression: expression
+      }
+    }
 
 TupleLiteral
   = "(" __ head:Expression __ tail:(__ "," __ Expression)+ __ ")" {

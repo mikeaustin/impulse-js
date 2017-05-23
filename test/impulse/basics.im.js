@@ -224,7 +224,7 @@ function cacheIsDirty(basePath) {
 
 
 impulse.require = (basePath) => {
-  if (fs.existsSync(basePath ++ ".js") === false || cacheIsDirty(basePath)) {
+  if (!fs.existsSync(basePath ++ ".js") || cacheIsDirty(basePath)) {
     var js = impulse.compile(basePath ++ ".im.js");
 
     fs.writeFileSync(basePath ++ ".js", js);
