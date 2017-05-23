@@ -190,27 +190,30 @@ ReservedWord
 Keyword
   = CaseToken
   / CatchToken
+  / ClassToken
   / DefaultToken
   / ElseToken
+  / ExtendToken
+  / ExtendsToken
   / FinallyToken
   / FunctionToken
   / IfToken
+  / ImportToken
   / NewToken
   / ReturnToken
   / SwitchToken
   / ThisToken
   / ThrowToken
+  / TraitToken
   / TryToken
   / TypeofToken
   / VarToken
+  / WithToken
 
 FutureReservedWord
-  = ClassToken
-  / ConstToken
+  = ConstToken
   / EnumToken
   / ExportToken
-  / ExtendsToken
-  / ImportToken
   / SuperToken
 
 Literal
@@ -342,6 +345,7 @@ DefaultToken    = "default"    !IdentifierPart
 ElseToken       = "else"       !IdentifierPart
 EnumToken       = "enum"       !IdentifierPart
 ExportToken     = "export"     !IdentifierPart
+ExtendToken     = "extend"     !IdentifierPart
 ExtendsToken    = "extends"    !IdentifierPart
 FalseToken      = "false"      !IdentifierPart
 FinallyToken    = "finally"    !IdentifierPart
@@ -356,9 +360,11 @@ SwitchToken     = "switch"     !IdentifierPart
 ThisToken       = "this"       !IdentifierPart
 ThrowToken      = "throw"      !IdentifierPart
 TrueToken       = "true"       !IdentifierPart
+TraitToken      = "trait"      !IdentifierPart
 TryToken        = "try"        !IdentifierPart
 TypeofToken     = "typeof"     !IdentifierPart
 VarToken        = "var"        !IdentifierPart
+WithToken       = "with"       !IdentifierPart
 
 // Skipped
 
@@ -831,11 +837,11 @@ Finally
 // ----- A.5 Functions and Programs -----
 
 ImportDeclaration
-  = "import" __ id:Identifier __ "from" __ source:StringLiteral {
+  = ImportToken __ id:Identifier __ "from" __ source:StringLiteral {
     }
 
 ClassDeclaration
-  = ClassToken __ id:Identifier __ superclass:("extends" __ Identifier __)? "{" __ body:ClassBody __ "}" {
+  = ClassToken __ id:Identifier __ superclass:(ExtendsToken __ Identifier __)? "{" __ body:ClassBody __ "}" {
       return {
         type: "ClassDeclaration",
         id: id,
@@ -845,7 +851,7 @@ ClassDeclaration
     }
 
 TraitDeclaration
-  = "trait" __ id:Identifier __ "(" __ required:FormalParameterList __ ")" __ "{" __ body:ClassBody __ "}" {
+  = TraitToken __ id:Identifier __ "(" __ required:FormalParameterList __ ")" __ "{" __ body:ClassBody __ "}" {
       return {
         type: "TraitDeclaration",
         id: id,
@@ -860,7 +866,7 @@ ClassBody
     }
 
 ExtendDeclaration
-  = "extend" __ id:Identifier __ traits:("with" __ FormalParameterList)? __ "{" __ body:ClassBody __ "}" {
+  = ExtendToken __ id:Identifier __ traits:(WithToken __ FormalParameterList)? __ "{" __ body:ClassBody __ "}" {
       return {
         type: "ExtendDeclaration",
         id: id,
