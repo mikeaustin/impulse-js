@@ -37,16 +37,18 @@ Number.prototype.case = String.prototype.case = function (that) {
   return this.isEqual(that);
 }
 
+var Inf = Infinity;
+
 var numberOrString = Parameters.define([{foo: Union.of(Number, String, [Int], Boolean)}], function (foo) {
-  var $; switch (true) {                            // return switch (foo) {
-    case R(1, 5).case(foo):                         //
-    case (7).case(foo):     $ = "1..5, 7";  break;  //   case 1..5, 7: "1..5, 7"
-    case R(100, Infinity).case(foo):  $ = "100..Inf"; break;  //   case 10..Inf: "10..Inf"  
-    case Number.case(foo):  $ = "Number";   break;  //   case Number:  "Number"
-    case String.case(foo):  $ = "String";   break;  //   case String:  "String"
-    case [Int].case(foo):   $ = "[Int]";    break;  //   case [Int]:   "[Int]"
-    default:                $ = "default";  break;  //   else          "default";
-  } return $;                                       // }
+  var $; switch (true) {                                // return switch (foo) {
+    case R(1, 5).case(foo):                             //
+    case (7).case(foo):         $ = "1..5, 7";  break;  //   case 1..5, 7: "1..5, 7"
+    case R(100, Inf).case(foo): $ = "100..Inf"; break;  //   case 10..Inf: "10..Inf"  
+    case Number.case(foo):      $ = "Number";   break;  //   case Number:  "Number"
+    case String.case(foo):      $ = "String";   break;  //   case String:  "String"
+    case [Int].case(foo):       $ = "[Int]";    break;  //   case [Int]:   "[Int]"
+    default:                    $ = "default";  break;  //   else          "default";
+  } return $;                                           // }
 });
 
 global.R = Range.of;

@@ -35,7 +35,7 @@ var _ = Extension.extend(_, String, {
   }
 });
 
-var _ = Extension.extend(_, String, Iterable.methods(_.iterator));
+var _ = Extension.extend(_, String, Iterable.bind(_.iterator));
 
 //
 

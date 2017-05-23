@@ -75,6 +75,6 @@ var Numeric = new Trait(Numeric, function () {
 
 var Numeric = new Trait.addtrait(Vector, Numeric);
 
-var _ = Extension.extend(_, Vector, Numeric.methods());
+var _ = Extension.extend(_, Vector, Numeric.bind());
 
 console.log(Numeric.isTypeOf(new Vector3D()));
