@@ -71,7 +71,7 @@ console.log(result);
 
 trait TestTrait (foo, bar) {
   function test() {
-    return foo.apply(this, []) + bar.apply(this, []);
+    return this.foo() + this.bar();
   }
 }
 
