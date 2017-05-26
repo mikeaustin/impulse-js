@@ -210,7 +210,7 @@ extend String {
   }
 }
 
-console.log("_.map(_.slice(0, 2)", _.map(_.slice(0, 2))(["jim", "kate"]) == ["ji", "ka"]);
+console.log("_.map(_.slice(0, 2) ==", _.map(_.slice(0, 2))(["jim", "kate"]));
 
 
 //
