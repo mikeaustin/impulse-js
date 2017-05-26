@@ -10,7 +10,7 @@ More details can be found here:
 * [Impulse-JS Language Spec](https://docs.google.com/document/d/1LqEP5ERAjBa1b0iryn88pessVohDyVAPIGgZvMK8IC4/edit?usp=sharing)  
   Language specs, examples, and implementation status.
 
-### Status
+### Current Status
 
 Many features are implemented, but there are plenty of holes, edge cases and bugs. See [Current Status](https://docs.google.com/document/d/1LqEP5ERAjBa1b0iryn88pessVohDyVAPIGgZvMK8IC4/edit#bookmark=id.dku14xd0594c) to find the status of each feature.
 
