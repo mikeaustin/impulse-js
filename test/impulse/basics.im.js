@@ -159,6 +159,10 @@ function cps() {
   var a <= delay(200), b <= delay(2000);
 
   console.log(">>> 0", a, b);
+
+  var values <= (delay(200), delay(2000));
+
+  console.log(">>> 1", values);
 }
 
 cps();
@@ -166,11 +170,11 @@ cps();
 {
   var value <= delay(100);
 
-  console.log(">>> 1", value);
+  console.log(">>> 2", value);
 
   var value <= delay(0);
 
-  console.log(">>> 2", value);
+  console.log(">>> 3", value);
 }
 
 console.log("here");
@@ -199,15 +203,19 @@ console.log(result);
 //
 
 extend Array {
+
   function map(func) {
     return this.map(func);
   }
+
 }
 
 extend String {
+
   function slice(begin, end) {
     return this.slice(begin, end);
   }
+  
 }
 
 console.log("_.map(_.slice(0, 2) ==", _.map(_.slice(0, 2))(["jim", "kate"]));
