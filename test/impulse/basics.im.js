@@ -151,14 +151,14 @@ console.log(result);
 
 function delay(seconds) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), seconds);
+    setTimeout(() => resolve(seconds), seconds);
   });
 }
 
 function cps() {
-  var value <= delay(200);
+  var a <= delay(200), b <= delay(2000);
 
-  console.log(">>> 0", value);
+  console.log(">>> 0", a, b);
 }
 
 cps();

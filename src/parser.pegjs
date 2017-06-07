@@ -684,15 +684,6 @@ VariableStatement
       };
     }
 
-ContinuationStatement
-  = VarToken __ id:Identifier init:(__ "<=" __ AssignmentExpression) EOS {
-      return {
-        type: "ContinuationDeclaration",
-        id: id,
-        init: init[3]
-      };
-    }
-
 VariableDeclarationList
   = head:VariableDeclaration tail:(__ "," __ VariableDeclaration)* {
       return buildList(head, tail, 3);
@@ -704,6 +695,29 @@ VariableDeclaration
         type: "VariableDeclarator",
         id: id,
         init: extractOptional(init, 1)
+      };
+    }
+
+ContinuationStatement
+  = VarToken __ declarations:ContinuationDeclarationList EOS {
+      return {
+        type: "ContinuationDeclaration",
+        declarations: declarations,
+        kind: "var"
+      };
+    }
+
+ContinuationDeclarationList
+  = head:ContinuationDeclaration tail:(__ "," __ ContinuationDeclaration)* {
+      return buildList(head, tail, 3);
+    }
+
+ContinuationDeclaration
+  = id:Identifier init:(__ "<=" __ AssignmentExpression) {
+      return {
+        type: "ContinuationDeclarator",
+        id: id,
+        init: extractOptional(init, 3)
       };
     }
 
