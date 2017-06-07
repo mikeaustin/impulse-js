@@ -1,5 +1,17 @@
 # impulse-js
-Impulse-JS is a modern dialect of JavaScript with traits, extension methods, operator overloading, map, range and tuple literals and more. It moves legacy and low-level features such as binary operators and for loops to library code, and promotes functional programming and the use of immutable data types.
+Impulse-JS is a cleaner, more modern dialect of JavaScript. It moves legacy and low-level features such as binary operators and for loops to library code, and promotes functional programming and the use of immutable data types.
+
+Features include:
+
+* Extension Methods
+* Traits and Composition
+* Operator Overloading
+* Map, Range and Tuple Literals
+* Async Functions (CPS)
+* [Future] Named Parameters
+* [Future] Functional Loops / TCO
+* [Future] Enhance Switch
+* [Future] Splat and Splat-Packs
 
 The language lives happily together with existing JavaScript code and libraries. Each feature of the language is implemented as a module, so it can also be used to enhance existing JavaScript.
 
@@ -31,13 +43,26 @@ trait Aggregate (reduce) {
 
 extend Array with Aggregate {
 
-  function filter(func) {
-    return this.filter(func);
-  }
+  // Can define more functions here
 
 }
 
 console.log("[1, 2, 3].max() ==", [1, 3, 2].max());
+
+
+//
+
+
+function loadAvatar(id) {
+  var profile <= loadProfile(id);
+  
+  var avatarImage <= loadImage(profile.avatarUrl),
+      defaultImage <= loadImage(0);
+  
+  console.log(defaultImage, avatarImage);
+}
+
+loadAvatar(1000);
 
 
 //
