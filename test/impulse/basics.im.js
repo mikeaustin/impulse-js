@@ -149,10 +149,14 @@ console.log(result);
 // CPS Transformation
 //
 
-function cps() {
-  var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 20);
+function delay(seconds) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(10), seconds);
   });
+}
+
+function cps() {
+  var value <= delay(200);
 
   console.log(">>> 0", value);
 }
@@ -160,15 +164,11 @@ function cps() {
 cps();
 
 {
-  var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 10);
-  });
+  var value <= delay(100);
 
   console.log(">>> 1", value);
 
-  var value <= new Promise((resolve, reject) => {
-    setTimeout(() => resolve(10), 0);
-  });
+  var value <= delay(0);
 
   console.log(">>> 2", value);
 }
