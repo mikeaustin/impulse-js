@@ -10,7 +10,7 @@ Features include:
 * Async Functions (CPS)
 * [Future] Named Parameters
 * [Future] Functional Loops / TCO
-* [Future] Enhance Switch
+* [Future] Enhanced Switch
 * [Future] Splat and Splat-Packs
 
 The language lives happily together with existing JavaScript code and libraries. Each feature of the language is implemented as a module, so it can also be used to enhance existing JavaScript.
