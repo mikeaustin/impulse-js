@@ -56,6 +56,26 @@ try {
   });
 
   (__LINE__ = 52, $ = console, $.log || _.log).apply($, ["new Point(2, 3) + new Point(2, 3) ==", ($ = new (Point)(2, 3), $._add || _._add).apply($, [new (Point)(2, 3)])]);
+  var fsx = new (Object)();
+  fsx.readFile = (path, options) => {
+    var $;
+    var fs = (__LINE__ = 62, require).apply(null, ["fs"]);
+    return new (Promise)((resolve, reject) => {
+      var $;
+      (__LINE__ = 65, $ = fs, $.readFile || _.readFile).apply($, [path, options, (err, data) => (__LINE__ = 65, resolve).apply(null, [data])]);
+    });
+  };
+  (__LINE__ = 69, () => {
+    var $;
+    function foo() {
+      var _this = this;
+      var $;
+
+    }
+    return Promise.all([(__LINE__ = 72, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.im.js"]), (__LINE__ = 73, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.js"])]).then(function ([im, js]) {
+      (__LINE__ = 75, $ = console, $.log || _.log).apply($, [im, js]);
+    });
+  }).apply(null, []);
 } catch (e) {
   var stack = '\n' + e.stack.toString().split('\n').slice(1).join('\n');
   console.log(e.name + ': [' + __FILE__ + ' : ' + __LINE__ + ']', e.message, stack);

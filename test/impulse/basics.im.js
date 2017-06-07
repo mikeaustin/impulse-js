@@ -167,7 +167,7 @@ function cps() {
 
 cps();
 
-{
+() => {
   var value <= delay(100);
 
   console.log(">>> 2", value);
@@ -175,7 +175,7 @@ cps();
   var value <= delay(0);
 
   console.log(">>> 3", value);
-}
+} ();
 
 console.log("here");
 

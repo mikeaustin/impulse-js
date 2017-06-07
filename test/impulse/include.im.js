@@ -51,3 +51,25 @@ class Point extends Object {
 
 console.log("new Point(2, 3) + new Point(2, 3) ==", new Point(2, 3) + new Point(2, 3));
 
+
+//
+
+
+var fsx = new Object();
+
+fsx.readFile = (path, options) => {
+  var fs = require("fs");
+
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, options, (err, data) => resolve(data));
+  });
+};
+
+() => {
+  function foo() { }
+
+  var im <= fsx.readFile("test/impulse/include.im.js"),
+      js <= fsx.readFile("test/impulse/include.js");
+
+  console.log(im, js);
+} ();
