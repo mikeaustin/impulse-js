@@ -28,7 +28,7 @@ Many features are implemented, but there are plenty of holes, edge cases and bug
 
 To try it out, all you need is Node:
 
-```$ bin/impulse-js test/impulse/basics.im.js | node```
+```$ bin/impulse-js test/impulse/basics.xjs | node```
 
 ### Working Examples
 

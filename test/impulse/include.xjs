@@ -68,7 +68,7 @@ fsx.readFile = (path, options) => {
 () => {
   function foo() { }
 
-  var im <= fsx.readFile("test/impulse/include.im.js"),
+  var im <= fsx.readFile("test/impulse/include.xjs"),
       js <= fsx.readFile("test/impulse/include.js");
 
   console.log(im, js);

@@ -6,7 +6,9 @@
   "author": "Mike Austin <mike@mike-austin.com>",
   "license": "MIT",
   "bin": "bin/impulse-js",
-  "dependencies": {},
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12"
+  },
   "devDependencies": {
     "pegjs": "^0.10.0",
     "jsdoc": "^3.4.3"

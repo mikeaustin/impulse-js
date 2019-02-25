@@ -229,7 +229,7 @@ var fs = require("fs");
 var impulse = require("./lib/impulse-js");
 
 function cacheIsDirty(basePath) {
-  var imjsStats = fs.statSync(basePath ++ ".im.js");
+  var imjsStats = fs.statSync(basePath ++ ".xjs");
   var jsStats = fs.statSync(basePath ++ ".js");  
 
   return imjsStats.mtime > jsStats.mtime;
@@ -238,7 +238,7 @@ function cacheIsDirty(basePath) {
 
 impulse.require = (basePath) => {
   if (!fs.existsSync(basePath ++ ".js") || cacheIsDirty(basePath)) {
-    var js = impulse.compile(basePath ++ ".im.js");
+    var js = impulse.compile(basePath ++ ".xjs");
 
     fs.writeFileSync(basePath ++ ".js", js);
   }

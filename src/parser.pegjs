@@ -278,17 +278,9 @@ StringLiteral "string"
   = '"' chars:DoubleStringCharacter* '"' {
       return { type: "Literal", value: chars.join("") };
     }
-  / "'" chars:SingleStringCharacter* "'" {
-      return { type: "Literal", value: chars.join("") };
-    }
 
 DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
-  / LineContinuation
-
-SingleStringCharacter
-  = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
   / "\\" sequence:EscapeSequence { return sequence; }
   / LineContinuation
 
@@ -565,9 +557,9 @@ MultiplicativeOperator
   / "%"
 
 AdditiveExpression
-  = head:MultiplicativeExpression
-    tail:(__ AdditiveOperator __ MultiplicativeExpression)*
-    { return buildBinaryExpression(head, tail); }
+  = head:MultiplicativeExpression tail:(__ AdditiveOperator __ MultiplicativeExpression)* {
+      return buildBinaryExpression(head, tail);
+    }
 
 AdditiveOperator
   = "++"
@@ -875,7 +867,7 @@ TraitDeclaration
     }
 
 ClassBody
-  = body:((ClassDeclaration / ConstructorDeclaration / FunctionDeclaration) __)* {
+  = body:((ClassDeclaration / ConstructorDeclaration / MethodDeclaration) __)* {
       return extractList(body, 0);
     }
 
@@ -898,10 +890,10 @@ ConstructorDeclaration
       };
     }
 
-FunctionDeclaration
+MethodDeclaration
   = FunctionToken __ id:Identifier __ "(" __ params:(FormalParameterList __)? ")" __ "{" __ body:FunctionBody __ "}" {
       return {
-        type: "FunctionDeclaration",
+        type: "MethodDeclaration",
         id: id,
         params: optionalList(extractOptional(params, 0)),
         body: body
@@ -966,7 +958,7 @@ SourceElements
 
 SourceElement
   = Statement
-  / FunctionDeclaration
+  / MethodDeclaration
   / ClassDeclaration
   / TraitDeclaration
   / ExtendDeclaration

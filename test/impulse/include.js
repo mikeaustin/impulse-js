@@ -1,7 +1,7 @@
 'use strict';
 var __FILE__ = 'undefined';
 var __LINE__ = '0';
-var impulse = require('impulse-js/lib/runtime');
+var impulse = require('../../lib/runtime');
 var Tuple = impulse.Tuple;
 var Range = impulse.Range;
 try {
@@ -59,21 +59,21 @@ try {
   var fsx = new (Object)();
   fsx.readFile = (path, options) => {
     var $;
-    var fs = (__LINE__ = 62, require).apply(null, ["fs"]);
+    var fs = (__LINE__ = 61, require).apply(null, ["fs"]);
     return new (Promise)((resolve, reject) => {
       var $;
-      (__LINE__ = 65, $ = fs, $.readFile || _.readFile).apply($, [path, options, (err, data) => (__LINE__ = 65, resolve).apply(null, [data])]);
+      (__LINE__ = 64, $ = fs, $.readFile || _.readFile).apply($, [path, options, (err, data) => (__LINE__ = 64, resolve).apply(null, [data])]);
     });
   };
-  (__LINE__ = 69, () => {
+  (__LINE__ = 68, () => {
     var $;
     function foo() {
       var _this = this;
       var $;
 
     }
-    return Promise.all([(__LINE__ = 72, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.im.js"]), (__LINE__ = 73, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.js"])]).then(function ([im, js]) {
-      (__LINE__ = 75, $ = console, $.log || _.log).apply($, [im, js]);
+    return Promise.all([(__LINE__ = 71, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.xjs"]), (__LINE__ = 72, $ = fsx, $.readFile || _.readFile).apply($, ["test/impulse/include.js"])]).then(function ([im, js]) {
+      (__LINE__ = 74, $ = console, $.log || _.log).apply($, [im, js]);
     });
   }).apply(null, []);
 } catch (e) {

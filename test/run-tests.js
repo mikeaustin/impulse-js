@@ -44,8 +44,8 @@ require('./runtime/module');
 require('./runtime/operator');
 require('./runtime/parameters');
 
-system('./bin/impulse-js ./test/impulse/basics.im.js | node');
-system('./bin/impulse-js ./test/impulse/iterator.im.js | node');
+system('./bin/impulse-js ./test/impulse/basics.xjs | node');
+system('./bin/impulse-js ./test/impulse/iterator.xjs | node');
 
 // // Runtime
 
