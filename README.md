@@ -1,6 +1,10 @@
 # impulse-js
 Impulse-JS is a cleaner, more modern dialect of JavaScript. It moves legacy and low-level features such as binary operators and for loops to library code, and promotes functional programming and the use of immutable data types.
 
+> **NOTE**: This projects was an experiment, and is no longer being maintained. It was an attempty to keep the general syntax of JavaScript, but remove all the legacy cruft and add things like extension methods and immutable data. I've been working on a new language, Kopi, which runs inside JavaScript but has it's only syntax. It's "Simple, Immutable, and 100% Asynchronous".
+> 
+> Check it out at https://github.com/mikeaustin/kopi.
+
 Features include:
 
 * Extension Methods
